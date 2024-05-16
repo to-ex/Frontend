@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import logo from "../assets/images/Logo.svg";
 import LoginButton from "../components/LoginButton";
-// import KakaoLogo from "../assets/images/KakaoLogo.svg";
 
 const Login = () => {
   return (
