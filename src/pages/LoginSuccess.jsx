@@ -1,30 +1,30 @@
 import React from "react";
-import Confetti from "../styles/Confetti";
+import Confetti from "../components/Confetti";
 import styled from "styled-components";
 
 const LoginSuccess = () => {
   return (
     <>
       <Confetti />
-      <CenteredContainer>
+      <TextBox>
         <Text>
           <RedText>김퓨처</RedText>
           님,
           <br />
           환영합니다!
         </Text>
-      </CenteredContainer>
+      </TextBox>
     </>
   );
 };
 
 export default LoginSuccess;
 
-const CenteredContainer = styled.div`
+const TextBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* 100% of the viewport height */
+  height: 100vh;
 `;
 
 const Text = styled.p`

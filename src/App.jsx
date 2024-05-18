@@ -4,11 +4,7 @@ import { Theme } from "./styles/Theme";
 import LoginSuccess from "./pages/LoginSuccess";
 
 function App() {
-  return (
-    <ThemeProvider theme={Theme}>
-      <LoginSuccess></LoginSuccess>
-    </ThemeProvider>
-  );
+  return <ThemeProvider theme={Theme}></ThemeProvider>;
 }
 
 export default App;
