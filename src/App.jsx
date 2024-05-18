@@ -1,12 +1,12 @@
 import "./App.css";
 import { ThemeProvider } from "styled-components";
 import { Theme } from "./styles/Theme";
-import Login from "./pages/Login";
+import LoginSuccess from "./pages/LoginSuccess";
 
 function App() {
   return (
     <ThemeProvider theme={Theme}>
-      <Login></Login>
+      <LoginSuccess></LoginSuccess>
     </ThemeProvider>
   );
 }
