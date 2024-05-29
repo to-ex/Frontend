@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { ReactComponent as PersonCamIcon } from '../assets/images/person_cam.svg'; 
+import { ReactComponent as CamIcon } from '../assets/images/cam.svg';
 
 const theme = {
   colors: {
     WHITE: "#FFFFFF",
+    GRAY01: "D9D9D9",
     GRAY02: "#9C9CA1",
     GRAY03: "#636366",
     GRAY04: "#3A3A3C",
@@ -29,12 +31,14 @@ const Container = styled.div`
 `;
 
 const AvatarContainer = styled.div`
-  margin-bottom: 50px;  
+  margin-bottom: 50px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: auto;  
+  width: 218px;
+  height: 215px;
+  cursor: pointer;
 `;
 
 const AvatarIcon = styled(PersonCamIcon)`
@@ -81,7 +85,7 @@ const Button = styled.button`
   width: 234px;
   height: 60px;
   font-size: 17px;
-  background-color: ${props => props.theme.colors.RED04};
+  background-color: ${props => props.isNicknameAvailable === false ? props.theme.colors.GRAY01 : props.theme.colors.RED04};
   color: ${props => props.theme.colors.WHITE};
   border: none;
   border-radius: 50px;
@@ -126,13 +130,32 @@ const InputRow = styled.div`
 const NicknameButton = styled(Button)`
   width: 110px;
   height: 60px;
-  background-color: ${props => props.theme.colors.RED04};
-  color: ${props => props.theme.colors.WHITE};
-  border: none;
+  background-color: ${props => props.theme.colors.WHITE};
+  color: ${props => props.theme.colors.RED04};
+  border: 1px solid ${props => props.theme.colors.RED04};
   border-radius: 50px;
   cursor: pointer;
   margin-top: 0px;
   font-size: 18px;
+`;
+const Overlay = styled.div` // 오버레이 스타일 컴포넌트를 추가합니다.
+  position: absolute;
+  width: 218px;
+  height: 215px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3); 
+  cursor: pointer;
+`;
+
+const AvatarImage = styled.img`
+  cursor: pointer;
+  width: 218px;
+  height: 215px;
+  border-radius: 50%;
+  object-fit: cover;
 `;
 
 function MyInfo() {
@@ -180,9 +203,18 @@ function MyInfo() {
   return (
     <ThemeProvider theme={theme}>
       <Container>
-        <AvatarContainer onClick={handleAvatarClick}>
-          {avatar ? <img src={avatar} alt="Avatar" style={{ width: '218px', height: '215px', borderRadius: '50%', position: 'absolute', bottom: '0', cursor: 'pointer' }} /> : <AvatarIcon />}
-      </AvatarContainer>
+      <AvatarContainer onClick={handleAvatarClick}>
+          {avatar ? (
+            <>
+              <AvatarImage src={avatar} alt="Avatar" />
+              <Overlay>
+                <CamIcon /> {/* 업로드된 이미지가 있을 때, 오버레이와 카메라 아이콘을 추가합니다 */}
+              </Overlay>
+            </>
+          ) : (
+            <AvatarIcon />
+          )}
+        </AvatarContainer>
       <input
         type="file"
         ref={fileInputRef}
@@ -194,7 +226,7 @@ function MyInfo() {
         <Title>닉네임</Title>
         {isNicknameAvailable !== null && (
           <StatusMessage>
-            {isNicknameAvailable ? "사용 가능한 닉네임입니다." : "사용 불가능한 닉네임입니다."}
+            {isNicknameAvailable ? "사용 가능한 닉네임입니다." : "이미 사용중인 닉네임입니다."}
           </StatusMessage>
         )}
       </TitleContainer>
@@ -209,7 +241,7 @@ function MyInfo() {
         </InputContainer>
         <NicknameButton onClick={handleCheckNickname}>중복 확인</NicknameButton>
       </InputRow>
-      <Button>저장</Button>
+      <Button isNicknameAvailable={isNicknameAvailable}>저장</Button>
     </Container>
   </ThemeProvider>
   );
