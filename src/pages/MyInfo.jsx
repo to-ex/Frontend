@@ -1,22 +1,8 @@
 import React, { useRef, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
+import { Theme } from '../styles/Theme';
 import { ReactComponent as PersonCamIcon } from '../assets/images/person_cam.svg'; 
 import { ReactComponent as CamIcon } from '../assets/images/cam.svg';
-
-const theme = {
-  colors: {
-    WHITE: "#FFFFFF",
-    GRAY01: "D9D9D9",
-    GRAY02: "#9C9CA1",
-    GRAY03: "#636366",
-    GRAY04: "#3A3A3C",
-    BLACK: "#1C2C1E",
-    RED01: "#FFE0E6",
-    RED02: "#FFAEBD",
-    RED03: "#FF5876",
-    RED04: "#FF244A",
-  },
-};
 
 const Container = styled.div`
   display: flex;
@@ -24,7 +10,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh; 
-  background-color: ${props => props.theme.colors.WHITE};
+  background-color: ${({ theme }) => theme.colors.WHITE};
   overflow: hidden;  
   box-sizing: border-box;  
   margin-top: 60px;
@@ -85,8 +71,8 @@ const Button = styled.button`
   width: 234px;
   height: 60px;
   font-size: 17px;
-  background-color: ${props => props.isNicknameAvailable === false ? props.theme.colors.GRAY01 : props.theme.colors.RED04};
-  color: ${props => props.theme.colors.WHITE};
+  background-color: ${({ theme, isNicknameAvailable }) => isNicknameAvailable === false ? theme.colors.GRAY01 : theme.colors.RED04};
+  color: ${({ theme }) => theme.colors.WHITE};
   border: none;
   border-radius: 50px;
   cursor: pointer;
@@ -94,8 +80,7 @@ const Button = styled.button`
 `;
 
 const Title = styled.div`
-  color: ${props => props.theme.colors.BLACK};
-  // margin-bottom: 0px;  
+  color: ${({ theme }) => theme.colors.BLACK};
   font-size: 22px;
 `;
 
@@ -105,7 +90,7 @@ const TitleContainer = styled.div`
   width: 475px;
 `;
 const StatusMessage = styled.span`
-  color: ${props => props.theme.colors.RED04};
+  color: ${({ theme }) => theme.colors.RED04};
   margin-left: 10px; 
   width: 193px;
   height: 25px;
@@ -130,8 +115,8 @@ const InputRow = styled.div`
 const NicknameButton = styled(Button)`
   width: 110px;
   height: 60px;
-  background-color: ${props => props.theme.colors.WHITE};
-  color: ${props => props.theme.colors.RED04};
+  background-color: ${({ theme }) => theme.colors.WHITE};
+  color: ${({ theme }) => theme.colors.RED04};
   border: 1px solid ${props => props.theme.colors.RED04};
   border-radius: 50px;
   cursor: pointer;
@@ -201,7 +186,7 @@ function MyInfo() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <Container>
       <AvatarContainer onClick={handleAvatarClick}>
           {avatar ? (
