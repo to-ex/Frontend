@@ -138,7 +138,7 @@ const NicknameButton = styled(Button)`
   margin-top: 0px;
   font-size: 18px;
 `;
-const Overlay = styled.div` // 오버레이 스타일 컴포넌트를 추가합니다.
+const Overlay = styled.div` 
   position: absolute;
   width: 218px;
   height: 215px;
@@ -208,7 +208,7 @@ function MyInfo() {
             <>
               <AvatarImage src={avatar} alt="Avatar" />
               <Overlay>
-                <CamIcon /> {/* 업로드된 이미지가 있을 때, 오버레이와 카메라 아이콘을 추가합니다 */}
+                <CamIcon /> 
               </Overlay>
             </>
           ) : (
