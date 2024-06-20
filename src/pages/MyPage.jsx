@@ -16,52 +16,48 @@ const PageWrapper = styled.div`
   flex-direction: column;
   align-items: center; 
   width: 100%;
-  margin: 11% auto 0;
+  margin-top: 150px;
   a { 
     text-decoration: none;  
   color: black;
+  position: relative;
 `;
 
 const PageHeader = styled.div`
   font-size: 32px;
   color: black;
   font-weight: bold;
-  text-align: left;
+  text-align: center;
   width: 1420px;
-  margin-bottom: 15px;
+  margin-bottom: 28px;
 `;
 
 const MyPageContainer = styled.div`
   position: relative;
   display: flex;
-  flex-direction: row; 
+  flex-direction: column;
   align-items: center; 
   justify-content: center;
-  padding: 5px;
   gap: 10px;
-  background: #FFF;
   box-shadow: 0px 0px 3px 3px rgba(0,0,0,0.1); 
   border-radius: 10px;
-  width: 1426px;
-  height: 379px;
+  width: 1400px;
+  height: 687px;
 `;
 
 const UserGreeting = styled.div`
-  flex: 0.7;
-  margin-bottom: 0;
-  background-color: white;
   display: flex;
   flex-direction: column; 
   align-items: center;
-  margin-top: 30px;
+  position: absolute;
+  top: 60px;
 `;
 
 const IconGrid = styled.div`
-  flex: 2.0;
   display: grid;
   grid-template-columns: repeat(5, 1fr); 
-  gap: 0px; 
-  margin-right: 50px;
+  gap: 57px; 
+  margin-top: 130px;
 `;
 
 const Card = styled.div`
@@ -89,22 +85,17 @@ const UserName = styled.span`
   color: #ff244a;
   font-weight: bold;
   font-size: 28px;
-  margin-top: 6px;
+  margin-top: 8px;
 `
 
 const NameSuffix = styled.span`
-  margin-top: 6px; 
+  margin-top: 8px; 
   font-size: 28px;
 `;
 
 const GreetingContainer = styled.div`
   display: flex;
   align-items: center; 
-`;
-
-const AdditionalGreeting = styled.div`
-  text-align: center; 
-  font-size: 28px;
 `;
 
 const ItemTitle = styled.span`
@@ -116,8 +107,8 @@ const ItemTitle = styled.span`
 
 const AccountActions = styled.div`
   position: absolute;
-  bottom: 16px;
-  right: 18px;
+  bottom: 46px;
+  right: 595px;
   display: flex;
   gap: 10px;
 `;
@@ -136,6 +127,7 @@ const ActionButton = styled.button`
   }
   font-size: 18px;
 `;
+
 
 const iconMapping = {
   profile: StyledProfile,
@@ -184,8 +176,8 @@ function MyPage() {
     })
     .catch(err => {
       // 요청이 실패하면 오류를 처리
-      console.error('Failed to fetch user info:', err);
-      alert(err.response?.data?.message || 'Failed to fetch user info');
+      //console.error('Failed to fetch user info:', err);
+      //alert(err.response?.data?.message || 'Failed to fetch user info');
     });
   }, []);
 
@@ -235,9 +227,8 @@ return (
         <StyledPerson1 style={{ width: '165.64px', height: '163.17px'}}/>
         <GreetingContainer>
           <UserName>{userInfo.name}</UserName>
-          <NameSuffix>님,</NameSuffix>
+          <NameSuffix>님, 안녕하세요!</NameSuffix>
         </GreetingContainer>
-        <AdditionalGreeting>안녕하세요!</AdditionalGreeting>
       </UserGreeting>
 
       <IconGrid>
