@@ -9,11 +9,15 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; 
+  width: 730px;
+  height: 682px; 
   background-color: ${({ theme }) => theme.colors.WHITE};
   overflow: hidden;  
   box-sizing: border-box;  
-  margin-top: 60px;
+  box-shadow: 0px 0px 3px 3px rgba(0,0,0,0.1); 
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 150px;
 `;
 
 const AvatarContainer = styled.div`
