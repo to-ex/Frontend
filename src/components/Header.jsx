@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import logo from "../assets/images/Logo.svg";
-import Category from "../assets/images/category.svg";
 import TabBar from "./TabBar";
 import { useNavigate } from "react-router-dom";
 import Tab from "./Tab";
@@ -15,46 +14,22 @@ const Header = () => {
         <MainTabBar>
           <TabBar
             tabs={[
-              {
-                id: 0,
-                title: "학사",
-                url: "/",
-              },
-              {
-                id: 1,
-                title: "어학",
-                url: "/",
-              },
-              {
-                id: 2,
-                title: "커뮤니티",
-                url: "/",
-              },
-              {
-                id: 3,
-                title: "캘린더",
-                url: "/",
-              },
-              {
-                id: 4,
-                title: "체크리스트",
-                url: "/",
-              },
+              { id: 0, title: "학사", url: "/study" }, // 각 주소 변경 예정
+              { id: 1, title: "어학", url: "/language" },
+              { id: 2, title: "커뮤니티", url: "/community" },
+              { id: 3, title: "캘린더", url: "/calendar" },
+              { id: 4, title: "체크리스트", url: "/checklist" },
+              { id: 5, title: "마이페이지", url: "/mypage" },
             ]}
           />
         </MainTabBar>
         <SideTabBar>
-          <Tab color="GRAY" onClick={() => navigate("/")}>
+          <Tab color="GRAY" onClick={() => navigate("/signup")}>
             회원가입
           </Tab>
-          <Tab color="GRAY" onClick={() => navigate("/")}>
+          <Tab color="GRAY" onClick={() => navigate("/login")}>
             로그인
           </Tab>
-          <CategoryImg
-            src={Category}
-            alt="CategoryImg"
-            onClick={() => navigate("/")}
-          />
         </SideTabBar>
       </Container>
     </BackGround>
@@ -62,6 +37,7 @@ const Header = () => {
 };
 
 export default Header;
+
 const BackGround = styled.div`
   width: 100%;
   height: 88px;
@@ -91,8 +67,4 @@ const MainTabBar = styled.div`
 const SideTabBar = styled.div`
   display: flex;
   gap: 10px;
-`;
-
-const CategoryImg = styled.img`
-  width: 36px;
 `;

@@ -1,14 +1,19 @@
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Tab from "./Tab";
 
 const TabBar = ({ tabs }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <Container>
       {tabs.map((tab) => (
-        <Tab key={tab.id} onClick={() => navigate(tab.url)}>
+        <Tab
+          key={tab.id}
+          isActive={location.pathname === tab.url}
+          onClick={() => navigate(tab.url)}
+        >
           {tab.title}
         </Tab>
       ))}
