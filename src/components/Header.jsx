@@ -3,9 +3,11 @@ import logo from "../assets/images/Logo.svg";
 import TabBar from "./TabBar";
 import { useNavigate } from "react-router-dom";
 import Tab from "./Tab";
+import { useState } from "react";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(false);
 
   return (
     <BackGround>
@@ -23,8 +25,11 @@ const Header = () => {
             ]}
           />
         </MainTabBar>
-        <Tab color="GRAY" onClick={() => navigate("/login")}>
-          로그인
+        <Tab
+          color="GRAY"
+          onClick={() => setIsLogin(!isLogin) && navigate("/login")}
+        >
+          {isLogin === false ? "로그인" : "로그아웃"}
         </Tab>
       </Container>
     </BackGround>
