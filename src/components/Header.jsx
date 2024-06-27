@@ -23,14 +23,9 @@ const Header = () => {
             ]}
           />
         </MainTabBar>
-        <SideTabBar>
-          <Tab color="GRAY" onClick={() => navigate("/signup")}>
-            회원가입
-          </Tab>
-          <Tab color="GRAY" onClick={() => navigate("/login")}>
-            로그인
-          </Tab>
-        </SideTabBar>
+        <Tab color="GRAY" onClick={() => navigate("/login")}>
+          로그인
+        </Tab>
       </Container>
     </BackGround>
   );
@@ -62,9 +57,4 @@ const MainTabBar = styled.div`
   color: ${({ theme }) => theme.colors.RED02};
   display: flex;
   margin-left: 120px;
-`;
-
-const SideTabBar = styled.div`
-  display: flex;
-  gap: 10px;
 `;
