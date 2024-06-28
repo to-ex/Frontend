@@ -37,7 +37,7 @@ const ConfirmButton = styled.button`
     height: 58px;
     margin: 10px;
     border: none;
-    border-radius: 30.5px;
+    border-radius: 12px;
     cursor: pointer;
     margin-top: 20px;
     font-size: 19px;

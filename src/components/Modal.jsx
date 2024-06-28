@@ -34,7 +34,7 @@ const Button = styled.button`
     height: 58px;
     margin: 10px;
     border: none;
-    border-radius: 30.5px;
+    border-radius: 12px;
     cursor: pointer;
     background-color: ${props => props.$confirm ? '#FF244A' : '#bEAEAEA'};
     color: ${props => props.$confirm ? 'white' : 'black'};
