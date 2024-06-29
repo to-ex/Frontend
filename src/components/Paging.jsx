@@ -47,12 +47,12 @@ const StyledPagination = styled.div`
     font-size: 20px;
     border-radius: 50%;
     background-color: ${({ theme }) => theme.colors.WHITE};
-    border: 1px solid ${({ theme }) => theme.colors.GRAY01};
+    border: 1px solid ${({ theme }) => theme.colors.GRAY02};
   }
 
   ul.pagination li a {
     text-decoration: none;
-    color: ${({ theme }) => theme.colors.GRAY01};
+    color: ${({ theme }) => theme.colors.GRAY02};
   }
 
   ul.pagination li.active a {
@@ -62,6 +62,7 @@ const StyledPagination = styled.div`
   ul.pagination li.active {
     border-radius: 50%;
     background-color: ${({ theme }) => theme.colors.RED04};
+    border: none;
   }
 
   ul.pagination li a:hover,

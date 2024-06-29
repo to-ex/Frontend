@@ -3,10 +3,11 @@ import Trashimg from "../assets/images/Trash.svg";
 import EmptyHeart from "../assets/images/EmptyHeart.svg";
 import FullHeart from "../assets/images/FullHeart.svg";
 import Comment from "../assets/images/ChatCircle.svg";
-
+import { useState } from "react";
 const ContentBox = ({ dummyData }) => {
   const {
     title,
+    writer,
     typetag,
     countrytag,
     text,
@@ -15,32 +16,32 @@ const ContentBox = ({ dummyData }) => {
     heartcount,
     commentcount,
     date,
+    ismine,
   } = dummyData;
-  // const [heart, setHeart] = useState(EmptyHeart);
-  // const [heartCount, setHeartCount] = useState(3);
-  // console.log(dummyData);
-  // const toggleHeart = () => {
-  //   setHeart((prevHeart) => {
-  //     if (prevHeart === EmptyHeart) {
-  //       setHeartCount(heartCount + 1);
-  //       return FullHeart;
-  //     } else {
-  //       setHeartCount(heartCount - 1);
-  //       return EmptyHeart;
-  //     }
-  //   });
-  // };
+
+  const [heart, setHeart] = useState(ishearted);
+  const [heartCount, setHeartCount] = useState(heartcount);
+
+  const toggleHeart = () => {
+    setHeart((prevHeart) => !prevHeart);
+    setHeartCount((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
+  };
 
   return (
     <Container>
       <Top>
-        <Title>
-          <TitleText>{title}</TitleText>
+        <TitleTagBox>
+          <Title>
+            <TitleText>{title}</TitleText>
+            <Bar>| </Bar>
+            <Writer>{writer}</Writer>
+          </Title>
           <TagBox>
             <TypeTag>#{typetag}</TypeTag>
             <CountryTag>#{countrytag}</CountryTag>
           </TagBox>
-        </Title>
+        </TitleTagBox>
+
         <DeleteBtn>
           <img src={Trashimg} alt="Trash Icon" />
         </DeleteBtn>
@@ -55,14 +56,10 @@ const ContentBox = ({ dummyData }) => {
       </Middle>
       <Bottom>
         <ReactionBox>
-          <HeartIcon>
-            {ishearted === true ? (
-              <img src={FullHeart} alt="FullHeartIcon" />
-            ) : (
-              <img src={EmptyHeart} alt="EmptyHeartIcon" />
-            )}
+          <HeartIcon onClick={toggleHeart}>
+            <img src={heart ? FullHeart : EmptyHeart} alt="Heart Icon" />
           </HeartIcon>
-          <HeartCount>{heartcount}</HeartCount>
+          <HeartCount>{heartCount}</HeartCount>
           <CommentIcon>
             <img src={Comment} alt="Comment Icon" />
           </CommentIcon>
@@ -78,7 +75,7 @@ export default ContentBox;
 
 const Container = styled.div`
   width: 1496px;
-  height: 404px;
+  height: 410px;
   box-shadow: 0 0 10px #ebebeb;
   border-radius: 12px;
 `;
@@ -88,17 +85,35 @@ const Top = styled.div`
   justify-content: space-between;
 `;
 
-const Title = styled.div`
+const TitleTagBox = styled.div`
   display: flex;
   gap: 18px;
   flex-direction: column;
   margin: 38px 0 0 48px;
 `;
 
+const Title = styled.div`
+  display: flex;
+`;
+
 const TitleText = styled.p`
   font-size: 28px;
   font-weight: 600;
-  margin: 0;
+  margin: 0 9px 0 0;
+`;
+
+const Bar = styled.p`
+  font-size: 22px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.GRAY02};
+  margin: 0 5px 0 0;
+`;
+
+const Writer = styled.p`
+  font-size: 22px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.GRAY03};
+  margin: 3px 0 0 0;
 `;
 
 const TagBox = styled.div`
@@ -148,7 +163,7 @@ const Middle = styled.div`
 const Content = styled.div`
   width: 1029px;
   height: 103px;
-  border: 1px solid #ffd0d8;
+  background-color: #f8f9fa;
   border-radius: 12px;
   padding: 25px 22px;
   margin-left: 52px;
@@ -181,13 +196,14 @@ const ContentImg = styled.img`
 const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 `;
 
 const ReactionBox = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 52px;
-  margin-top: 19px;
+  margin: 19px 0 0 52px;
+  padding: 0;
 `;
 
 const HeartIcon = styled.button`
