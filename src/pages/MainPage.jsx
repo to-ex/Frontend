@@ -22,7 +22,7 @@ const Container = styled.div`
 
 const SearchBar = styled.div`
   margin: auto;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   margin-top: 150px;
   padding: 20px;
   border: 1px solid ${({ theme }) => theme.colors.RED04};
@@ -46,15 +46,12 @@ const SearchIconWrap = styled.div`
 const Banner = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.colors.RED01};
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 22px;
   margin-bottom: 40px;
   width: 1348px;
-  height: 332px;
+  height: 308px;
   margin: 0 auto;
-  background-size: cover;
   background-position: center;
-  overflow: hidden;
 `;
 
 const MainBanner1 = styled(Banner)`
@@ -86,7 +83,7 @@ const BannerContent = styled.div`
     color: ${({ theme }) => theme.colors.RED04};
   }
   position: absolute;
-  top: 70px;
+  top: 45px;
   left: 900px;
   font-weight: bold;
 `;
@@ -152,6 +149,9 @@ const sliderSettings = {
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: false,
+  autoplay: true,  
+  autoplaySpeed: 2500,  
+  cssEase: 'ease-in-out', 
 };
 
 const FeatureCards = styled.div`
