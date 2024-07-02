@@ -93,20 +93,30 @@ const ScrapPage = () => {
     setCurrentPage(page);
   };
 
+  const handleDelete = (index) => {
+    setContent((prevContent) =>
+      prevContent.filter((item) => item.index !== index)
+    );
+  };
+
   useEffect(() => {
     const indexOfLastContent = currentPage * contentPerPage; // 현재 페이지의 마지막 content index
     const indexOfFirstContent = indexOfLastContent - contentPerPage;
     setCount(content.length);
     setCurrentContent(content.slice(indexOfFirstContent, indexOfLastContent));
     window.scrollTo(0, 0);
-  }, [currentPage, contentPerPage]);
+  }, [currentPage, contentPerPage, content]);
 
   return (
     <Container>
       <MainTitle>스크랩</MainTitle>
       <ContentBoxContainer>
         {currentContent.map((dummyData) => (
-          <ContentBox key={dummyData.index} dummyData={dummyData}></ContentBox>
+          <ContentBox
+            key={dummyData.index}
+            dummyData={dummyData}
+            onDelete={handleDelete}
+          ></ContentBox>
         ))}
       </ContentBoxContainer>
       <Paging

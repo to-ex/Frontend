@@ -4,8 +4,11 @@ import EmptyHeart from "../assets/images/EmptyHeart.svg";
 import FullHeart from "../assets/images/FullHeart.svg";
 import Comment from "../assets/images/ChatCircle.svg";
 import { useState } from "react";
-const ContentBox = ({ dummyData }) => {
+import Modal from "../components/Modal";
+
+const ContentBox = ({ dummyData, onDelete }) => {
   const {
+    index,
     title,
     writer,
     typetag,
@@ -21,10 +24,15 @@ const ContentBox = ({ dummyData }) => {
 
   const [heart, setHeart] = useState(ishearted);
   const [heartCount, setHeartCount] = useState(heartcount);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleHeart = () => {
     setHeart((prevHeart) => !prevHeart);
     setHeartCount((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
+  };
+
+  const toggleModal = () => {
+    setIsModalVisible((prevVisible) => !prevVisible);
   };
 
   return (
@@ -41,8 +49,7 @@ const ContentBox = ({ dummyData }) => {
             <CountryTag>#{countrytag}</CountryTag>
           </TagBox>
         </TitleTagBox>
-
-        <DeleteBtn>
+        <DeleteBtn onClick={toggleModal}>
           <img src={Trashimg} alt="Trash Icon" />
         </DeleteBtn>
       </Top>
@@ -67,6 +74,18 @@ const ContentBox = ({ dummyData }) => {
         </ReactionBox>
         <Date>{date}</Date>
       </Bottom>
+      {isModalVisible && (
+        <Modal
+          onConfirm={() => {
+            onDelete(index);
+            toggleModal();
+          }}
+          onCancel={toggleModal}
+          msg="삭제하시겠습니까?"
+          text1="아니요"
+          text2="네"
+        />
+      )}
     </Container>
   );
 };
@@ -152,6 +171,7 @@ const DeleteBtn = styled.button`
   background-color: transparent;
   border: none;
   margin-right: 54px;
+  cursor: pointer;
 `;
 
 const Middle = styled.div`
