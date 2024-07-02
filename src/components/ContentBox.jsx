@@ -3,10 +3,14 @@ import Trashimg from "../assets/images/Trash.svg";
 import EmptyHeart from "../assets/images/EmptyHeart.svg";
 import FullHeart from "../assets/images/FullHeart.svg";
 import Comment from "../assets/images/ChatCircle.svg";
+import Write from "../assets/images/Write.svg";
 import { useState } from "react";
 import Modal from "../components/Modal";
+import { useNavigate } from "react-router-dom";
 
 const ContentBox = ({ dummyData, onDelete }) => {
+  const navigate = useNavigate();
+
   const {
     index,
     title,
@@ -35,6 +39,15 @@ const ContentBox = ({ dummyData, onDelete }) => {
     setIsModalVisible((prevVisible) => !prevVisible);
   };
 
+  const handlegopost = () => {
+    navigate("/post");
+  };
+
+  const handleDelete = () => {
+    onDelete(index);
+    toggleModal();
+  };
+
   return (
     <Container>
       <Top>
@@ -49,9 +62,16 @@ const ContentBox = ({ dummyData, onDelete }) => {
             <CountryTag>#{countrytag}</CountryTag>
           </TagBox>
         </TitleTagBox>
-        <DeleteBtn onClick={toggleModal}>
-          <img src={Trashimg} alt="Trash Icon" />
-        </DeleteBtn>
+        {ismine && (
+          <TopIconBtnBox>
+            <WriteBtn onClick={handlegopost}>
+              <img src={Write} alt="Write Icon" />
+            </WriteBtn>
+            <DeleteBtn onClick={toggleModal}>
+              <img src={Trashimg} alt="Trash Icon" />
+            </DeleteBtn>
+          </TopIconBtnBox>
+        )}
       </Top>
       <Middle>
         <Content>
@@ -76,10 +96,7 @@ const ContentBox = ({ dummyData, onDelete }) => {
       </Bottom>
       {isModalVisible && (
         <Modal
-          onConfirm={() => {
-            onDelete(index);
-            toggleModal();
-          }}
+          onConfirm={handleDelete}
           onCancel={toggleModal}
           msg="삭제하시겠습니까?"
           text1="아니요"
@@ -167,10 +184,26 @@ const CountryTag = styled.div`
   background-color: ${({ theme }) => theme.colors.RED04};
 `;
 
+const TopIconBtnBox = styled.div`
+  display: flex;
+  gap: 16px;
+  margin: 40px 58px 0 0;
+`;
+
 const DeleteBtn = styled.button`
+  width: 30px;
+  height: 30px;
   background-color: transparent;
   border: none;
-  margin-right: 54px;
+  cursor: pointer;
+`;
+
+const WriteBtn = styled.button`
+  width: 24px;
+  height: 24px;
+  margin-top: 3px;
+  background-color: transparent;
+  border: none;
   cursor: pointer;
 `;
 

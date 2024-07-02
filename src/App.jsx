@@ -1,13 +1,17 @@
-import "./App.css";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import ScrapPage from "./pages/ScrapPage";
 import { ThemeProvider } from "styled-components";
 import { Theme } from "./styles/Theme";
-import ScrapPage from "./pages/ScrapPage";
-import Modal from "./components/Modal";
 
 function App() {
   return (
     <ThemeProvider theme={Theme}>
-      <ScrapPage />
+      <Router>
+        <Routes>
+          <Route path="/" element={<ScrapPage />} />
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
 }

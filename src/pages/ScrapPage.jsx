@@ -19,7 +19,7 @@ const ScrapPage = () => {
       heartcount: 3,
       commentcount: 9,
       date: "2024.05.07",
-      ismine: true,
+      ismine: false,
     },
     {
       index: 1,
