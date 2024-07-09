@@ -257,7 +257,7 @@ function MainPage() {
                 <p>최대 500만원 지원!</p>
                 <p>미래에셋 교환학생 장학금</p>
                 <h4>지금 바로 미래에셋 홈페이지에서 자세하게 확인해 보세요!</h4>
-                <Button href="#">
+                <Button href="https://miraeassetfoundation-recruit.com/">
                   이동하기 ↗
                 </Button>
               </BannerContent>
@@ -269,7 +269,7 @@ function MainPage() {
                 <p>연간 400~500만원</p>
                 <p>서울장학재단 학업장려금 지원!</p>
                 <h4>지금 한국장학재단 홈페이지에서 자세하게 확인해 보세요!</h4>
-                <Button href="#">
+                <Button href="https://www.hissf.or.kr/Programs/user/scholarship/university/exchange.asp">
                   이동하기 ↗
                 </Button>
               </BannerContent>
@@ -281,7 +281,7 @@ function MainPage() {
                 <p>최대 4,000유로 지원!</p>
                 <p>아센듀오 교환학생 장학금</p>
                 <h4>지금 바로 아셈듀오 홈페이지에서 자세하게 확인해 보세요!</h4>
-                <Button href="#">
+                <Button href="https://www.asemduo.org/02_programs/programs_01.php">
                   이동하기 ↗
                 </Button>
               </BannerContent>
