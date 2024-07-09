@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import axios from 'axios';
 import styled, { ThemeProvider } from 'styled-components';
 import { Theme } from '../styles/Theme';
 import { ReactComponent as PersonCamIcon } from '../assets/images/person_cam.svg'; 
@@ -93,6 +94,7 @@ const TitleContainer = styled.div`
   justify-content: flex-start; 
   width: 475px;
 `;
+
 const StatusMessage = styled.span`
   color: ${({ theme }) => theme.colors.RED04};
   margin-left: 10px; 
@@ -127,6 +129,7 @@ const NicknameButton = styled(Button)`
   margin-top: 0px;
   font-size: 18px;
 `;
+
 const Overlay = styled.div` 
   position: absolute;
   width: 218px;
@@ -152,6 +155,21 @@ function MyInfo() {
   const [avatar, setAvatar] = useState('');
   const [nickname, setNickname] = useState(''); 
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(null); 
+  const [userInfo, setUserInfo] = useState({ userId: '', username: '', email: '' });
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get('/api/v1/mypage/myinfo');
+        setUserInfo(response.data);
+        setNickname(response.data.username); // 초기 닉네임 설정
+      } catch (error) {
+        console.error('Failed to fetch user info', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   const handleNicknameChange = (event) => {
     setNickname(event.target.value);
@@ -159,13 +177,13 @@ function MyInfo() {
       setIsNicknameAvailable(null); 
     }
   };
-      
-  const handleCheckNickname = () => {
-    // ui 확인용 더미
-    if (nickname === 'future1234') {
-      setIsNicknameAvailable(true);
-    } else {
-      setIsNicknameAvailable(false);
+
+  const handleCheckNickname = async () => {
+    try {
+      const response = await axios.get(`/api/v1/mypage/myinfo/isExist/${nickname}`);
+      setIsNicknameAvailable(!response.data.isExist);
+    } catch (error) {
+      console.error('Failed to check nickname', error);
     }
   };
 
@@ -192,7 +210,7 @@ function MyInfo() {
   return (
     <ThemeProvider theme={Theme}>
       <Container>
-      <AvatarContainer onClick={handleAvatarClick}>
+        <AvatarContainer onClick={handleAvatarClick}>
           {avatar ? (
             <>
               <AvatarImage src={avatar} alt="Avatar" />
@@ -204,35 +222,35 @@ function MyInfo() {
             <AvatarIcon />
           )}
         </AvatarContainer>
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        style={{ display: 'none' }}
-        accept="image/*"
-      />
-      <TitleContainer>
-        <Title>닉네임</Title>
-        {isNicknameAvailable !== null && (
-          <StatusMessage>
-            {isNicknameAvailable ? "사용 가능한 닉네임입니다." : "이미 사용중인 닉네임입니다."}
-          </StatusMessage>
-        )}
-      </TitleContainer>
-      <InputRow>
-        <InputContainer>
-          <Input
-            placeholder="닉네임"
-            value={nickname}
-            onChange={handleNicknameChange}
-          />
-          <CloseButton onClick={handleClearNickname}>X</CloseButton>
-        </InputContainer>
-        <NicknameButton onClick={handleCheckNickname}>중복 확인</NicknameButton>
-      </InputRow>
-      <Button isNicknameAvailable={isNicknameAvailable}>저장</Button>
-    </Container>
-  </ThemeProvider>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+          accept="image/*"
+        />
+        <TitleContainer>
+          <Title>닉네임</Title>
+          {isNicknameAvailable !== null && (
+            <StatusMessage>
+              {isNicknameAvailable ? "사용 가능한 닉네임입니다." : "이미 사용중인 닉네임입니다."}
+            </StatusMessage>
+          )}
+        </TitleContainer>
+        <InputRow>
+          <InputContainer>
+            <Input
+              placeholder="닉네임"
+              value={nickname}
+              onChange={handleNicknameChange}
+            />
+            <CloseButton onClick={handleClearNickname}>X</CloseButton>
+          </InputContainer>
+          <NicknameButton onClick={handleCheckNickname}>중복 확인</NicknameButton>
+        </InputRow>
+        <Button isNicknameAvailable={isNicknameAvailable}>저장</Button>
+      </Container>
+    </ThemeProvider>
   );
 }
 
