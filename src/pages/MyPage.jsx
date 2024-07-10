@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import Modal from '../components/Modal';
 import ConfirmModal from '../components/ConfirmModal';
@@ -18,7 +19,8 @@ const PageWrapper = styled.div`
   margin: 11% auto 0;
   a { 
     text-decoration: none;  
-  color: black;
+    color: black;
+  }
 `;
 
 const PageHeader = styled.div`
@@ -146,7 +148,7 @@ const iconMapping = {
 };
   
 function MyPage() {
-  const [userInfo] = useState({ name: '김퓨처' });
+  const [userInfo, setUserInfo] = useState({ userId: '', username: '', email: '' });
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -161,8 +163,21 @@ function MyPage() {
     { id: 2, title: '나의 쓰기', icon: 'writing', path: null },
     { id: 3, title: '스크랩', icon: 'scrap', path: null },
     { id: 4, title: '체크리스트', icon: 'checklist', path: null },
-    { id: 5, title: '캘린더', icon: 'calendar', path: null } //이후 path 추가 예정
+    { id: 5, title: '캘린더', icon: 'calendar', path: null } 
   ]);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get('/api/v1/mypage');
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error('Failed to fetch user info', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   const handleLogoutClick = () => {
     setModalContent('로그아웃 하시겠습니까?');
@@ -208,7 +223,7 @@ return (
       <UserGreeting>
         <StyledPerson1 style={{ width: '165.64px', height: '163.17px'}}/>
         <GreetingContainer>
-          <UserName>{userInfo.name}</UserName>
+          <UserName>{userInfo.username}</UserName>
           <NameSuffix>님,</NameSuffix>
         </GreetingContainer>
         <AdditionalGreeting>안녕하세요!</AdditionalGreeting>
