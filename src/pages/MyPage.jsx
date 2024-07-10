@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
+import axios from 'axios'; 
 import Modal from '../components/Modal';
 import ConfirmModal from '../components/ConfirmModal';
 import { Link } from 'react-router-dom';
@@ -28,41 +28,37 @@ const PageHeader = styled.div`
   color: black;
   font-weight: bold;
   text-align: left;
-  width: 1420px;
-  margin-bottom: 15px;
+  width: 140px;
+  margin-bottom: 25px;
 `;
 
 const MyPageContainer = styled.div`
-  position: relative;
   display: flex;
-  flex-direction: row; 
-  align-items: center; 
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 5px;
-  gap: 10px;
   background: #FFF;
-  box-shadow: 0px 0px 3px 3px rgba(0,0,0,0.1); 
   border-radius: 10px;
-  width: 1426px;
-  height: 379px;
+  width: 1400px;
+  height: 687px;
+  position: relative;
+  margin-bottom: 70px;
+  border: 2px solid #E1E1E1;
 `;
 
 const UserGreeting = styled.div`
-  flex: 0.7;
-  margin-bottom: 0;
-  background-color: white;
   display: flex;
   flex-direction: column; 
   align-items: center;
-  margin-top: 30px;
+  margin-bottom: 30px; 
+  margin-top: -55px;
 `;
 
 const IconGrid = styled.div`
-  flex: 2.0;
   display: grid;
   grid-template-columns: repeat(5, 1fr); 
-  gap: 0px; 
-  margin-right: 50px;
+  gap: 60px; 
+  margin-bottom: 50px; 
 `;
 
 const Card = styled.div`
@@ -76,7 +72,7 @@ const Card = styled.div`
 const createStyledIcon = (SvgComponent) => styled(SvgComponent)`
   width: 151px;
   height: 151px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 const StyledPerson1 = createStyledIcon(Person1);
@@ -90,22 +86,17 @@ const UserName = styled.span`
   color: #ff244a;
   font-weight: bold;
   font-size: 28px;
-  margin-top: 6px;
-`
+  margin-top: 8px;
+`;
 
 const NameSuffix = styled.span`
-  margin-top: 6px; 
+  margin-top: 8px; 
   font-size: 28px;
 `;
 
 const GreetingContainer = styled.div`
   display: flex;
   align-items: center; 
-`;
-
-const AdditionalGreeting = styled.div`
-  text-align: center; 
-  font-size: 28px;
 `;
 
 const ItemTitle = styled.span`
@@ -116,18 +107,20 @@ const ItemTitle = styled.span`
 `;
 
 const AccountActions = styled.div`
-  position: absolute;
-  bottom: 16px;
-  right: 18px;
   display: flex;
-  gap: 10px;
+  justify-content: center;
+  gap: 15px;
+  position: absolute;
+  bottom: 45px;
 `;
 
 const ActionButton = styled.button`
   width: 101px;
   height: 42px;
   background-color: #fff;
-  border: 2px solid #E4E4E4;
+  //border: 2px solid #E4E4E4;
+  border: none;
+  box-shadow: 0px 0px 2px 2px rgba(0,0,0,0.1);
   border-radius: 50px;
   cursor: pointer;
   color: gray;
@@ -146,9 +139,10 @@ const iconMapping = {
   calendar: StyledCalendar,
   person: StyledPerson1
 };
-  
+
 function MyPage() {
-  const [userInfo, setUserInfo] = useState({ userId: '', username: '', email: '' });
+  const [userInfo] = useState({ name: '김퓨처' });
+  // const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '' });
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -163,21 +157,28 @@ function MyPage() {
     { id: 2, title: '나의 쓰기', icon: 'writing', path: null },
     { id: 3, title: '스크랩', icon: 'scrap', path: null },
     { id: 4, title: '체크리스트', icon: 'checklist', path: null },
-    { id: 5, title: '캘린더', icon: 'calendar', path: null } 
+    { id: 5, title: '캘린더', icon: 'calendar', path: null }
   ]);
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await axios.get('/api/v1/mypage');
-        setUserInfo(response.data);
-      } catch (error) {
-        console.error('Failed to fetch user info', error);
-      }
-    };
+  // useEffect(() => {
+  //   const apiUrl = 'http://localhost:8080';
+  //   const endpoint = '/user/mypage';
 
-    fetchUserInfo();
-  }, []);
+  //   const token = localStorage.getItem('accessToken');
+  //   axios.get(apiUrl + endpoint, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`
+  //     }
+  //   })
+  //   .then(res => {
+  //     setUserInfo(res.data);
+  //     console.log(res.data);
+  //   })
+  //   .catch(err => {
+  //     console.error('Failed to fetch user info:', err);
+  //     alert(err.response?.data?.message || 'Failed to fetch user info');
+  //   });
+  // }, []);
 
   const handleLogoutClick = () => {
     setModalContent('로그아웃 하시겠습니까?');
@@ -208,6 +209,7 @@ function MyPage() {
   };
 
   const confirmDeletion = () => {
+    console.log("User Deletion");
     setModalVisible(false);
     setConfirmModalVisible(true);
   };
@@ -216,64 +218,62 @@ function MyPage() {
     setConfirmModalVisible(false);
   };
 
-return (
-  <PageWrapper>
-    <PageHeader>마이페이지</PageHeader>
-    <MyPageContainer>
-      <UserGreeting>
-        <StyledPerson1 style={{ width: '165.64px', height: '163.17px'}}/>
-        <GreetingContainer>
-          <UserName>{userInfo.username}</UserName>
-          <NameSuffix>님,</NameSuffix>
-        </GreetingContainer>
-        <AdditionalGreeting>안녕하세요!</AdditionalGreeting>
-      </UserGreeting>
-
-      <IconGrid>
-        {items.map(item => (
-          <Card key={item.id}>
-            {item.path ? (
-              <Link to={item.path}>
-                {React.createElement(iconMapping[item.icon], { className: 'icon' })}
-                <ItemTitle>{item.title}</ItemTitle>
-              </Link>
-            ) : (
-              <div>
-                {React.createElement(iconMapping[item.icon], { className: 'icon' })}
-                <ItemTitle>{item.title}</ItemTitle>
-              </div>
-            )}
-          </Card>
-        ))}
-      </IconGrid>
+  return (
+    <PageWrapper>
+      <PageHeader>마이페이지</PageHeader>
+      <MyPageContainer>
+        <UserGreeting>
+          <StyledPerson1 style={{ width: '165.64px', height: '163.17px'}}/>
+          <GreetingContainer>
+            <UserName>{userInfo.name}</UserName>
+            <NameSuffix>님, 안녕하세요!</NameSuffix>
+          </GreetingContainer>
+        </UserGreeting>
+        <IconGrid>
+          {items.map(item => (
+            <Card key={item.id}>
+              {item.path ? (
+                <Link to={item.path}>
+                  {React.createElement(iconMapping[item.icon], { className: 'icon' })}
+                  <ItemTitle>{item.title}</ItemTitle>
+                </Link>
+              ) : (
+                <div>
+                  {React.createElement(iconMapping[item.icon], { className: 'icon' })}
+                  <ItemTitle>{item.title}</ItemTitle>
+                </div>
+              )}
+            </Card>
+          ))}
+        </IconGrid>
       <AccountActions>
         <ActionButton onClick={handleLogoutClick}>로그아웃</ActionButton>
         <ActionButton onClick={handleDeleteClick}>회원탈퇴</ActionButton>
       </AccountActions>
-    </MyPageContainer>
-    {modalVisible && (
+      {modalVisible && (
         <Modal
-        msg={modalContent}
-        text1={modalActions.text1}
-        text2={modalActions.text2}
-        onCancel={modalActions.onCancel}
-        onConfirm={modalActions.onConfirm}
-      />
-    )}
-    {confirmModalVisible && (
-      <ConfirmModal
-        msg="로그아웃 되었어요"
-        onConfirm={handleCloseConfirmModal}
-      />
-    )}
-    {confirmModalVisible && (
-      <ConfirmModal
-        msg="회원탈퇴 처리가 완료되었어요"
-        onConfirm={handleCloseConfirmModal}
-      />
-    )}
-  </PageWrapper>
-);
+          msg={modalContent}
+          text1={modalActions.text1}
+          text2={modalActions.text2}
+          onCancel={modalActions.onCancel}
+          onConfirm={modalActions.onConfirm}
+        />
+      )}
+      {confirmModalVisible && (
+        <>
+          <ConfirmModal
+            msg="로그아웃 되었어요"
+            onConfirm={handleCloseConfirmModal}
+          />
+          <ConfirmModal
+            msg="회원탈퇴 처리가 완료되었어요"
+            onConfirm={handleCloseConfirmModal}
+          />
+        </>
+      )}
+      </MyPageContainer>
+    </PageWrapper>
+  );
 }
 
 export default MyPage;
