@@ -5,21 +5,19 @@ import "react-calendar/dist/Calendar.css";
 import { ReactComponent as NextIcon } from "../assets/images/NextMonth.svg";
 import { ReactComponent as PrevIcon } from "../assets/images/PrevMonth.svg";
 import moment from "moment";
+import "moment/locale/ko";
 import {
   StyledCalendarWrapper,
-  // StyledScheduleLine,
+  StyledScheduleLine,
 } from "../styles/StyledCalrendar";
 import Modal from "react-modal";
-
-Modal.setAppElement("#root");
+import CustomModal from "./CustomModal";
 
 const CustomCalendar = () => {
   const [selectedTab, setSelectedTab] = useState("ALL");
   const [events, setEvents] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-
-  console.log(selectedEvent);
 
   const Tabs = [
     {
@@ -28,7 +26,6 @@ const CustomCalendar = () => {
       scheduleCategory: "ALL",
       oncolor: "#FFAEBD",
       offcolor: "rgba(255, 174, 189, 0.7)",
-      url: "/calendar",
     },
     {
       index: 1,
@@ -36,7 +33,6 @@ const CustomCalendar = () => {
       scheduleCategory: "VISA",
       oncolor: "#D2AEFF",
       offcolor: "rgba(210, 174, 255, 0.3)",
-      url: "/calendar",
     },
     {
       index: 2,
@@ -44,7 +40,6 @@ const CustomCalendar = () => {
       scheduleCategory: "TEST",
       oncolor: "#FFCA63",
       offcolor: "rgba(255, 202, 99, 0.3)",
-      url: "/calendar",
     },
     {
       index: 3,
@@ -52,11 +47,9 @@ const CustomCalendar = () => {
       scheduleCategory: "ETC",
       oncolor: "#63E3FF",
       offcolor: "rgba(99, 227, 255, 0.3)",
-      url: "/calendar",
     },
   ];
 
-  // 임시 데이터
   const data = [
     {
       scheduleId: 8,
@@ -101,7 +94,6 @@ const CustomCalendar = () => {
   ];
 
   useEffect(() => {
-    // 데이터를 받아와서 상태로 설정
     setEvents(data);
   }, []);
 
@@ -112,7 +104,6 @@ const CustomCalendar = () => {
   const handleEventClick = (event) => {
     setSelectedEvent(event);
     setModalIsOpen(true);
-    console.log("눌리긴 함");
   };
 
   const closeModal = () => {
@@ -120,7 +111,6 @@ const CustomCalendar = () => {
     setSelectedEvent(null);
   };
 
-  // 선택된 탭에 따라 필터링된 데이터를 반환
   const getFilteredEvents = () => {
     if (selectedTab === "ALL") {
       return events.filter((event) => event.type === "CALENDAR");
@@ -137,12 +127,20 @@ const CustomCalendar = () => {
     return filteredEvents.filter((event) =>
       moment(date).isBetween(
         moment(event.startDate),
-        moment(event.startDate),
+        moment(event.endDate),
         null,
         "[]"
       )
     );
   };
+
+  const formatStartDate =
+    selectedEvent &&
+    moment(selectedEvent.startDate).locale("ko").format("M월 D일 (ddd)");
+
+  const formatEndDate =
+    selectedEvent &&
+    moment(selectedEvent.endDate).locale("ko").format("M월 D일 (ddd)");
 
   return (
     <StyledCalendarWrapper>
@@ -172,13 +170,20 @@ const CustomCalendar = () => {
         next2Label={null}
         prev2Label={null}
         showNeighboringMonth={false}
-        calendarType="gregory" // 일요일부터 시작
+        calendarType="gregory"
         minDetail="month"
         maxDetail="month"
         tileContent={({ date, view }) => {
           let html = [];
           const dayEvents = getEventsForDate(date);
           dayEvents.forEach((event, index) => {
+            let momentDate = moment(
+              date,
+              "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (한국 표준시)"
+            );
+            momentDate = moment(momentDate).format("YYYY-MM-DD");
+            const isStartDate = event.startDate === momentDate;
+            const isEndDate = event.endDate === momentDate;
             html.push(
               <StyledScheduleLine
                 key={event.scheduleId}
@@ -189,65 +194,35 @@ const CustomCalendar = () => {
                     ? "#FFCA63"
                     : "#63E3FF"
                 }
-                style={{ top: `${(index + 1) * 45}px` }} // 이벤트 간격 조정 및 높이 설정
+                style={{ top: `${(index + 1) * 45}px` }}
+                $isStartDate={isStartDate}
+                $isEndDate={isEndDate}
                 onClick={() => handleEventClick(event)}
               >
-                {event.content}
+                {event.startDate === momentDate ? event.content : null}
               </StyledScheduleLine>
             );
           });
           return <>{html}</>;
         }}
       />
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Event Modal"
-        style={{
-          overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            zIndex: 1000,
-          },
-          content: {
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "504px",
-            height: "121px",
-            // padding: "20px",
-            borderRadius: "8px",
-            backgroundColor: "#fff",
-            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-          },
-        }}
-      >
-        {selectedEvent && (
-          <>
-            <ModalTitle value={selectedEvent.content}></ModalTitle>
-            <p>Category: {selectedEvent.scheduleCategory}</p>
-            <p>
-              Date: {selectedEvent.startDate} - {selectedEvent.endDate}
-            </p>
-            <button onClick={closeModal}>Close</button>
-          </>
-        )}
-      </Modal>
+      <CustomModal
+        $modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        selectedEvent={selectedEvent}
+        formatStartDate={formatStartDate}
+        formatEndDate={formatEndDate}
+        CategoryTypes={Tabs}
+      />
     </StyledCalendarWrapper>
   );
 };
 
 export default CustomCalendar;
-const ModalTitle = styled.input`
-  font-weight: 600;
-  font-size: 20px;
-  color: ${({ theme }) => theme.colors.BLACK};
-  border: none;
-`;
 
 const TabBar = styled.div`
   position: absolute;
-  top: 167px; /* 네비게이션 바로 아래에 위치하도록 조정 */
+  top: 167px;
   width: 100%;
   z-index: 1;
   display: flex;
@@ -275,19 +250,4 @@ const Container = styled.div`
   position: absolute;
   top: 10px;
   box-shadow: 0 -4px 10px 0 rgba(00, 00, 00, 0.1);
-`;
-
-const StyledScheduleLine = styled.div`
-  background-color: ${(props) => props.color};
-  width: 196px;
-  height: 39px;
-  border-radius: 50px;
-  position: absolute;
-  color: #fff;
-  font-weight: 600;
-  font-size: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 `;

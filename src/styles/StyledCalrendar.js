@@ -1,4 +1,3 @@
-import Calendar from "react-calendar";
 import styled from "styled-components";
 import "react-calendar/dist/Calendar.css";
 
@@ -104,13 +103,16 @@ export const StyledCalendarWrapper = styled.div`
   }
 `;
 
-export const StyledCalendar = styled(Calendar)``;
-
 export const StyledScheduleLine = styled.div`
   background-color: ${(props) => props.color};
-  width: 196px;
+  width: 100%;
   height: 39px;
-  border-radius: 50px;
+  border-radius: ${(props) =>
+    props.$isStartDate
+      ? "50px 0 0 50px"
+      : props.$isEndDate
+      ? "0 50px 50px 0"
+      : "0"};
   position: absolute;
   color: #fff;
   font-weight: 600;

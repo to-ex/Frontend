@@ -4,6 +4,7 @@ import "./App.css";
 import { ThemeProvider } from "styled-components";
 import { Theme } from "./styles/Theme";
 import CustomCalendar from "./components/CustomCalendar";
+import ScheduleCategoryDropDown from "./components/ScheduleCategoryDropDown";
 
 function App() {
   return (
