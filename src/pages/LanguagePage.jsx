@@ -324,11 +324,11 @@ const ArrowButton = styled.a`
   }
 `;
 
-const Arrow = styled.div`
-  display: flex;
-  margin-left: 314px;
-  gap: 27px;
-`;
+// const Arrow = styled.div`
+//   display: flex;
+//   margin-left: 314px;
+//   gap: 27px;
+// `;
 
 const PagingWrapper = styled.div`
   margin-top: 50px; 
@@ -352,7 +352,7 @@ const dummyData = [
     { date: '3', day: '수', time: '12:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: 'Paper' },
     { date: '4', day: '목', time: '13:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: 'Paper' },
     { date: '5', day: '금', time: '14:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: 'Paper' },
-    { date: '6', day: '토', time: '15:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: 'Paper' },
+    { date: '6', day: '토', time: '15:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '인천', type: 'Paper' },
 ];
 
 function LanguagePage() {
@@ -507,6 +507,7 @@ function LanguagePage() {
                             <DropdownIcon />
                         </DropdownButton>
                         <DropdownContent $show={dropdownOpen.date}>
+                        <button onClick={() => handleDateRangeSelect('전체')}>전체</button>
                         {[...Array(31).keys()].map(day => (
                                 <button
                                     key={day + 1}
