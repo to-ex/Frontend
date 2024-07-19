@@ -6,6 +6,8 @@ import Paging from "../components/Paging";
 import { ReactComponent as Bg1Icon } from '../assets/images/Bg1.svg'; 
 import { ReactComponent as Bg2Icon } from '../assets/images/Bg2.svg';
 import { ReactComponent as WarningIcon } from '../assets/images/Warning.svg';
+import { ReactComponent as IeltsText } from '../assets/images/IeltsText.svg';
+import { ReactComponent as ToeflText } from '../assets/images/ToeflText.svg';
 
 const Bg1IconWrap = styled.div`
   position: absolute;
@@ -69,6 +71,7 @@ const ExamTypeSelector = styled.div`
       border-radius: 50%;
       background: ${({ theme }) => theme.colors.WHITE};
       color: ${({ theme }) => theme.colors.GRAY02};
+      box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.1);
     }
 
     &.active.toefl {
@@ -113,6 +116,7 @@ const MonthSelector = styled.div`
     background-color: ${({ theme }) => theme.colors.WHITE};
     font-size: 24px;
     cursor: pointer;
+    box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.1);
 
     &:hover,
     &.active {
@@ -126,13 +130,15 @@ const MonthSelector = styled.div`
 const ExamList = styled.div`
   width: 1424px;
   margin: 0 auto;
+  box-sizing: border-box;
+  padding-top: 20px;
 `;
 
 const ExamItem = styled.div`
   height: 221px;
   display: flex;
   background: ${({ theme }) => theme.colors.WHITE};
-  border: 1px solid #EAEAEA;
+  border: 2px solid #EAEAEA;
   border-radius: 15px;
   margin-bottom: 30px;
   text-align: left;
@@ -146,7 +152,7 @@ const ExamItem = styled.div`
     border-right: 1px solid #EAEAEA;
     height: 223px;
     border-radius: 15px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 1px 6px 1px rgba(0,0,0,0.2);
   }
   .exam-date {
     font-size: 32px;
@@ -230,9 +236,9 @@ const DropdownContainer = styled.div`
 const DropdownButton = styled.button`
   background-color: ${({ theme }) => theme.colors.WHITE};
   color: ${({ theme }) => theme.colors.BLACK};
-  border: 1px solid ${({ theme }) => theme.colors.GRAY02};
-  border-bottom: ${props => (props.$isOpen ? 'none' : '1px solid ${({ theme }) => theme.colors.GRAY02}')};
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  border: 1px solid #C3C3C3;
+  border-bottom: ${props => (props.$isOpen ? 'none' : '1px solid #C3C3C3')};
+  box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.2);
   padding: 10px 20px;
   font-size: 20px;
   font-weight: bold;
@@ -354,9 +360,9 @@ function LanguagePage() {
     const [selectedMonth, setSelectedMonth] = useState(6);
     const [examData, setExamData] = useState(dummyData); // 더미 데이터 사용
     const [dropdownOpen, setDropdownOpen] = useState({ region: false, type: false, ieltsType: false, date: false });
-    const [selectedRegion, setSelectedRegion] = useState('전체');
-    const [selectedType, setSelectedType] = useState('전체');
-    const [selectedDateRange, setSelectedDateRange] = useState('전체');
+    const [selectedRegion, setSelectedRegion] = useState('지역');
+    const [selectedType, setSelectedType] = useState('종류');
+    const [selectedDateRange, setSelectedDateRange] = useState('일정');
     const isDropdownOpen = Object.values(dropdownOpen).some(open => open);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -372,7 +378,7 @@ function LanguagePage() {
         } else if (selectedDateRange === '21~31') {
             return day >= 21 && day <= 31;
         }
-        return true; // '전체'인 경우
+        return true; // 전체인 경우
     };
 
     const filterExams = () => {
@@ -454,7 +460,7 @@ function LanguagePage() {
                 <DropdownWrapper>
                     <DropdownContainer>
                         <DropdownButton onClick={() => toggleDropdown('region')} $isOpen={dropdownOpen.region}>
-                            지역
+                            {selectedRegion}
                             <DropdownIcon />
                         </DropdownButton>
                         <DropdownContent $show={dropdownOpen.region}>
@@ -472,7 +478,7 @@ function LanguagePage() {
                     {selectedExamType === '토플' && (
                         <DropdownContainer>
                             <DropdownButton onClick={() => toggleDropdown('type')} $isOpen={dropdownOpen.type}>
-                                종류
+                                {selectedType}
                                 <DropdownIcon />
                             </DropdownButton>
                             <DropdownContent $show={dropdownOpen.type}>
@@ -485,7 +491,7 @@ function LanguagePage() {
                     {selectedExamType === '아이엘츠' && (
                         <DropdownContainer>
                             <DropdownButton onClick={() => toggleDropdown('ieltsType')} $isOpen={dropdownOpen.ieltsType}>
-                                종류
+                                {selectedType}
                                 <DropdownIcon />
                             </DropdownButton>
                             <DropdownContent $show={dropdownOpen.ieltsType}>
@@ -497,11 +503,11 @@ function LanguagePage() {
                     )}
                     <DropdownContainer>
                         <DropdownButton onClick={() => toggleDropdown('date')} $isOpen={dropdownOpen.date}>
-                            일정
+                            {selectedDateRange}
                             <DropdownIcon />
                         </DropdownButton>
                         <DropdownContent $show={dropdownOpen.date}>
-                            {[...Array(31).keys()].map(day => (
+                        {[...Array(31).keys()].map(day => (
                                 <button
                                     key={day + 1}
                                     onClick={() => handleDateRangeSelect(day + 1)}
@@ -509,23 +515,35 @@ function LanguagePage() {
                                         {day + 1}
                                     </button>
                                 ))}
-                            </DropdownContent>
-                        </DropdownContainer>
-                        <Arrow>
-                            <ArrowButtonContainer>
-                                <ArrowButton href="#">시험 신청 바로가기 ↗</ArrowButton>
-                            </ArrowButtonContainer>
-                            <ArrowButtonContainer>
-                                <ArrowButton href="#">캘린더에 추가하기 ↗</ArrowButton>
-                            </ArrowButtonContainer>
-                        </Arrow>
-                    </DropdownWrapper>
+                        </DropdownContent>
+                    </DropdownContainer>
+                </DropdownWrapper>
                     {filteredExamData.length === 0 ? (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '220px', marginBottom: '370px',}}>
-                            <WarningIcon width="442" height="279"/>
-                        </div>
+                            {selectedExamType === '토플' && selectedType === 'Home' ? (
+                                <>
+                                    <div style={{ marginBottom: '50px' }}>
+                                        <ToeflText width="723" height="192"/>
+                                    </div>
+                                    <ArrowButtonContainer>
+                                        <ArrowButton href="https://www.kr.ets.org/toefl/test-takers/ibt/schedule.html">시험 신청 바로가기 ↗</ArrowButton>
+                                    </ArrowButtonContainer>
+                                </>
+                            ) : selectedExamType === '아이엘츠' && selectedType === 'Computer' ? (
+                                <>
+                                    <div style={{ marginBottom: '50px' }}>
+                                        <IeltsText width="723" height="192"/>
+                                    </div>
+                                    <ArrowButtonContainer>
+                                        <ArrowButton href="https://ieltskorea.org/korea/test-dates">시험 신청 바로가기 ↗</ArrowButton>
+                                    </ArrowButtonContainer>
+                                </>
                             ) : (
-                            <>
+                                <WarningIcon width="442" height="279"/>
+                            )}
+                        </div>
+                    ) : (
+                        <>
                         <ExamList>
                             {displayedExams.map((exam, index) => (
                                 <ExamItem key={index}>
