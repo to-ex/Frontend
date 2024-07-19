@@ -10,7 +10,6 @@ import {
   StyledCalendarWrapper,
   StyledScheduleLine,
 } from "../styles/StyledCalrendar";
-import Modal from "react-modal";
 import CustomModal from "./CustomModal";
 
 const CustomCalendar = () => {
