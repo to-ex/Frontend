@@ -341,12 +341,12 @@ const Overlay = styled.div`
 `;
 
 const dummyData = [
-    { date: '1', day: '월', time: '10:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: '시험센터' },
-    { date: '2', day: '화', time: '11:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: '시험센터' },
-    { date: '3', day: '수', time: '12:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: '시험센터' },
-    { date: '4', day: '목', time: '13:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: '시험센터' },
-    { date: '5', day: '금', time: '14:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: '시험센터' },
-    { date: '6', day: '토', time: '15:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: '시험센터' },
+    { date: '1', day: '월', time: '10:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: 'Paper' },
+    { date: '2', day: '화', time: '11:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: 'Paper' },
+    { date: '3', day: '수', time: '12:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: 'Paper' },
+    { date: '4', day: '목', time: '13:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: 'Paper' },
+    { date: '5', day: '금', time: '14:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: 'Paper' },
+    { date: '6', day: '토', time: '15:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '서울', type: 'Paper' },
 ];
 
 function LanguagePage() {
@@ -477,8 +477,8 @@ function LanguagePage() {
                             </DropdownButton>
                             <DropdownContent $show={dropdownOpen.type}>
                                 <button onClick={() => handleTypeSelect('전체')}>전체</button>
-                                <button onClick={() => handleTypeSelect('시험센터')}>시험센터</button>
-                                <button onClick={() => handleTypeSelect('홈에디션')}>홈에디션</button>
+                                <button onClick={() => handleTypeSelect('Paper')}>Paper</button>
+                                <button onClick={() => handleTypeSelect('Home')}>Home</button>
                             </DropdownContent>
                         </DropdownContainer>
                     )}
