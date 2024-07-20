@@ -34,6 +34,12 @@ const LoginButton = () => {
     },
   ];
 
+  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
+
+  const loginHandler = () => {
+    window.location.href = link;
+  };
+
   return (
     <>
       {Companies.map((company) => (
@@ -41,6 +47,7 @@ const LoginButton = () => {
           key={company.id}
           $btncolor={company.btnColor}
           $textcolor={company.textColor}
+          onClick={loginHandler}
         >
           <LogoImg
             src={company.img}
