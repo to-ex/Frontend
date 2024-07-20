@@ -1,14 +1,12 @@
 import React from "react";
 import { styled } from "styled-components";
 
-const CircleBtn = ({ flag, country }) => {
+const CircleBtn = ({ flag, country, onClick, $isSelected }) => {
   return (
-    <>
-      <Circle>
-        <Flag>{flag}</Flag>
-        <Country>{country}</Country>
-      </Circle>
-    </>
+    <Circle onClick={onClick} $isSelected={$isSelected}>
+      <Flag>{flag}</Flag>
+      <Country>{country}</Country>
+    </Circle>
   );
 };
 
@@ -17,16 +15,23 @@ export default CircleBtn;
 const Circle = styled.button`
   width: 215px;
   height: 215px;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY01};
+  border: 1px solid
+    ${({ theme, $isSelected }) =>
+      $isSelected ? theme.colors.RED03 : theme.colors.GRAY01};
   border-radius: 100%;
-  background-color: ${({ theme }) => theme.colors.WHITE};
-  box-shadow: 0 0 10px #ebebeb;
+  background-color: ${({ theme, $isSelected }) =>
+    $isSelected ? "#fff4f6" : theme.colors.WHITE};
+  box-shadow: ${({ $isSelected }) =>
+    $isSelected ? "none" : "0 0 10px #ebebeb"};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  color: ${({ theme }) => theme.colors.GRAY02};
-  &:active {
+  color: ${({ theme, $isSelected }) =>
+    $isSelected ? theme.colors.RED04 : theme.colors.GRAY02};
+  cursor: pointer;
+
+  &:hover {
     border: solid 1px ${({ theme }) => theme.colors.RED03};
     background-color: #fff4f6;
     color: ${({ theme }) => theme.colors.RED04};

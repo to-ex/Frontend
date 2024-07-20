@@ -1,54 +1,69 @@
 import React from "react";
 import { styled } from "styled-components";
 import ArrowUpRight from "../../assets/images/ArrowUpRight.svg";
-import VisaSpain01 from "../../assets/images/VisaSpain01.svg";
+import { Visas } from "../../assets/Data/Visas";
+import { useNavigate } from "react-router-dom";
+const VisaDetail = ({ selcetedCountry }) => {
+  const navigate = useNavigate();
 
-const VisaDetail = () => {
+  const visaInfo = Visas.find((visa) => visa.country === selcetedCountry);
+  if (!visaInfo) {
+    return <p>선택된 국가에 대한 정보가 없습니다.</p>;
+  }
+
+  const handleGoCheckList = () => {
+    navigate("/checkList");
+  };
+
+  const parseTextWithLinks = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.split(urlRegex).map((part, index) =>
+      urlRegex.test(part) ? (
+        <Link key={index} href={part} target="_blank" rel="noopener noreferrer">
+          {part}
+        </Link>
+      ) : (
+        part
+      )
+    );
+  };
+
+  const { images, reservationText, suppliesText, country } = visaInfo;
+
   return (
     <>
       <Container>
         <TitleButtonBox>
-          <Title>To.ex가 알려주는 자세한 비자 신청 가이드 !</Title>
-          <Button>
+          <Title>To.ex가 알려주는 자세한 비자 신청 가이드!</Title>
+          <Button onClick={handleGoCheckList}>
             비자 준비 체크리스트
             <ArrowUpRightImg src={ArrowUpRight} />
           </Button>
         </TitleButtonBox>
         <ContentBoxArea>
           <ContentBox>
-            <Img src={VisaSpain01} />
-            <GrayBox>
-              <ImojiBigTextBox>
-                <Imoji>📌</Imoji>
-                <BigText>스페인 교환학생, 비자 신청 이렇게 하세요!</BigText>
-              </ImojiBigTextBox>
-              <SmallText>
-                1. 서류 준비가 전혀 안 되어 있어도 대사관 예약부터!{"\n"}
-                2. 금융 관련 서류(자금 증명서)는 인터뷰 날 5일 이내의 것만 유효
-                {"\n"}
-                3. 재정 보증서와 재학 증명서는 공증사무소에서 공증 → 아포스티유
-                순서로!{"\n"}
-                4. 스페인 거주지 증명서는 취소 가능한 호텔로!
-              </SmallText>
-            </GrayBox>
-          </ContentBox>
-          <ContentBox>
-            <Img src={VisaSpain01} />
+            <Img src={images} />
             <GrayBox>
               <ImojiBigTextBox>
                 <Imoji>📝</Imoji>
-                <BigText>스페인 교환학생, 비자 준비 필수 준비물</BigText>
+                <BigText>{country} 교환학생, 비자 준비 필수 준비물</BigText>
               </ImojiBigTextBox>
               <SmallTextBox>
-                <SmallText>
-                  비자 신청서, 사진, 여권, 스페인 거주지 증명서, 입학 허가서
-                  원본,
-                  {"\n"}
-                  여행자보험증서, 자금증명서 등 비자 준비 필수 준비물은 꼭
-                  준비해주세요!
-                </SmallText>
+                <SmallText>{suppliesText}</SmallText>
               </SmallTextBox>
             </GrayBox>
+          </ContentBox>
+          <ContentBox>
+            <Img src={images} />
+            <BigGrayBox>
+              <ImojiBigTextBox>
+                <Imoji>📌</Imoji>
+                <BigText>{country} 교환학생, 비자 신청 이렇게 하세요!</BigText>
+              </ImojiBigTextBox>
+              <SmallTextBox>
+                <SmallText>{parseTextWithLinks(reservationText)}</SmallText>
+              </SmallTextBox>
+            </BigGrayBox>
           </ContentBox>
         </ContentBoxArea>
       </Container>
@@ -102,11 +117,12 @@ const ContentBoxArea = styled.div`
   gap: 47px;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 163px;
 `;
 
 const ContentBox = styled.div`
   width: 1332px;
-  height: 234px;
+  height: auto;
   padding: 39px 46px;
   border: 1px solid ${({ theme }) => theme.colors.GRAY01};
   border-radius: 20px;
@@ -123,10 +139,20 @@ const Img = styled.img`
 
 const GrayBox = styled.div`
   width: 892px;
-  height: 176px;
+  height: auto;
   border-radius: 20px;
   background-color: #f8f9fa;
   padding: 32px 0 27px 47px;
+`;
+
+const BigGrayBox = styled.div`
+  width: 892px;
+  max-width: 100%;
+  height: 590px;
+  border-radius: 20px;
+  background-color: #f8f9fa;
+  padding: 32px 0 27px 47px;
+  overflow: auto;
 `;
 
 const Imoji = styled.p`
@@ -147,7 +173,7 @@ const ImojiBigTextBox = styled.div`
 `;
 
 const SmallTextBox = styled.div`
-  width: 680px;
+  width: 95%;
   height: auto;
   display: flex;
   align-items: center;
@@ -159,6 +185,18 @@ const SmallText = styled.p`
   font-weight: 500;
   line-height: 30px;
   color: #232323;
-  white-space: pre-line;
+  /* white-space: pre-line; */
   margin-left: 52px;
+  white-space: pre-wrap;
+`;
+
+const Link = styled.a`
+  color: ${({ theme }) => theme.colors.RED03};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.RED04};
+  }
+  &:visited {
+  }
+  color: ${({ theme }) => theme.colors.RED03};
 `;

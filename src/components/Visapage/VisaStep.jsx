@@ -4,13 +4,30 @@ import StepLine from "../../assets/images/StepLine.svg";
 import VisaStepIcon01 from "../../assets/images/VisaStepIcon01.svg";
 import VisaStepIcon02 from "../../assets/images/VisaStepIcon02.svg";
 import ArrowUpRight from "../../assets/images/ArrowUpRight.svg";
+import { Visas } from "../../assets/Data/Visas";
+import { useNavigate } from "react-router-dom";
 
-const VisaStep = ({ country, url1, url2 }) => {
+const VisaStep = ({ country }) => {
+  const navigate = useNavigate();
+
+  const handleGoReservationSite = () => {
+    const visa = Visas.find((visa) => visa.country === country);
+    if (visa && visa.reservationSite) {
+      window.location.href = visa.reservationSite;
+    }
+  };
+
+  const handleGCheckList = () => {
+    navigate("/checkList");
+  };
+
   return (
     <>
       <Container>
         <TitleArea>
-          <MainTitle>한 눈에 보는 {country} 비자 신청!</MainTitle>
+          <MainTitle>
+            한 눈에 보는 <span>{country}</span> 비자 신청!
+          </MainTitle>
           <SmallTitle>
             비자 신청 어렵지 않게 단계별로 준비해보았어요!
           </SmallTitle>
@@ -33,7 +50,7 @@ const VisaStep = ({ country, url1, url2 }) => {
               아래 사이트에서 비자 인터뷰 일정을{"\n"}예약해요!
             </SmallText>
             <BottomBox>
-              <Button>
+              <Button onClick={handleGoReservationSite}>
                 비자 신청 예약 사이트
                 <ArrowUpRightImg src={ArrowUpRight} />
               </Button>
@@ -45,7 +62,7 @@ const VisaStep = ({ country, url1, url2 }) => {
             <BigText>비자 서류 준비</BigText>
             <SmallText>비자 발급을 위한 서류를 준비해요!</SmallText>
             <BottomBox>
-              <Button>
+              <Button onClick={handleGCheckList}>
                 구비 서류 체크리스트
                 <ArrowUpRightImg src={ArrowUpRight} />
               </Button>
@@ -92,6 +109,9 @@ const MainTitle = styled.p`
   font-weight: 700;
   margin: 0;
   color: ${({ theme }) => theme.colors.BLACK};
+  span {
+    color: ${({ theme }) => theme.colors.RED04};
+  }
 `;
 
 const SmallTitle = styled.p`
