@@ -146,6 +146,7 @@ function MyPage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [confirmModalMessage, setConfirmModalMessage] = useState('');
   const [modalActions, setModalActions] = useState({
     text1: '',
     text2: '',
@@ -194,6 +195,7 @@ function MyPage() {
   const confirmLogout = () => {
     console.log("User logged out");
     setModalVisible(false);
+    setConfirmModalMessage('로그아웃 되었어요');
     setConfirmModalVisible(true);
   };
 
@@ -211,6 +213,7 @@ function MyPage() {
   const confirmDeletion = () => {
     console.log("User Deletion");
     setModalVisible(false);
+    setConfirmModalMessage('회원탈퇴 처리가 완료되었어요');
     setConfirmModalVisible(true);
   };
 
@@ -260,20 +263,15 @@ function MyPage() {
         />
       )}
       {confirmModalVisible && (
-        <>
-          <ConfirmModal
-            msg="로그아웃 되었어요"
-            onConfirm={handleCloseConfirmModal}
-          />
-          <ConfirmModal
-            msg="회원탈퇴 처리가 완료되었어요"
-            onConfirm={handleCloseConfirmModal}
-          />
-        </>
+        <ConfirmModal
+          msg={confirmModalMessage}
+          onConfirm={handleCloseConfirmModal}
+        />
       )}
       </MyPageContainer>
-    </PageWrapper>
+      </PageWrapper>
   );
 }
 
 export default MyPage;
+
