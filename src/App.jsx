@@ -1,12 +1,17 @@
-import React from 'react';
-import { ThemeProvider } from 'styled-components';
-import { Theme } from './styles/Theme';
+import "./App.css";
+import { ThemeProvider } from "styled-components";
+import { Theme } from "./styles/Theme";
 import MainPage from './pages/MainPage';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
     <ThemeProvider theme={Theme}>
-      <MainPage />
+      <Router>
+      <Routes>
+        <Route path="/MainPage" element={<MainPage />} />
+      </Routes>
+    </Router>
     </ThemeProvider>
   );
 }

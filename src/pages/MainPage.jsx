@@ -6,41 +6,24 @@ import { ReactComponent as CalculatorIcon } from '../assets/images/Calculator.sv
 import { ReactComponent as CalendarIcon } from '../assets/images/Calendar.svg';
 import { ReactComponent as WindowsIcon } from '../assets/images/Windows.svg';
 import { ReactComponent as NoteIcon } from '../assets/images/Note.svg';
-import { ReactComponent as SearchIcon } from '../assets/images/Search.svg';
 import CardBackground from '../assets/images/Card.svg';
 import Banner1Background from '../assets/images/Banner1.svg';
 import Banner2Background from '../assets/images/Banner2.svg';
 import Banner3Background from '../assets/images/Banner3.svg';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
-  width: 100%;
+  width: 1920px;
+  height: 980px;
   margin: 0 auto;
   text-align: center;
 `;
 
-const SearchBar = styled.div`
-  margin: auto;
-  margin-bottom: 50px;
-  margin-top: 150px;
-  padding: 20px;
-  border: 1px solid ${({ theme }) => theme.colors.RED04};
-  box-shadow: 0 0 3px ${({ theme }) => theme.colors.RED04};
-  color: ${({ theme }) => theme.colors.GRAY02};
-  border-radius: 50px;
-  width: 801px;
-  height: 69px;
+const Contain = styled.div`
   box-sizing: border-box;
-  font-size: 20px;
-  text-align: left;
-  position: relative;
-`;
-
-const SearchIconWrap = styled.div`
-  position: absolute;
-  right: 50px;
-  top: 23px;
+  padding-top: 180px;
 `;
 
 const Banner = styled.div`
@@ -186,8 +169,7 @@ const FeatureCard = styled.div`
     margin: 0;
   }
 
-  &::after {
-    content: '↗';
+  a {
     position: absolute;
     top: 8px;
     right: -1px;
@@ -202,14 +184,10 @@ const FeatureCard = styled.div`
     font-size: 25px;
     color: ${({ theme }) => theme.colors.RED04};
     cursor: pointer;
+    text-decoration: none;
   }
 
-  &::after:hover {
-    background-color: ${({ theme }) => theme.colors.RED04};
-    border: 1px solid ${({ theme }) => theme.colors.WHITE};
-    color: ${({ theme }) => theme.colors.WHITE};
-  }
-  &:hover::after {
+  a:hover {
     background-color: ${({ theme }) => theme.colors.RED04};
     border: 1px solid ${({ theme }) => theme.colors.WHITE};
     color: ${({ theme }) => theme.colors.WHITE};
@@ -244,12 +222,7 @@ function MainPage() {
   return (
     <ThemeProvider theme={Theme}>
       <Container>
-        <SearchBar>
-          교환학생 준비, 투엑스에게 물어보세요!
-          <SearchIconWrap>
-            <SearchIcon src="../assets/images/Search.svg" alt="돋보기" />
-          </SearchIconWrap>
-        </SearchBar>
+        <Contain>
         <StyledSlider {...sliderSettings}>
           <div>
             <MainBanner1>
@@ -295,6 +268,9 @@ function MainPage() {
             <CalculatorIconWrap>
               <CalculatorIcon src="../assets/images/Calculator.svg" alt="학사 아이콘" />
             </CalculatorIconWrap>
+            <Link to="#">
+              ↗
+            </Link>
           </FeatureCard>
           <FeatureCard>
             <h2>어학</h2>
@@ -302,6 +278,9 @@ function MainPage() {
             <NoteIconWrap>
               <NoteIcon src="../assets/images/Note.svg" alt="어학 아이콘" />
             </NoteIconWrap>
+            <Link to="#">
+              ↗
+            </Link>
           </FeatureCard>
           <FeatureCard>
             <h2>커뮤니티</h2>
@@ -309,6 +288,9 @@ function MainPage() {
             <WindowsIconWrap>
               <WindowsIcon src="../assets/images/Windows.svg" alt="커뮤니티 아이콘" />
             </WindowsIconWrap>
+            <Link to="#">
+              ↗
+            </Link>
           </FeatureCard>
           <FeatureCard>
             <h2>캘린더</h2>
@@ -316,12 +298,15 @@ function MainPage() {
             <CalendarIconWrap>
               <CalendarIcon src="../assets/images/Calendar.svg" alt="캘린더 아이콘" />
             </CalendarIconWrap>
+            <Link to="#">
+              ↗
+            </Link>
           </FeatureCard>
         </FeatureCards>
+        </Contain>
       </Container>
     </ThemeProvider>
   );
 }
 
 export default MainPage;
-
