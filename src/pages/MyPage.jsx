@@ -162,10 +162,10 @@ function MyPage() {
   ]);
 
   // useEffect(() => {
-  //   const apiUrl = 'http://localhost:8080';
-  //   const endpoint = '/user/mypage';
+  //   const apiUrl = 'http://43.200.144.133:8080';
+  //   const endpoint = '/api/v1/mypage';
 
-  //   const token = localStorage.getItem('accessToken');
+  //   const token = localStorage.getItem('"accessToken": "eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjM0ODY2MDkxNTcsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjAyNzA0OTh9.ijuyfzl-rAAWsrBSkeYqcLAMAUIbqXHYyOCACjrK7TYv7IAmHlMhicNTMeLotT5jlNHkbw1FehiGG-zB_AndJQ",');
   //   axios.get(apiUrl + endpoint, {
   //     headers: {
   //       Authorization: `Bearer ${token}`
