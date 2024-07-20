@@ -8,6 +8,12 @@ import { useState } from "react";
 const Header = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
+  const handleLogin = () => {
+    setIsLogin(!isLogin);
+    if (!isLogin) {
+      navigate("/login");
+    }
+  };
 
   return (
     <BackGround>
@@ -25,10 +31,7 @@ const Header = () => {
             ]}
           />
         </MainTabBar>
-        <Tab
-          color="GRAY"
-          onClick={() => setIsLogin(!isLogin) && navigate("/login")}
-        >
+        <Tab color="GRAY" onClick={handleLogin}>
           {isLogin === false ? "로그인" : "로그아웃"}
         </Tab>
       </Container>
