@@ -5,6 +5,7 @@ import { ReactComponent as CalendarIcon } from "../assets/images/CalendarIcon.sv
 import { ReactComponent as Trash } from "../assets/images/Trash.svg";
 import { ReactComponent as Send } from "../assets/images/Send.svg";
 import ScheduleCategoryDropDown from "./ScheduleCategoryDropDown";
+import { AxiosCalendarDelete } from "../api/AxiosCalendar";
 
 const CustomModal = ({
   $modalIsOpen,
@@ -13,6 +14,7 @@ const CustomModal = ({
   formatStartDate,
   formatEndDate,
   CategoryTypes,
+  onDelete,
 }) => {
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   useEffect(() => {
@@ -20,6 +22,17 @@ const CustomModal = ({
       setDropdownIsOpen(false);
     }
   }, [$modalIsOpen]);
+
+  const handleDeleteSchedule = async () => {
+    try {
+      await AxiosCalendarDelete(selectedEvent.scheduleId);
+      onDelete(selectedEvent.scheduleId);
+      closeModal();
+      alert("삭제 되었습니다!");
+    } catch (error) {
+      console.error("Error deleting data:", error);
+    }
+  };
 
   return (
     <>
@@ -52,7 +65,7 @@ const CustomModal = ({
               <ModalTopBox>
                 <ModalTitle defaultValue={selectedEvent.content}></ModalTitle>
                 <ModalTopBtnBox>
-                  <ModalTopBtn>
+                  <ModalTopBtn onClick={handleDeleteSchedule}>
                     <Trash />
                   </ModalTopBtn>
                   <ModalTopBtn onClick={closeModal}>

@@ -11,7 +11,7 @@ import {
   StyledScheduleLine,
 } from "../styles/StyledCalrendar";
 import CustomModal from "./CustomModal";
-import { AxiosCalendar } from "../api/AxiosCalendar";
+import { AxiosCalendarGet } from "../api/AxiosCalendar";
 
 const CustomCalendar = () => {
   const [selectedTab, setSelectedTab] = useState("ALL");
@@ -52,7 +52,7 @@ const CustomCalendar = () => {
 
   const fetchData = async () => {
     try {
-      await AxiosCalendar().then((res) => {
+      await AxiosCalendarGet().then((res) => {
         setEvents(res.data);
       });
     } catch (error) {
@@ -76,6 +76,10 @@ const CustomCalendar = () => {
   const closeModal = () => {
     setModalIsOpen(false);
     setSelectedEvent(null);
+  };
+
+  const handleDeleteEvent = (deletedEventId) => {
+    setEvents(events.filter((event) => event.scheduleId !== deletedEventId));
   };
 
   const getFilteredEvents = () => {
@@ -180,6 +184,7 @@ const CustomCalendar = () => {
         formatStartDate={formatStartDate}
         formatEndDate={formatEndDate}
         CategoryTypes={Tabs}
+        onDelete={handleDeleteEvent}
       />
     </StyledCalendarWrapper>
   );
