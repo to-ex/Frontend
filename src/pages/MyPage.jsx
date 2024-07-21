@@ -141,8 +141,8 @@ const iconMapping = {
 };
 
 function MyPage() {
-  const [userInfo] = useState({ name: '김퓨처' });
-  // const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '' });
+  // const [userInfo] = useState({ name: '김퓨처' });
+  const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '', userImage: ''});
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -161,25 +161,27 @@ function MyPage() {
     { id: 5, title: '캘린더', icon: 'calendar', path: null }
   ]);
 
-  // useEffect(() => {
-  //   const apiUrl = 'http://43.200.144.133:8080';
-  //   const endpoint = '/api/v1/mypage';
-
-  //   const token = localStorage.getItem('"accessToken": "eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjM0ODY2MDkxNTcsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjAyNzA0OTh9.ijuyfzl-rAAWsrBSkeYqcLAMAUIbqXHYyOCACjrK7TYv7IAmHlMhicNTMeLotT5jlNHkbw1FehiGG-zB_AndJQ",');
-  //   axios.get(apiUrl + endpoint, {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`
-  //     }
-  //   })
-  //   .then(res => {
-  //     setUserInfo(res.data);
-  //     console.log(res.data);
-  //   })
-  //   .catch(err => {
-  //     console.error('Failed to fetch user info:', err);
-  //     alert(err.response?.data?.message || 'Failed to fetch user info');
-  //   });
-  // }, []);
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const apiUrl = 'http://43.200.144.133:8080/api/v1/mypage';
+      const token = localStorage.getItem('eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjIsImVtYWlsIjoiaHlvcmllMDEwM0BnbWFpbC5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoiaHlvcmllMDEwM0BnbWFpbC5jb20iLCJleHAiOjE3MjE2MzYxOTN9.3QsEuf93Jr4Itmk2bLCooh96LfcokvdGAlslGhdG5yHWJYAMABuo_1eAYkhN4FqK9GFFGGgRFp7HmtFFrLHoKg');
+  
+      try {
+        const response = await axios.get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error('Failed to fetch user info:', error);
+        alert(error.response?.data?.message || 'Failed to fetch user info');
+      }
+    };
+  
+    fetchUserInfo();
+  }, []);
+  
 
   const handleLogoutClick = () => {
     setModalContent('로그아웃 하시겠습니까?');
@@ -226,7 +228,7 @@ function MyPage() {
       <PageHeader>마이페이지</PageHeader>
       <MyPageContainer>
         <UserGreeting>
-          <StyledPerson1 style={{ width: '165.64px', height: '163.17px'}}/>
+          <StyledPerson1 style={{ width: '165.64px', height: '163.17px'}}>{userInfo.userImage}</StyledPerson1>
           <GreetingContainer>
             <UserName>{userInfo.name}</UserName>
             <NameSuffix>님, 안녕하세요!</NameSuffix>
