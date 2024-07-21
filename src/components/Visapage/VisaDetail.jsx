@@ -28,7 +28,13 @@ const VisaDetail = ({ selcetedCountry }) => {
     );
   };
 
-  const { images, reservationText, suppliesText, country } = visaInfo;
+  const {
+    reservationImg,
+    suppliesImg,
+    reservationText,
+    suppliesText,
+    country,
+  } = visaInfo;
 
   return (
     <>
@@ -42,7 +48,7 @@ const VisaDetail = ({ selcetedCountry }) => {
         </TitleButtonBox>
         <ContentBoxArea>
           <ContentBox>
-            <Img src={images} />
+            <Img src={suppliesImg} />
             <GrayBox>
               <ImojiBigTextBox>
                 <Imoji>📝</Imoji>
@@ -54,7 +60,7 @@ const VisaDetail = ({ selcetedCountry }) => {
             </GrayBox>
           </ContentBox>
           <ContentBox>
-            <Img src={images} />
+            <Img src={reservationImg} />
             <BigGrayBox>
               <ImojiBigTextBox>
                 <Imoji>📌</Imoji>
@@ -134,7 +140,8 @@ const ContentBox = styled.div`
 const Img = styled.img`
   width: 349px;
   height: 235px;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 12px;
 `;
 
 const GrayBox = styled.div`
@@ -147,12 +154,12 @@ const GrayBox = styled.div`
 
 const BigGrayBox = styled.div`
   width: 892px;
-  max-width: 100%;
   height: 590px;
   border-radius: 20px;
   background-color: #f8f9fa;
   padding: 32px 0 27px 47px;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 `;
 
 const Imoji = styled.p`
@@ -178,16 +185,17 @@ const SmallTextBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 `;
 
 const SmallText = styled.p`
+  width: 95%;
   font-size: 22px;
   font-weight: 500;
   line-height: 30px;
   color: #232323;
-  /* white-space: pre-line; */
   margin-left: 52px;
-  white-space: pre-wrap;
 `;
 
 const Link = styled.a`
