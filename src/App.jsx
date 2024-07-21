@@ -9,7 +9,7 @@ function App() {
     <ThemeProvider theme={Theme}>
       <Router>
       <Routes>
-        <Route path="/LanguagePage" element={<LanguagePage />} />
+        <Route path="/Language" element={<LanguagePage />} />
       </Routes>
     </Router>
     </ThemeProvider>
