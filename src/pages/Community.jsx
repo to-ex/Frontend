@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Theme } from "../styles/Theme";
 import { ReactComponent as SearchIcon } from '../assets/images/Search2.svg';
@@ -14,7 +14,7 @@ import CommentIcon from "../assets/images/ChatCircle.svg";
 import BackgroundAnimation from "../components/BackgroundAnimation";
 import Paging from "../components/Paging";
 import { Link } from 'react-router-dom';
-// import axios from 'axios';
+import axios from 'axios';
 
 const AppWrapper = styled.div`
   width: 1920px;
@@ -30,8 +30,8 @@ const SearchBar = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.RED04};
   box-shadow: 0 0 3px ${({ theme }) => theme.colors.RED04};
   width: 915px;
-  height: ${({ isOpen }) => (isOpen ? '572px' : '78px')};
-  border-radius:${({ isOpen }) => (isOpen ? '40px' : '50px')};
+  height: ${({ $isOpen }) => ($isOpen ? '572px' : '78px')};
+  border-radius:${({ $isOpen }) => ($isOpen ? '40px' : '50px')};
   box-sizing: border-box;
   font-size: 20px;
   text-align: left;
@@ -108,7 +108,7 @@ const HashtagList = styled.div`
   top: 78px;
   left: 0;
   background-color: ${props => props.theme.colors.WHITE};
-  display: ${({ show }) => (show ? 'block' : 'none')};
+  display: ${({ $show }) => ($show ? 'block' : 'none')};
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
   padding: 10px 0;
   border-bottom-left-radius: 40px;
@@ -344,7 +344,7 @@ const CommentIconBox = styled.div`
     margin-left: 15px;
 `;
 
-const HeartCount = styled.p`
+const Likes = styled.p`
     font-size: 20px;
     font-weight: 500;
     margin-left: 10px;
@@ -356,7 +356,7 @@ const CommentCount = styled.p`
     margin-left: 6px;
 `;
 
-const Date = styled.p`
+const CreatedDt = styled.p`
     color: #adadad;
     font-size: 20px;
     font-weight: 500;
@@ -382,7 +382,7 @@ const ModalOverlay = styled.div`
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    display: ${({ show }) => (show ? 'block' : 'none')};
+    display: ${({ $show }) => ($show ? 'block' : 'none')};
     z-index: 20;
 `;
 
@@ -397,7 +397,7 @@ const ModalContent = styled.div`
     box-sizing: border-box;
     border-radius: 20px;
     z-index: 30;
-    display: ${({ show }) => (show ? 'block' : 'none')};
+    display: ${({ $show }) => ($show ? 'block' : 'none')};
 `;
 
 const FilterOption = styled.div`
@@ -433,79 +433,122 @@ const PagingWrapper = styled.div`
     margin-bottom: 90px; 
 `;
 
+const fetchPosts = async (searchTerm, boardCategory, countryTag, page, size) => {
+  try {
+    const response = await axios.get('http://43.200.144.133:8080/api/v1/board', {
+      params: {
+        keyword: searchTerm,
+        boardCategory: boardCategory,
+        countryTag: countryTag,
+        page: page,
+        size: size,
+      },
+    });
+    return response.data.data.content;
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    throw error;
+  }
+}
+
 const Community = () => {
+    const [boardCategory, setBoardCategory] = useState('');
+    const [countryTag, setCountryTag] = useState('');
+
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1); //현재 페이지 및 페이징 설정
     const contentPerPage = 4; 
     const [isOpen, setIsOpen] = useState(false); // 검색바 확장 상태 추가
     const [selectedHashtags, setSelectedHashtags] = useState([]);
+    // const [posts, setPosts] = useState([]);
     const [posts, setPosts] = useState([
     {
         id: 1,
         title: '스페인 UAB 교환학생 후기',
         author: '김퓨처',
-        typetag: "공유해요",
+        boardCategory: "공유해요",
         countrytag: "스페인",
-        text: '스페인의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 스페인의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
+        comments: '스페인의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 스페인의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
         img: '',
-        ishearted: false,
-        heartcount: 3,
+        isLiked: false,
+        likes: 3,
         commentcount: 8,
-        date: '2024.05.07',
+        createdDt: '2024.05.07',
     },
     {
         id: 2,
         title: '독일 UAB 교환학생 후기',
         author: '이퓨처',
-        typetag: "공유해요",
+        boardCategory: "공유해요",
         countrytag: "독일",
-        text: '독일의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 독일의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
+        comments: '독일의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 독일의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
         img: '',
-        ishearted: false,
-        heartcount: 2,
+        isLiked: false,
+        likes: 2,
         commentcount: 5,
-        date: '2024.06.07',
+        createdDt: '2024.06.07',
     },
     {
         id: 3,
         title: '프랑스 UAB 교환학생 후기',
         author: '박퓨처',
-        typetag: "공유해요",
+        boardCategory: "공유해요",
         countrytag: "프랑스",
-        text: '프랑스의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 프랑스의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
+        comments: '프랑스의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 프랑스의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
         img: '',
-        ishearted: false,
-        heartcount: 4,
+        isLiked: false,
+        likes: 4,
         commentcount: 7,
-        date: '2024.07.07',
+        createdDt: '2024.07.07',
     },
     {
         id: 4,
         title: '이탈리아 UAB 교환학생 후기',
         author: '최퓨처',
-        typetag: "공유해요",
+        boardCategory: "공유해요",
         countrytag: "이탈리아",
-        text: '이탈리아의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 이탈리아의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
+        comments: '이탈리아의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 이탈리아의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
         img: '',
-        ishearted: false,
-        heartcount: 5,
+        isLiked: false,
+        likes: 5,
         commentcount: 6,
-        date: '2024.08.07',
+        createdDt: '2024.08.07',
     },
     {
         id: 5,
         title: '영국 UAB 교환학생 후기',
         author: '강퓨처',
-        typetag: "공유해요",
+        boardCategory: "공유해요",
         countrytag: "영국",
-        text: '영국의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 영국의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
+        comments: '영국의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 영국의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
         img: '',
-        ishearted: false,
-        heartcount: 6,
+        isLiked: false,
+        likes: 6,
         commentcount: 9,
-        date: '2024.09.07',
+        createdDt: '2024.09.07',
     },
     ]);
+
+    useEffect(() => {
+      const loadPosts = async () => {
+        try {
+          const fetchedPosts = await fetchPosts(searchTerm, boardCategory, countryTag, currentPage, contentPerPage);
+          setPosts(fetchedPosts);
+        } catch (error) {
+          console.error('Error loading posts:', error);
+        }
+      };
+  
+      loadPosts();
+    }, [searchTerm, boardCategory, countryTag, currentPage]);
+
+    const handleBoardCategoryChange = (category) => {
+      setBoardCategory(category);
+    };
+  
+    const handleCountryTagChange = (tag) => {
+      setCountryTag(tag);
+    };
 
     const hashtags = [
     { tag: '🇪🇸 스페인', count: 9999999 },
@@ -518,7 +561,7 @@ const Community = () => {
     const toggleHeart = (id) => {
         setPosts((prevPosts) =>
             prevPosts.map((post) =>
-            post.id === id ? { ...post, ishearted: !post.ishearted, heartcount: post.ishearted ? post.heartcount - 1 : post.heartcount + 1 } : post
+            post.id === id ? { ...post, isLiked: !post.isLiked, likes: post.isLiked ? post.likes - 1 : post.likes + 1 } : post
             )
         );
     };
@@ -584,7 +627,7 @@ const Community = () => {
         </TitleIconWrap>
         <BackgroundAnimation />
         <SearchBarWrapper>
-            <SearchBar isOpen={isOpen} onClick={toggleSearchBar}>
+            <SearchBar $isOpen={isOpen} onClick={toggleSearchBar}>
             <CharacterIconWrap>
                 <CharacterIcon src="../assets/images/Character.svg" alt="캐릭터 이모티콘" />
             </CharacterIconWrap>
@@ -600,7 +643,7 @@ const Community = () => {
             <FilterIconWrap onClick={openFilterModal}>
                 <FilterIcon />
             </FilterIconWrap>
-            <HashtagList show={isOpen}>
+            <HashtagList $show={isOpen}>
                 {hashtags.map((tag, index) => (
                 <HashtagItem key={index} onClick={() => handleHashtagClick(tag.tag)}>
                     <HashTagContain>
@@ -634,35 +677,35 @@ const Community = () => {
                 <PostBackground />
                 <PostContentWrapper>
                 <PostHeader>
-                    <PostAvatar />
+                    <PostAvatar>{post.authorProfileImgUrl}</PostAvatar>
                     <PostInfo>
                     <PostTitle>
                         {post.title} <AuthorSpan>| {post.author}</AuthorSpan>
                     </PostTitle>
                     <PostActions>
-                        <PostActionButton1># {post.typetag}</PostActionButton1>
+                        <PostActionButton1># {post.boardCategory}</PostActionButton1>
                         <PostActionButton2># {post.countrytag}</PostActionButton2>
                     </PostActions>
                     </PostInfo>
                 </PostHeader>
                 <PostContent>
                     <PostBox>
-                    <PostText>{post.text}</PostText>
+                    <PostText>{post.comments}</PostText>
                     </PostBox>
-                    <PostImage />
+                    <PostImage>{post.imgUrl}</PostImage>
                 </PostContent>
                 <PostFooter>
                     <ReactionBox>
                     <HeartIcon onClick={() => toggleHeart(post.id)}>
-                        <img src={post.ishearted ? FullHeart : EmptyHeart} alt="Heart Icon" />
+                        <img src={post.isLiked ? FullHeart : EmptyHeart} alt="Heart Icon" />
                     </HeartIcon>
-                    <HeartCount>{post.heartcount}</HeartCount>
+                    <Likes>{post.likes}</Likes>
                     <CommentIconBox>
                         <img src={CommentIcon} alt="Comment Icon" />
                         <CommentCount>{post.commentcount}</CommentCount>
                     </CommentIconBox>
                     </ReactionBox>
-                    <Date>{post.date}</Date>
+                    <CreatedDt>{post.createdDt}</CreatedDt>
                 </PostFooter>
                 </PostContentWrapper>
             </Post>
@@ -676,8 +719,8 @@ const Community = () => {
             />
         </PagingWrapper>
         </PostList>
-        <ModalOverlay show={isFilterOpen} onClick={closeFilterModal} />
-        <ModalContent show={isFilterOpen}>
+        <ModalOverlay $show={isFilterOpen} onClick={closeFilterModal} />
+        <ModalContent $show={isFilterOpen}>
             <FilterOption onClick={() => handleFilterClick('전체')}># 전체</FilterOption>
             <FilterOption onClick={() => handleFilterClick('떠들어요')}># 떠들어요</FilterOption>
             <FilterOption onClick={() => handleFilterClick('질문 있어요')}># 질문 있어요</FilterOption>
