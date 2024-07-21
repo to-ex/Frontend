@@ -4,12 +4,10 @@ import { useNavigate } from "react-router-dom";
 const Redirection = () => {
   const code = new URL(document.location.toString()).searchParams.get("code");
   const navigate = useNavigate();
-
+  console.log(code);
   useEffect(() => {
-    console.log(process.env.REACT_APP_URL);
-    console.log(code);
     const response = axios
-      .post(`${process.env.REACT_APP_URL}/api/v1/auth/login/kakao/code=${code}`)
+      .post(`${process.env.REACT_APP_URL}/api/v1/auth/login/kakao?code=${code}`)
       .then((r) => {
         console.log(r.data);
 
