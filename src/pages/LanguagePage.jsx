@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes, ThemeProvider } from 'styled-components';
 import { ReactComponent as DropdownIcon } from '../assets/images/Dropdown.svg';
 import { Theme } from '../styles/Theme'; 
@@ -8,6 +8,7 @@ import { ReactComponent as Bg2Icon } from '../assets/images/Bg2.svg';
 import { ReactComponent as WarningIcon } from '../assets/images/Warning.svg';
 import { ReactComponent as IeltsText } from '../assets/images/IeltsText.svg';
 import { ReactComponent as ToeflText } from '../assets/images/ToeflText.svg';
+import axios from 'axios';
 
 const Bg1IconWrap = styled.div`
   position: absolute;
@@ -355,228 +356,262 @@ const dummyData = [
     { date: '6', day: '토', time: '15:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', region: '인천', type: 'Paper' },
 ];
 
+const fetchExamData = async (category, area, type, date) => {
+  try {
+    const params = {
+      category,
+      area: area !== '전체' ? area : undefined,
+      type: type !== '전체' ? type : undefined,
+      date,
+    };
+
+    const queryString = Object.keys(params)
+      .filter(key => params[key] !== undefined)
+      .map(key => `${key}=${encodeURIComponent(params[key])}`)
+      .join('&');
+
+    const response = await axios.patch(`http://43.200.144.133:8080/api/v1/engTest?${queryString}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching exam data:", error);
+    return [];
+  }
+};
+
+
 function LanguagePage() {
-    const [selectedExamType, setSelectedExamType] = useState('토플');
-    const [selectedMonth, setSelectedMonth] = useState(6);
-    const [examData, setExamData] = useState(dummyData); // 더미 데이터 사용
-    const [dropdownOpen, setDropdownOpen] = useState({ region: false, type: false, ieltsType: false, date: false });
-    const [selectedRegion, setSelectedRegion] = useState('지역');
-    const [selectedType, setSelectedType] = useState('종류');
-    const [selectedDateRange, setSelectedDateRange] = useState('일정');
-    const isDropdownOpen = Object.values(dropdownOpen).some(open => open);
+const [selectedExamType, setSelectedExamType] = useState('토플');
+const [selectedMonth, setSelectedMonth] = useState(6);
+const [examData, setExamData] = useState(dummyData); // 더미 데이터 사용
+const [dropdownOpen, setDropdownOpen] = useState({ region: false, type: false, ieltsType: false, date: false });
+const [selectedRegion, setSelectedRegion] = useState('지역');
+const [selectedType, setSelectedType] = useState('종류');
+const [selectedDateRange, setSelectedDateRange] = useState('일정');
+const isDropdownOpen = Object.values(dropdownOpen).some(open => open);
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const contentPerPage = 3; 
-    const count = examData.length;
+const [currentPage, setCurrentPage] = useState(1);
+const contentPerPage = 3; 
+const count = examData.length;
 
-    const isDateInRange = (date) => {
-        const day = parseInt(date, 10);
-        if (selectedDateRange === '1~10') {
-            return day >= 1 && day <= 10;
-        } else if (selectedDateRange === '11~20') {
-            return day >= 11 && day <= 20;
-        } else if (selectedDateRange === '21~31') {
-            return day >= 21 && day <= 31;
-        }
-        return true; // 전체인 경우
-    };
 
-    const filterExams = () => {
-        return examData.filter(exam => {
-            const isRegionMatch = selectedRegion === '전체' || exam.region === selectedRegion;
-            const isTypeMatch = selectedType === '전체' || exam.type === selectedType;
-            const isDateMatch = isDateInRange(exam.date);
-            return isRegionMatch && isTypeMatch && isDateMatch;
-        });
-    };
+useEffect(() => {
+  const loadExamData = async () => {
+    const date = `2024-${selectedMonth < 10 ? '0' : ''}${selectedMonth}-01`; // month formatting
+    const data = await fetchExamData(selectedExamType, selectedRegion, selectedType, date);
+    setExamData(data);
+  };
 
-    const filteredExamData = filterExams();
-    const displayedExams = filteredExamData.slice((currentPage - 1) * contentPerPage, currentPage * contentPerPage);
+  loadExamData();
+}, [selectedExamType, selectedMonth, selectedRegion, selectedType, selectedDateRange]);
 
-    const toggleDropdown = (dropdown) => {
-        setDropdownOpen(prevState => ({
-            ...prevState,
-            [dropdown]: !prevState[dropdown]
-        }));
-    };
-
-    const handleRegionSelect = (region) => {
-        setSelectedRegion(region);
-        setDropdownOpen(prevState => ({ ...prevState, region: false }));
-    };
-
-    const handleTypeSelect = (type) => {
-        setSelectedType(type);
-        setDropdownOpen(prevState => ({ ...prevState, type: false }));
-    };
-
-    const handleDateRangeSelect = (range) => {
-        setSelectedDateRange(range);
-        setDropdownOpen(prevState => ({ ...prevState, date: false }));
-    };
-
-    const setPage = (page) => {
-        setCurrentPage(page);
-    };
-
-    return (
-        <ThemeProvider theme={Theme}>
-            <Bg1IconWrap>
-              <Bg1Icon src="../assets/images/Bg1.svg" alt="bg1" />
-            </Bg1IconWrap>
-            <Bg2IconWrap>
-              <Bg2Icon src="../assets/images/Bg2.svg" alt="bg2" />
-            </Bg2IconWrap>
-            <Container>
-            <Overlay show={isDropdownOpen} onClick={() => setDropdownOpen({ region: false, type: false, ieltsType: false, date: false })} />
-                <Title>어학 시험 일정</Title>
-                <Subtitle>원하는 시험 일정을 미리 캘린더에 추가할 수 있어요!</Subtitle>
-                <ExamTypeSelector>
-                    <button
-                        className={`toefl ${selectedExamType === '토플' ? 'active' : ''}`}
-                        onClick={() => setSelectedExamType('토플')}
-                    >
-                        토플
-                    </button>
-                    <button
-                        className={`ielts ${selectedExamType === '아이엘츠' ? 'active' : ''}`}
-                        onClick={() => setSelectedExamType('아이엘츠')}
-                    >
-                        아이엘츠
-                    </button>
-                </ExamTypeSelector>
-                <Notice>2024년 <span>{selectedExamType}</span> 시험 일정</Notice>
-                <MonthSelector>
-                    {[6, 7, 8, 9, 10, 11, 12].map(month => (
-                        <button
-                            key={month}
-                            className={selectedMonth === month ? 'active' : ''}
-                            onClick={() => setSelectedMonth(month)}
-                        >
-                            {month}월
-                        </button>
-                    ))}
-                </MonthSelector>
-                <DropdownWrapper>
-                    <DropdownContainer>
-                        <DropdownButton onClick={() => toggleDropdown('region')} $isOpen={dropdownOpen.region}>
-                            {selectedRegion}
-                            <DropdownIcon />
-                        </DropdownButton>
-                        <DropdownContent $show={dropdownOpen.region}>
-                            <button onClick={() => handleRegionSelect('전체')}>전체</button>
-                            <button onClick={() => handleRegionSelect('서울')}>서울</button>
-                            <button onClick={() => handleRegionSelect('인천')}>인천</button>
-                            <button onClick={() => handleRegionSelect('경기')}>경기</button>
-                            <button onClick={() => handleRegionSelect('충청')}>충청</button>
-                            <button onClick={() => handleRegionSelect('강원')}>강원</button>
-                            <button onClick={() => handleRegionSelect('전라')}>전라</button>
-                            <button onClick={() => handleRegionSelect('경상')}>경상</button>
-                            <button onClick={() => handleRegionSelect('제주')}>제주</button>
-                        </DropdownContent>
-                    </DropdownContainer>
-                    {selectedExamType === '토플' && (
-                        <DropdownContainer>
-                            <DropdownButton onClick={() => toggleDropdown('type')} $isOpen={dropdownOpen.type}>
-                                {selectedType}
-                                <DropdownIcon />
-                            </DropdownButton>
-                            <DropdownContent $show={dropdownOpen.type}>
-                                <button onClick={() => handleTypeSelect('전체')}>전체</button>
-                                <button onClick={() => handleTypeSelect('Paper')}>Paper</button>
-                                <button onClick={() => handleTypeSelect('Home')}>Home</button>
-                            </DropdownContent>
-                        </DropdownContainer>
-                    )}
-                    {selectedExamType === '아이엘츠' && (
-                        <DropdownContainer>
-                            <DropdownButton onClick={() => toggleDropdown('ieltsType')} $isOpen={dropdownOpen.ieltsType}>
-                                {selectedType}
-                                <DropdownIcon />
-                            </DropdownButton>
-                            <DropdownContent $show={dropdownOpen.ieltsType}>
-                                <button onClick={() => handleTypeSelect('전체')}>전체</button>
-                                <button onClick={() => handleTypeSelect('Paper')}>Paper</button>
-                                <button onClick={() => handleTypeSelect('Computer')}>Computer</button>
-                            </DropdownContent>
-                        </DropdownContainer>
-                    )}
-                    <DropdownContainer>
-                        <DropdownButton onClick={() => toggleDropdown('date')} $isOpen={dropdownOpen.date}>
-                            {selectedDateRange}
-                            <DropdownIcon />
-                        </DropdownButton>
-                        <DropdownContent $show={dropdownOpen.date}>
-                        <button onClick={() => handleDateRangeSelect('전체')}>전체</button>
-                        {[...Array(31).keys()].map(day => (
-                                <button
-                                    key={day + 1}
-                                    onClick={() => handleDateRangeSelect(day + 1)}
-                                    >
-                                        {day + 1}
-                                    </button>
-                                ))}
-                        </DropdownContent>
-                    </DropdownContainer>
-                </DropdownWrapper>
-                    {filteredExamData.length === 0 ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '220px', marginBottom: '370px',}}>
-                            {selectedExamType === '토플' && selectedType === 'Home' ? (
-                                <>
-                                    <div style={{ marginBottom: '50px' }}>
-                                        <ToeflText width="723" height="192"/>
-                                    </div>
-                                    <ArrowButtonContainer>
-                                        <ArrowButton href="https://www.kr.ets.org/toefl/test-takers/ibt/schedule.html">시험 신청 바로가기 ↗</ArrowButton>
-                                    </ArrowButtonContainer>
-                                </>
-                            ) : selectedExamType === '아이엘츠' && selectedType === 'Computer' ? (
-                                <>
-                                    <div style={{ marginBottom: '50px' }}>
-                                        <IeltsText width="723" height="192"/>
-                                    </div>
-                                    <ArrowButtonContainer>
-                                        <ArrowButton href="https://ieltskorea.org/korea/test-dates">시험 신청 바로가기 ↗</ArrowButton>
-                                    </ArrowButtonContainer>
-                                </>
-                            ) : (
-                                <WarningIcon width="442" height="279"/>
-                            )}
-                        </div>
-                    ) : (
-                        <>
-                        <ExamList>
-                            {displayedExams.map((exam, index) => (
-                                <ExamItem key={index}>
-                                    <div className="schedule">
-                                        <h3 className="exam-date">{exam.date}일</h3>
-                                        <h3 className="exam-day">{exam.day}요일</h3>
-                                    </div>
-                                    <div className="substance">
-                                        <div className="choice">
-                                            <p className="exam-time">{exam.time}</p>
-                                            <p className="exam-kind">{exam.kind}</p>
-                                        </div>
-                                        <h3 className="exam-location">{exam.location}</h3>
-                                        <p className="exam-address">{exam.address}</p>
-                                    </div>
-                                    <button>시험 신청 바로가기</button>
-                                </ExamItem>
-                            ))}
-                        </ExamList>
-                        <PagingWrapper>
-                        <Paging
-                        page={currentPage}
-                        count={count}
-                        setPage={setPage}
-                        contentPerPage={contentPerPage}
-                        />
-                    </PagingWrapper>
-                    </>
-                )}
-                </Container>
-            </ThemeProvider>
-        );
+const isDateInRange = (date) => {
+    const day = parseInt(date, 10);
+    if (selectedDateRange === '1~10') {
+        return day >= 1 && day <= 10;
+    } else if (selectedDateRange === '11~20') {
+        return day >= 11 && day <= 20;
+    } else if (selectedDateRange === '21~31') {
+        return day >= 21 && day <= 31;
     }
-    
-    export default LanguagePage;
+    return true; // 전체인 경우
+};
+
+const filterExams = () => {
+    return examData.filter(exam => {
+        const isRegionMatch = selectedRegion === '전체' || exam.region === selectedRegion;
+        const isTypeMatch = selectedType === '전체' || exam.type === selectedType;
+        const isDateMatch = isDateInRange(exam.date);
+        return isRegionMatch && isTypeMatch && isDateMatch;
+    });
+};
+
+const filteredExamData = filterExams();
+const displayedExams = filteredExamData.slice((currentPage - 1) * contentPerPage, currentPage * contentPerPage);
+
+const toggleDropdown = (dropdown) => {
+    setDropdownOpen(prevState => ({
+        ...prevState,
+        [dropdown]: !prevState[dropdown]
+    }));
+};
+
+const handleRegionSelect = (region) => {
+    setSelectedRegion(region);
+    setDropdownOpen(prevState => ({ ...prevState, region: false }));
+};
+
+const handleTypeSelect = (type) => {
+    setSelectedType(type);
+    setDropdownOpen(prevState => ({ ...prevState, type: false }));
+};
+
+const handleDateRangeSelect = (range) => {
+    setSelectedDateRange(range);
+    setDropdownOpen(prevState => ({ ...prevState, date: false }));
+};
+
+const setPage = (page) => {
+    setCurrentPage(page);
+};
+
+return (
+    <ThemeProvider theme={Theme}>
+        <Bg1IconWrap>
+          <Bg1Icon src="../assets/images/Bg1.svg" alt="bg1" />
+        </Bg1IconWrap>
+        <Bg2IconWrap>
+          <Bg2Icon src="../assets/images/Bg2.svg" alt="bg2" />
+        </Bg2IconWrap>
+        <Container>
+        <Overlay show={isDropdownOpen} onClick={() => setDropdownOpen({ region: false, type: false, ieltsType: false, date: false })} />
+            <Title>어학 시험 일정</Title>
+            <Subtitle>원하는 시험 일정을 미리 캘린더에 추가할 수 있어요!</Subtitle>
+            <ExamTypeSelector>
+                <button
+                    className={`toefl ${selectedExamType === '토플' ? 'active' : ''}`}
+                    onClick={() => setSelectedExamType('토플')}
+                >
+                    토플
+                </button>
+                <button
+                    className={`ielts ${selectedExamType === '아이엘츠' ? 'active' : ''}`}
+                    onClick={() => setSelectedExamType('아이엘츠')}
+                >
+                    아이엘츠
+                </button>
+            </ExamTypeSelector>
+            <Notice>2024년 <span>{selectedExamType}</span> 시험 일정</Notice>
+            <MonthSelector>
+                {[6, 7, 8, 9, 10, 11, 12].map(month => (
+                    <button
+                        key={month}
+                        className={selectedMonth === month ? 'active' : ''}
+                        onClick={() => setSelectedMonth(month)}
+                    >
+                        {month}월
+                    </button>
+                ))}
+            </MonthSelector>
+            <DropdownWrapper>
+                <DropdownContainer>
+                    <DropdownButton onClick={() => toggleDropdown('region')} $isOpen={dropdownOpen.region}>
+                        {selectedRegion}
+                        <DropdownIcon />
+                    </DropdownButton>
+                    <DropdownContent $show={dropdownOpen.region}>
+                        <button onClick={() => handleRegionSelect('전체')}>전체</button>
+                        <button onClick={() => handleRegionSelect('서울')}>서울</button>
+                        <button onClick={() => handleRegionSelect('인천')}>인천</button>
+                        <button onClick={() => handleRegionSelect('경기')}>경기</button>
+                        <button onClick={() => handleRegionSelect('충청')}>충청</button>
+                        <button onClick={() => handleRegionSelect('강원')}>강원</button>
+                        <button onClick={() => handleRegionSelect('전라')}>전라</button>
+                        <button onClick={() => handleRegionSelect('경상')}>경상</button>
+                        <button onClick={() => handleRegionSelect('제주')}>제주</button>
+                    </DropdownContent>
+                </DropdownContainer>
+                {selectedExamType === '토플' && (
+                    <DropdownContainer>
+                        <DropdownButton onClick={() => toggleDropdown('type')} $isOpen={dropdownOpen.type}>
+                            {selectedType}
+                            <DropdownIcon />
+                        </DropdownButton>
+                        <DropdownContent $show={dropdownOpen.type}>
+                            <button onClick={() => handleTypeSelect('전체')}>전체</button>
+                            <button onClick={() => handleTypeSelect('Paper')}>Paper</button>
+                            <button onClick={() => handleTypeSelect('Home')}>Home</button>
+                        </DropdownContent>
+                    </DropdownContainer>
+                )}
+                {selectedExamType === '아이엘츠' && (
+                    <DropdownContainer>
+                        <DropdownButton onClick={() => toggleDropdown('ieltsType')} $isOpen={dropdownOpen.ieltsType}>
+                            {selectedType}
+                            <DropdownIcon />
+                        </DropdownButton>
+                        <DropdownContent $show={dropdownOpen.ieltsType}>
+                            <button onClick={() => handleTypeSelect('전체')}>전체</button>
+                            <button onClick={() => handleTypeSelect('Paper')}>Paper</button>
+                            <button onClick={() => handleTypeSelect('Computer')}>Computer</button>
+                        </DropdownContent>
+                    </DropdownContainer>
+                )}
+                <DropdownContainer>
+                    <DropdownButton onClick={() => toggleDropdown('date')} $isOpen={dropdownOpen.date}>
+                        {selectedDateRange}
+                        <DropdownIcon />
+                    </DropdownButton>
+                    <DropdownContent $show={dropdownOpen.date}>
+                    <button onClick={() => handleDateRangeSelect('전체')}>전체</button>
+                    {[...Array(31).keys()].map(day => (
+                            <button
+                                key={day + 1}
+                                onClick={() => handleDateRangeSelect(day + 1)}
+                                >
+                                    {day + 1}
+                                </button>
+                            ))}
+                    </DropdownContent>
+                </DropdownContainer>
+            </DropdownWrapper>
+                {filteredExamData.length === 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '220px', marginBottom: '370px',}}>
+                        {selectedExamType === '토플' && selectedType === 'Home' ? (
+                            <>
+                                <div style={{ marginBottom: '50px' }}>
+                                    <ToeflText width="723" height="192"/>
+                                </div>
+                                <ArrowButtonContainer>
+                                    <ArrowButton href="https://www.kr.ets.org/toefl/test-takers/ibt/schedule.html">시험 신청 바로가기 ↗</ArrowButton>
+                                </ArrowButtonContainer>
+                            </>
+                        ) : selectedExamType === '아이엘츠' && selectedType === 'Computer' ? (
+                            <>
+                                <div style={{ marginBottom: '50px' }}>
+                                    <IeltsText width="723" height="192"/>
+                                </div>
+                                <ArrowButtonContainer>
+                                    <ArrowButton href="https://ieltskorea.org/korea/test-dates">시험 신청 바로가기 ↗</ArrowButton>
+                                </ArrowButtonContainer>
+                            </>
+                        ) : (
+                            <WarningIcon width="442" height="279"/>
+                        )}
+                    </div>
+                ) : (
+                    <>
+                    <ExamList>
+                        {displayedExams.map((exam, index) => (
+                            <ExamItem key={index}>
+                                <div className="schedule">
+                                    <h3 className="exam-date">{exam.date}일</h3>
+                                    <h3 className="exam-day">{exam.day}요일</h3>
+                                </div>
+                                <div className="substance">
+                                    <div className="choice">
+                                        <p className="exam-time">{exam.time}</p>
+                                        <p className="exam-kind">{exam.kind}</p>
+                                    </div>
+                                    <h3 className="exam-location">{exam.location}</h3>
+                                    <p className="exam-address">{exam.address}</p>
+                                </div>
+                                <button>시험 신청 바로가기</button>
+                            </ExamItem>
+                        ))}
+                    </ExamList>
+                    <PagingWrapper>
+                    <Paging
+                    page={currentPage}
+                    count={count}
+                    setPage={setPage}
+                    contentPerPage={contentPerPage}
+                    />
+                </PagingWrapper>
+                </>
+            )}
+            </Container>
+        </ThemeProvider>
+    );
+}
+
+export default LanguagePage;
