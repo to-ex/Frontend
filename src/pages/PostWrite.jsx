@@ -3,6 +3,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import { useNavigate } from "react-router-dom";
 import { Theme } from "../styles/Theme";
 import ConfirmModal from "../components/ConfirmModal";
+import axios from 'axios';
 
 const Container = styled.div`
   width: 1424px;
@@ -220,14 +221,10 @@ const PostWrite = () => {
     }));
   };
 
-  const handlePostSubmit = () => {
-    setConfirmModalVisible(true);
-  };
-
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file));
+      setImage(file);
     }
   };
 
@@ -235,6 +232,34 @@ const PostWrite = () => {
     setConfirmModalVisible(false);
   };
 
+  const handlePostSubmit = async () => {
+    const formData = new FormData();
+    formData.append('boardReq', JSON.stringify({
+      title,
+      boardCategory: board,
+      countryTag: country,
+      content,
+    }));
+    if (image) {
+      formData.append('images', image);
+    }
+  
+    try {
+      const response = await axios.post('http://43.200.144.133:8080/api/v1/board/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE2OTM3NzJ9.ZyEMm1scyNkxFVcPrJMnIfpGHkPJuJn5SCefH-oTjaDU4SdYEYT0O8QHILYmlpoS5fRonCJ3lbxo4Et6vHcXUA`
+        }
+      });
+      console.log(response.data);
+      setConfirmModalVisible(true);
+      
+    } catch (error) {
+      console.error('Failed to submit post:', error.response ? error.response.data : error.message);
+      alert('Failed to submit post: ' + (error.response ? error.response.data : error.message));
+    }
+  };
+  
   return (
     <ThemeProvider theme={Theme}>
       <Container>
@@ -279,7 +304,7 @@ const PostWrite = () => {
             <ImageUploadInfo>이미지 파일 (JPG, PNG, GIF) 3개를 첨부할 수 있어요.</ImageUploadInfo>
             <ImageUploadButton
               onClick={() => document.getElementById('imageUpload').click()}
-              image={image}
+              image={image ? URL.createObjectURL(image) : null}
             >
               {image ? '' : '+'}
             </ImageUploadButton>
@@ -294,8 +319,8 @@ const PostWrite = () => {
         </ContentsBox>
         {confirmModalVisible && (
         <ConfirmModal
-        msg="등록 되었어요!"
-        onConfirm={handleCloseConfirmModal}
+          msg="등록 되었어요!"
+          onConfirm={handleCloseConfirmModal}
         />
       )}
       </Container>
