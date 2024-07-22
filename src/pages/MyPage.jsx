@@ -118,7 +118,6 @@ const ActionButton = styled.button`
   width: 101px;
   height: 42px;
   background-color: #fff;
-  //border: 2px solid #E4E4E4;
   border: none;
   box-shadow: 0px 0px 2px 2px rgba(0,0,0,0.1);
   border-radius: 50px;
@@ -141,8 +140,9 @@ const iconMapping = {
 };
 
 function MyPage() {
-  // const [userInfo] = useState({ name: '김퓨처' });
-  const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '', userImage: ''});
+  //const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '', userImage: ''});
+  const [userInfo, setUserInfo] = useState({ userId: null, name: null, email: null, userImage: null });
+
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -164,22 +164,24 @@ function MyPage() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjIsImVtYWlsIjoiaHlvcmllMDEwM0BnbWFpbC5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoiaHlvcmllMDEwM0BnbWFpbC5jb20iLCJleHAiOjE3MjE2MzYxOTN9.3QsEuf93Jr4Itmk2bLCooh96LfcokvdGAlslGhdG5yHWJYAMABuo_1eAYkhN4FqK9GFFGGgRFp7HmtFFrLHoKg';
-        const response = await axios.get('http://43.200.144.133:8080/api/v1/mypage', {
+        const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE2OTM3NzJ9.ZyEMm1scyNkxFVcPrJMnIfpGHkPJuJn5SCefH-oTjaDU4SdYEYT0O8QHILYmlpoS5fRonCJ3lbxo4Et6vHcXUA';
+        const response = await axios.get('http://43.200.144.133:8080/api/v1/user/mypage', {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Cache-Control': 'no-cache' // 캐시 비활성화 헤더 추가
           }
         });
-        setUserInfo(response.data);
+        console.log(response.data);  // 응답 데이터 확인
+        setUserInfo(response.data.data);
       } catch (error) {
         console.error('Failed to fetch user info:', error);
         alert(error.response?.data?.message || 'Failed to fetch user info');
       }
     };
+    
 
     fetchUserInfo();
   }, []);
-  
 
   const handleLogoutClick = () => {
     setModalContent('로그아웃 하시겠습니까?');
@@ -187,7 +189,7 @@ function MyPage() {
       text1: '취소',
       text2: '확인',
       onCancel: () => setModalVisible(false),
-      onConfirm: () => confirmLogout()
+      onConfirm: confirmLogout
     });
     setModalVisible(true);
   };
@@ -226,7 +228,7 @@ function MyPage() {
       <PageHeader>마이페이지</PageHeader>
       <MyPageContainer>
         <UserGreeting>
-          <StyledPerson1 style={{ width: '165.64px', height: '163.17px'}}>{userInfo.userImage}</StyledPerson1>
+          <StyledPerson1 style={{ width: '165.64px', height: '163.17px' }}>{userInfo.userImage}</StyledPerson1>
           <GreetingContainer>
             <UserName>{userInfo.name}</UserName>
             <NameSuffix>님, 안녕하세요!</NameSuffix>
@@ -249,29 +251,28 @@ function MyPage() {
             </Card>
           ))}
         </IconGrid>
-      <AccountActions>
-        <ActionButton onClick={handleLogoutClick}>로그아웃</ActionButton>
-        <ActionButton onClick={handleDeleteClick}>회원탈퇴</ActionButton>
-      </AccountActions>
-      {modalVisible && (
-        <Modal
-          msg={modalContent}
-          text1={modalActions.text1}
-          text2={modalActions.text2}
-          onCancel={modalActions.onCancel}
-          onConfirm={modalActions.onConfirm}
-        />
-      )}
-      {confirmModalVisible && (
-        <ConfirmModal
-          msg={confirmModalMessage}
-          onConfirm={handleCloseConfirmModal}
-        />
-      )}
+        <AccountActions>
+          <ActionButton onClick={handleLogoutClick}>로그아웃</ActionButton>
+          <ActionButton onClick={handleDeleteClick}>회원탈퇴</ActionButton>
+        </AccountActions>
+        {modalVisible && (
+          <Modal
+            msg={modalContent}
+            text1={modalActions.text1}
+            text2={modalActions.text2}
+            onCancel={modalActions.onCancel}
+            onConfirm={modalActions.onConfirm}
+          />
+        )}
+        {confirmModalVisible && (
+          <ConfirmModal
+            msg={confirmModalMessage}
+            onConfirm={handleCloseConfirmModal}
+          />
+        )}
       </MyPageContainer>
-      </PageWrapper>
+    </PageWrapper>
   );
 }
 
 export default MyPage;
-
