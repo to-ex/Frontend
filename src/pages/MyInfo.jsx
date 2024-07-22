@@ -155,37 +155,61 @@ function MyInfo() {
   const [avatar, setAvatar] = useState('');
   const [nickname, setNickname] = useState(''); 
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(null); 
-  const [userInfo, setUserInfo] = useState({ userId: '', username: '', email: '' });
+  const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '' });
+
+  const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE2OTM3NzJ9.ZyEMm1scyNkxFVcPrJMnIfpGHkPJuJn5SCefH-oTjaDU4SdYEYT0O8QHILYmlpoS5fRonCJ3lbxo4Et6vHcXUA';
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchUserInfo = async () => {  //사용자 정보 가져오기(연동 완료)
       try {
-        const response = await axios.get('/api/v1/mypage/myinfo');
-        setUserInfo(response.data);
-        setNickname(response.data.username); // 초기 닉네임 설정
+        const response = await axios.get('http://43.200.144.133:8080/api/v1/user/mypage', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Cache-Control': 'no-cache'
+          }
+        });
+        setUserInfo(response.data.data);
       } catch (error) {
-        console.error('Failed to fetch user info', error);
+        console.error('Failed to fetch user info:', error);
+        alert(error.response?.data?.message || 'Failed to fetch user info');
       }
     };
-
     fetchUserInfo();
-  }, []);
+  }, [token]);
 
   const handleNicknameChange = (event) => {
-    setNickname(event.target.value);
+    const newNickname = event.target.value;
+    console.log("New nickname:", newNickname); // 닉네임 변경 확인
+    setNickname(newNickname);
     if (isNicknameAvailable !== null) {
       setIsNicknameAvailable(null); 
     }
   };
-
+  
+  
   const handleCheckNickname = async () => {
     try {
-      const response = await axios.get(`/api/v1/mypage/myinfo/isExist/${nickname}`);
-      setIsNicknameAvailable(!response.data.isExist);
+      const response = await axios.get(`http://43.200.144.133:8080/api/v1/user/mypage/check-nickname`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Cache-Control': 'no-cache'
+        },
+        params: {
+          newName: nickname
+        }
+      });
+      console.log("Nickname check response:", response.data); // 서버 응답 확인
+      setIsNicknameAvailable(!response.data.data); // 서버 응답에 따라 설정: true -> 사용 가능, false -> 사용 중
     } catch (error) {
       console.error('Failed to check nickname', error);
+      alert(error.response?.data?.message || 'Failed to check nickname');
     }
   };
+  
+  
+  
+  
+  
 
   const handleClearNickname = () => {
     setNickname(''); 
@@ -204,6 +228,27 @@ function MyInfo() {
         setAvatar(e.target.result); 
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSave = async () => { // 사용자 정보 수정 후 저장(연동 완료)
+    const formData = new FormData();
+    formData.append('image', fileInputRef.current.files[0]);
+    formData.append('name', nickname);
+    formData.append('email', userInfo.email);
+
+    try {
+      await axios.patch('http://43.200.144.133:8080/api/v1/user/mypage', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      alert('정보가 성공적으로 수정되었습니다.');
+    } catch (error) {
+      console.error('Failed to save user info', error);
+      alert(error.response?.data?.message || 'Failed to save user info');
     }
   };
 
@@ -248,7 +293,7 @@ function MyInfo() {
           </InputContainer>
           <NicknameButton onClick={handleCheckNickname}>중복 확인</NicknameButton>
         </InputRow>
-        <Button isNicknameAvailable={isNicknameAvailable}>저장</Button>
+        <Button $isNicknameAvailable={isNicknameAvailable} onClick={handleSave}>저장</Button>
       </Container>
     </ThemeProvider>
   );
