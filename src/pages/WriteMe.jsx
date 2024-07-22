@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Theme } from "../styles/Theme";
 import { ReactComponent as Trashimg } from "../assets/images/Trash.svg";
@@ -9,6 +9,7 @@ import { ReactComponent as Write } from "../assets/images/Write.svg";
 import { ReactComponent as SendIcon } from "../assets/images/Send.svg";
 import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const Container = styled.div`
   width: 1920px;
@@ -322,6 +323,7 @@ const SendIconWrap = styled.div`
 
 const WriteMe = () => {
   const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
 
   const dummyData = {
     index: 0,
@@ -343,6 +345,28 @@ const WriteMe = () => {
       { id: 2, user: '김퓨처', date: '3일전', text: '어쩌구 저쩌구 댓글....' }
     ]
   };
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE2OTM3NzJ9.ZyEMm1scyNkxFVcPrJMnIfpGHkPJuJn5SCefH-oTjaDU4SdYEYT0O8QHILYmlpoS5fRonCJ3lbxo4Et6vHcXUA';
+        const response = await axios.get('http://43.200.144.133:8080/api/v1/board/mypost', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            page: 1,
+            size: 4,
+          },
+        });
+        setPosts(response.data.data);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   const [heart, setHeart] = useState(dummyData.ishearted);
   const [heartCount, setHeartCount] = useState(dummyData.heartcount);
