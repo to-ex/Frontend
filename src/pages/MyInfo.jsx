@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import styled, { ThemeProvider } from 'styled-components';
 import { Theme } from '../styles/Theme';
-import { ReactComponent as PersonCamIcon } from '../assets/images/person_cam.svg'; 
+// import { ReactComponent as PersonCamIcon } from '../assets/images/person_cam.svg'; 
 import { ReactComponent as CamIcon } from '../assets/images/cam.svg';
 
 const Container = styled.div`
@@ -32,13 +32,13 @@ const AvatarContainer = styled.div`
   cursor: pointer;
 `;
 
-const AvatarIcon = styled(PersonCamIcon)`
-  position: absolute;
-  bottom: 0;
-  cursor: pointer;
-  width: 218px;
-  height: 215px;
-`;
+// const AvatarIcon = styled(PersonCamIcon)`
+//   position: absolute;
+//   bottom: 0;
+//   cursor: pointer;
+//   width: 218px;
+//   height: 215px;
+// `;
 
 const Input = styled.input`
   width: 355px;
@@ -156,7 +156,7 @@ function MyInfo() {
   const [avatar, setAvatar] = useState('');
   const [nickname, setNickname] = useState(''); 
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(null); 
-  const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '' });
+  const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '', userImage: '' });
 
   const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE2OTM3NzJ9.ZyEMm1scyNkxFVcPrJMnIfpGHkPJuJn5SCefH-oTjaDU4SdYEYT0O8QHILYmlpoS5fRonCJ3lbxo4Et6vHcXUA';
 
@@ -251,18 +251,23 @@ function MyInfo() {
   return (
     <ThemeProvider theme={Theme}>
       <Container>
-        <AvatarContainer onClick={handleAvatarClick}>
-          {avatar ? (
-            <>
-              <AvatarImage src={avatar} alt="Avatar" />
-              <Overlay>
-                <CamIcon /> 
-              </Overlay>
-            </>
-          ) : (
-            <AvatarIcon />
-          )}
-        </AvatarContainer>
+      <AvatarContainer onClick={handleAvatarClick}>
+      {avatar ? (
+        <>
+          <AvatarImage src={avatar} alt="Avatar" />
+          <Overlay>
+            <CamIcon />
+          </Overlay>
+        </>
+      ) : (
+        <>
+          <AvatarImage src={userInfo.userImage} alt="Avatar" />
+          <Overlay>
+            <CamIcon />
+          </Overlay>
+        </>
+      )}
+    </AvatarContainer>
         <input
           type="file"
           ref={fileInputRef}
