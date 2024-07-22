@@ -163,11 +163,9 @@ function MyPage() {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const apiUrl = 'http://43.200.144.133:8080/api/v1/mypage';
-      const token = localStorage.getItem('eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjIsImVtYWlsIjoiaHlvcmllMDEwM0BnbWFpbC5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoiaHlvcmllMDEwM0BnbWFpbC5jb20iLCJleHAiOjE3MjE2MzYxOTN9.3QsEuf93Jr4Itmk2bLCooh96LfcokvdGAlslGhdG5yHWJYAMABuo_1eAYkhN4FqK9GFFGGgRFp7HmtFFrLHoKg');
-  
       try {
-        const response = await axios.get(apiUrl, {
+        const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjIsImVtYWlsIjoiaHlvcmllMDEwM0BnbWFpbC5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoiaHlvcmllMDEwM0BnbWFpbC5jb20iLCJleHAiOjE3MjE2MzYxOTN9.3QsEuf93Jr4Itmk2bLCooh96LfcokvdGAlslGhdG5yHWJYAMABuo_1eAYkhN4FqK9GFFGGgRFp7HmtFFrLHoKg';
+        const response = await axios.get('http://43.200.144.133:8080/api/v1/mypage', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -178,7 +176,7 @@ function MyPage() {
         alert(error.response?.data?.message || 'Failed to fetch user info');
       }
     };
-  
+
     fetchUserInfo();
   }, []);
   
