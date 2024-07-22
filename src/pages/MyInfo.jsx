@@ -76,12 +76,13 @@ const Button = styled.button`
   width: 234px;
   height: 60px;
   font-size: 17px;
-  background-color: ${({ theme, isNicknameAvailable }) => isNicknameAvailable === false ? theme.colors.GRAY01 : theme.colors.RED04};
+  background-color: ${({ theme, $isNicknameAvailable }) => 
+    $isNicknameAvailable ? theme.colors.RED04 : theme.colors.GRAY01};
   color: ${({ theme }) => theme.colors.WHITE};
   border: none;
   border-radius: 50px;
-  cursor: pointer;
-  margin-top: 18px;  
+  cursor: ${({ $isNicknameAvailable }) => $isNicknameAvailable ? 'pointer' : 'not-allowed'};
+  margin-top: 18px;
 `;
 
 const Title = styled.div`
@@ -206,11 +207,6 @@ function MyInfo() {
     }
   };
   
-  
-  
-  
-  
-
   const handleClearNickname = () => {
     setNickname(''); 
     setIsNicknameAvailable(null); 
