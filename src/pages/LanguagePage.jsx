@@ -3,6 +3,7 @@ import styled, { keyframes, ThemeProvider } from 'styled-components';
 import { ReactComponent as DropdownIcon } from '../assets/images/Dropdown.svg';
 import { Theme } from '../styles/Theme'; 
 import Paging from "../components/Paging";
+import Header from "../components/Header";
 import { ReactComponent as Bg1Icon } from '../assets/images/Bg1.svg'; 
 import { ReactComponent as Bg2Icon } from '../assets/images/Bg2.svg';
 import { ReactComponent as WarningIcon } from '../assets/images/Warning.svg';
@@ -25,8 +26,8 @@ const Bg2IconWrap = styled.div`
 const Container = styled.div`
   width: 1424px;
   margin: 0 auto;
-  margin-top: 88px;
-  padding-top: 65px;
+  box-sizing: border-box;
+  padding-top: 85px;
   text-align: center;
 `;
 
@@ -325,12 +326,6 @@ const ArrowButton = styled.a`
   }
 `;
 
-// const Arrow = styled.div`
-//   display: flex;
-//   margin-left: 314px;
-//   gap: 27px;
-// `;
-
 const PagingWrapper = styled.div`
   margin-top: 50px; 
   margin-bottom: 90px; 
@@ -413,7 +408,7 @@ function LanguagePage() {
   };
 
   const handleRegionSelect = (testArea) => {
-    console.log('Selected Region:', testArea);
+    console.log('Selected testArea:', testArea);
     setSelectedRegion(testArea);
     setDropdownOpen(prevState => ({ ...prevState, testArea: false }));
   };
@@ -441,6 +436,7 @@ function LanguagePage() {
 
   return (
     <ThemeProvider theme={Theme}>
+      <Header />
       <Bg1IconWrap>
         <Bg1Icon src="../assets/images/Bg1.svg" alt="bg1" />
       </Bg1IconWrap>
