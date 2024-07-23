@@ -12,6 +12,7 @@ import { ReactComponent as Scrap } from '../assets/images/scrap.svg';
 import { ReactComponent as Checklist } from '../assets/images/checklist.svg';
 import { ReactComponent as Calendar } from '../assets/images/calendar.svg';
 import Header from "../components/Header";
+import ScrollToTop from '../components/ScrollToTop';
 
 const HeaderWrapper = styled.div`
   position: fixed;
@@ -173,10 +174,10 @@ function MyPage() {
   });
   const [items] = useState([
     { id: 1, title: '내 정보 관리', icon: 'profile', path: '/myinfo' },
-    { id: 2, title: '나의 쓰기', icon: 'writing', path: null },
-    { id: 3, title: '스크랩', icon: 'scrap', path: null },
-    { id: 4, title: '체크리스트', icon: 'checklist', path: null },
-    { id: 5, title: '캘린더', icon: 'calendar', path: null }
+    { id: 2, title: '나의 쓰기', icon: 'writing', path: '/mywrite' },
+    { id: 3, title: '스크랩', icon: 'scrap', path: '/scrap' },
+    { id: 4, title: '체크리스트', icon: 'checklist', path: '/checklist' },
+    { id: 5, title: '캘린더', icon: 'calendar', path: '/calendar' } //추후 경로 수정 필요
   ]);
 
   useEffect(() => {
@@ -333,6 +334,7 @@ return (
         )}
         </MyPageContainer>
     </PageWrapper>
+    <ScrollToTop />
     </Contain>
 </ThemeProvider>
 );
