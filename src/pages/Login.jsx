@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import logo from "../assets/images/Logo.svg";
+import Logo from "../assets/images/Logo.svg";
 import LoginButton from "../components/LoginButton";
 
 const Login = () => {
   return (
     <Container>
-      <LogoImg src={logo} alt="LogoImg" />
+      <LogoImg src={Logo} alt="LogoImg" />
       <Text>
         <b>로그인</b>이 <br />
         필요한 서비스에요!
