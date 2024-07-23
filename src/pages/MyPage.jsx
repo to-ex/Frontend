@@ -17,8 +17,9 @@ const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center; 
-  width: 1920px;
+  //width: 100%;
   margin: 0 auto;
+  padding: 0;
   
   a { 
     text-decoration: none;  
