@@ -52,7 +52,7 @@ const BackGround = styled.div`
 
 const Container = styled.div`
   width: 100%;
-  margin: 12px 192px;
+  margin: 12px 10%;
   display: flex;
   justify-content: space-between;
 `;
