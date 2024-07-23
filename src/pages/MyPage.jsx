@@ -182,7 +182,7 @@ function MyPage() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE2OTM3NzJ9.ZyEMm1scyNkxFVcPrJMnIfpGHkPJuJn5SCefH-oTjaDU4SdYEYT0O8QHILYmlpoS5fRonCJ3lbxo4Et6vHcXUA';
+        const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE4MDEzMzB9.impBgrgiYYs8821Gxsg3x9k-_h3Efqc14VCUMN-Hs8gN8YZ-5KwVCUJKDuKbo6MoEQzZCYpuAdFPKeDMD6M9EA';
         const response = await axios.get('http://43.200.144.133:8080/api/v1/user/mypage', {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -197,7 +197,6 @@ function MyPage() {
       }
     };
     
-
     fetchUserInfo();
   }, []);
 
@@ -212,14 +211,35 @@ function MyPage() {
     setModalVisible(true);
   };
 
-  const confirmLogout = () => {
-    console.log("User logged out");
-    setModalVisible(false);
-    setConfirmModalMessage('로그아웃 되었어요');
-    setConfirmModalVisible(true);
+  
+//   const confirmLogout = () => {
+//     console.log("User logged out");
+//     setModalVisible(false);
+//     setConfirmModalMessage('로그아웃 되었어요');
+//     setConfirmModalVisible(true);
+//   };
+
+ const confirmLogout = async () => {
+    try {
+      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE4MDEzMzB9.impBgrgiYYs8821Gxsg3x9k-_h3Efqc14VCUMN-Hs8gN8YZ-5KwVCUJKDuKbo6MoEQzZCYpuAdFPKeDMD6M9EA';
+      await axios.post('http://43.200.144.133:8080/api/v1/auth/logout', null, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        params: {
+          id: userInfo.userId
+        }
+      });
+      setModalVisible(false);
+      setConfirmModalMessage('로그아웃 되었어요');
+      setConfirmModalVisible(true);
+    } catch (error) {
+      console.error('Failed to logout:', error);
+      alert(error.response?.data?.message || 'Failed to logout');
+    }
   };
 
-  const handleDeleteClick = () => {
+const handleDeleteClick = () => {
     setModalContent('더 이상 to.x 사용을 원하지 않으신가요?');
     setModalActions({
       text1: '더 써볼래요',
@@ -230,75 +250,91 @@ function MyPage() {
     setModalVisible(true);
   };
 
-  const confirmDeletion = () => {
-    console.log("User Deletion");
-    setModalVisible(false);
-    setConfirmModalMessage('회원탈퇴 처리가 완료되었어요');
-    setConfirmModalVisible(true);
+//   const confirmDeletion = () => {
+//     console.log("User Deletion");
+//     setModalVisible(false);
+//     setConfirmModalMessage('회원탈퇴 처리가 완료되었어요');
+//     setConfirmModalVisible(true);
+//   };
+
+ const confirmDeletion = async () => {
+    try {
+      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE4MDEzMzB9.impBgrgiYYs8821Gxsg3x9k-_h3Efqc14VCUMN-Hs8gN8YZ-5KwVCUJKDuKbo6MoEQzZCYpuAdFPKeDMD6M9EA';
+      await axios.delete('http://43.200.144.133:8080/api/v1/auth/withdraw', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setModalVisible(false);
+      setConfirmModalMessage('회원탈퇴 처리가 완료되었어요');
+      setConfirmModalVisible(true);
+    } catch (error) {
+      console.error('Failed to delete account:', error);
+      alert(error.response?.data?.message || 'Failed to delete account');
+    }
   };
 
-  const handleCloseConfirmModal = () => {
+ const handleCloseConfirmModal = () => {
     setConfirmModalVisible(false);
-  };
+};
 
-  return (
-    <ThemeProvider theme={Theme}>
+return (
+<ThemeProvider theme={Theme}>
     <HeaderWrapper>
-        <Header />
-      </HeaderWrapper>
-      <Contain>
-        <PageWrapper>
-          <PageHeader>마이페이지</PageHeader>
-          <MyPageContainer>
-            <UserGreeting>
-              <StyledPerson1 style={{ width: '165.64px', height: '163.17px' }}>{userInfo.userImage}</StyledPerson1>
-              <GreetingContainer>
-                <UserName>{userInfo.name}</UserName>
-                <NameSuffix>님, 안녕하세요!</NameSuffix>
-              </GreetingContainer>
-            </UserGreeting>
-            <IconGrid>
-              {items.map(item => (
-                <Card key={item.id}>
-                  {item.path ? (
-                    <Link to={item.path}>
-                                           {React.createElement(iconMapping[item.icon], { className: 'icon' })}
-                      <ItemTitle>{item.title}</ItemTitle>
-                    </Link>
-                  ) : (
-                    <div>
-                      {React.createElement(iconMapping[item.icon], { className: 'icon' })}
-                      <ItemTitle>{item.title}</ItemTitle>
-                    </div>
-                  )}
-                </Card>
-              ))}
-            </IconGrid>
-            <AccountActions>
-              <ActionButton onClick={handleLogoutClick}>로그아웃</ActionButton>
-              <ActionButton onClick={handleDeleteClick}>회원탈퇴</ActionButton>
-            </AccountActions>
-            {modalVisible && (
-              <Modal
-                msg={modalContent}
-                text1={modalActions.text1}
-                text2={modalActions.text2}
-                onCancel={modalActions.onCancel}
-                onConfirm={modalActions.onConfirm}
-              />
-            )}
-            {confirmModalVisible && (
-              <ConfirmModal
-                msg={confirmModalMessage}
-                onConfirm={handleCloseConfirmModal}
-              />
-            )}
-          </MyPageContainer>
-        </PageWrapper>
-      </Contain>
-    </ThemeProvider>
-  );
+    <Header />
+    </HeaderWrapper>
+    <Contain>
+    <PageWrapper>
+        <PageHeader>마이페이지</PageHeader>
+        <MyPageContainer>
+        <UserGreeting>
+            <StyledPerson1 style={{ width: '165.64px', height: '163.17px' }}>{userInfo.userImage}</StyledPerson1>
+            <GreetingContainer>
+            <UserName>{userInfo.name}</UserName>
+            <NameSuffix>님, 안녕하세요!</NameSuffix>
+            </GreetingContainer>
+        </UserGreeting>
+        <IconGrid>
+            {items.map(item => (
+            <Card key={item.id}>
+                {item.path ? (
+                <Link to={item.path}>
+                    {React.createElement(iconMapping[item.icon], { className: 'icon' })}
+                    <ItemTitle>{item.title}</ItemTitle>
+                </Link>
+                ) : (
+                <div>
+                    {React.createElement(iconMapping[item.icon], { className: 'icon' })}
+                    <ItemTitle>{item.title}</ItemTitle>
+                </div>
+                )}
+            </Card>
+            ))}
+        </IconGrid>
+        <AccountActions>
+            <ActionButton onClick={handleLogoutClick}>로그아웃</ActionButton>
+            <ActionButton onClick={handleDeleteClick}>회원탈퇴</ActionButton>
+        </AccountActions>
+        {modalVisible && (
+            <Modal
+            msg={modalContent}
+            text1={modalActions.text1}
+            text2={modalActions.text2}
+            onCancel={modalActions.onCancel}
+            onConfirm={modalActions.onConfirm}
+            />
+        )}
+        {confirmModalVisible && (
+            <ConfirmModal
+            msg={confirmModalMessage}
+            onConfirm={handleCloseConfirmModal}
+            />
+        )}
+        </MyPageContainer>
+    </PageWrapper>
+    </Contain>
+</ThemeProvider>
+);
 }
 
 export default MyPage;
-
