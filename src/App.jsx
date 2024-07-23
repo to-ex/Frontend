@@ -10,7 +10,7 @@ function App() {
     <ThemeProvider theme={Theme}>
       <Header />  
       <Routes>
-        <Route path="/MainPage" element={<MainPage />} />
+        <Route path="/" element={<MainPage />} />
       </Routes>
     </ThemeProvider>
   );
