@@ -271,7 +271,7 @@ function MainPage() {
             <CalculatorIconWrap>
               <CalculatorIcon src="../assets/images/Calculator.svg" alt="학사 아이콘" />
             </CalculatorIconWrap>
-            <Link to="#">
+            <Link to="/study">
               ↗
             </Link>
           </FeatureCard>
@@ -281,7 +281,7 @@ function MainPage() {
             <NoteIconWrap>
               <NoteIcon src="../assets/images/Note.svg" alt="어학 아이콘" />
             </NoteIconWrap>
-            <Link to="#">
+            <Link to="/language">
               ↗
             </Link>
           </FeatureCard>
@@ -291,7 +291,7 @@ function MainPage() {
             <WindowsIconWrap>
               <WindowsIcon src="../assets/images/Windows.svg" alt="커뮤니티 아이콘" />
             </WindowsIconWrap>
-            <Link to="#">
+            <Link to="/community">
               ↗
             </Link>
           </FeatureCard>
@@ -301,7 +301,7 @@ function MainPage() {
             <CalendarIconWrap>
               <CalendarIcon src="../assets/images/Calendar.svg" alt="캘린더 아이콘" />
             </CalendarIconWrap>
-            <Link to="#">
+            <Link to="/calendar">
               ↗
             </Link>
           </FeatureCard>
