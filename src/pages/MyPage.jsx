@@ -197,6 +197,7 @@ function MyPage() {
       }
     };
     
+
     fetchUserInfo();
   }, []);
 
