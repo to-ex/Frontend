@@ -54,7 +54,7 @@ export const StyledOptionItem = styled.li`
   align-items: center;
   padding-right: 15px;
   border-radius: ${(props) =>
-    props.$index === 0
+    props.$index === 1
       ? "20px 20px 0 0"
       : props.$index === 3
       ? "0 0 20px 20px"

@@ -8,10 +8,33 @@ import {
 } from "../styles/StyledDropDown";
 import { ReactComponent as NoteIcon } from "../assets/images/NoteIcon.svg";
 
-const ScheduleCategoryDropDown = ({ list, selected, isOpen }) => {
+const ScheduleCategoryDropDown = ({ selected, isOpen }) => {
   const [selectedName, setSelectedName] = useState(selected);
   const [active, setActive] = useState(false);
 
+  const list = [
+    {
+      index: 1,
+      name: "비자",
+      scheduleCategory: "VISA",
+      oncolor: "#D2AEFF",
+      offcolor: "rgba(210, 174, 255, 0.3)",
+    },
+    {
+      index: 2,
+      name: "어학",
+      scheduleCategory: "TEST",
+      oncolor: "#FFCA63",
+      offcolor: "rgba(255, 202, 99, 0.3)",
+    },
+    {
+      index: 3,
+      name: "기타",
+      scheduleCategory: "ETC",
+      oncolor: "#63E3FF",
+      offcolor: "rgba(99, 227, 255, 0.3)",
+    },
+  ];
   return (
     <>
       <StyledSelectedLabel onClick={() => setActive(!active)}>

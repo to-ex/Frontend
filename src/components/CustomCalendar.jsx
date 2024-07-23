@@ -50,19 +50,65 @@ const CustomCalendar = () => {
     },
   ];
 
-  const fetchData = async () => {
-    try {
-      await AxiosCalendarGet().then((res) => {
-        setEvents(res.data);
-      });
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const data = [
+    {
+      scheduleId: 8,
+      scheduleCategory: "VISA",
+      content: "비자 인터뷰 예약",
+      isDone: false,
+      userId: 3486609159,
+      startDate: "2024-07-01",
+      endDate: "2024-07-15",
+      type: "CALENDAR",
+    },
+    {
+      scheduleId: 9,
+      scheduleCategory: "TEST",
+      content: "어학 시험 준비",
+      isDone: true,
+      userId: 3486609159,
+      startDate: "2024-07-01",
+      endDate: "2024-07-15",
+      type: "CALENDAR",
+    },
+    {
+      scheduleId: 10,
+      scheduleCategory: "VISA",
+      content: "Update Schedule",
+      isDone: true,
+      userId: 3486609159,
+      startDate: null,
+      endDate: null,
+      type: "CHECKLIST",
+    },
+    {
+      scheduleId: 11,
+      scheduleCategory: "VISA",
+      content: "Update Schedule",
+      isDone: true,
+      userId: 3486609159,
+      startDate: null,
+      endDate: null,
+      type: "CHECKLIST",
+    },
+  ];
 
   useEffect(() => {
-    fetchData();
+    setEvents(data);
   }, []);
+  // const fetchData = async () => {
+  //   try {
+  //     await AxiosCalendarGet().then((res) => {
+  //       setEvents(res.data);
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   const handleTabClick = (tab) => {
     setSelectedTab(tab.scheduleCategory);
