@@ -8,12 +8,10 @@ import Header from "./components/Header";
 function App() {
   return (
     <ThemeProvider theme={Theme}>
-      <Router>
       <Header />  
       <Routes>
         <Route path="/MainPage" element={<MainPage />} />
       </Routes>
-    </Router>
     </ThemeProvider>
   );
 }
