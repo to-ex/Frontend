@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
+import { Theme } from '../styles/Theme';
 import axios from 'axios'; 
 import Modal from '../components/Modal';
 import ConfirmModal from '../components/ConfirmModal';
@@ -10,17 +11,24 @@ import { ReactComponent as Writing } from '../assets/images/writing.svg';
 import { ReactComponent as Scrap } from '../assets/images/scrap.svg';
 import { ReactComponent as Checklist } from '../assets/images/checklist.svg';
 import { ReactComponent as Calendar } from '../assets/images/calendar.svg';
+import Header from "../components/Header";
 
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center; 
-  width: 100%;
-  margin: 11% auto 0;
+  width: 1920px;
+  margin: 0 auto;
+  
   a { 
     text-decoration: none;  
     color: black;
   }
+`;
+
+const Contain = styled.div`
+  box-sizing: border-box;
+  padding-top: 150px;
 `;
 
 const PageHeader = styled.div`
@@ -37,7 +45,7 @@ const MyPageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #FFF;
+  background: ${({ theme }) => theme.colors.WHITE};
   border-radius: 10px;
   width: 1400px;
   height: 687px;
@@ -224,54 +232,59 @@ function MyPage() {
   };
 
   return (
-    <PageWrapper>
-      <PageHeader>마이페이지</PageHeader>
-      <MyPageContainer>
-        <UserGreeting>
-          <StyledPerson1 style={{ width: '165.64px', height: '163.17px' }}>{userInfo.userImage}</StyledPerson1>
-          <GreetingContainer>
-            <UserName>{userInfo.name}</UserName>
-            <NameSuffix>님, 안녕하세요!</NameSuffix>
-          </GreetingContainer>
-        </UserGreeting>
-        <IconGrid>
-          {items.map(item => (
-            <Card key={item.id}>
-              {item.path ? (
-                <Link to={item.path}>
-                  {React.createElement(iconMapping[item.icon], { className: 'icon' })}
-                  <ItemTitle>{item.title}</ItemTitle>
-                </Link>
-              ) : (
-                <div>
-                  {React.createElement(iconMapping[item.icon], { className: 'icon' })}
-                  <ItemTitle>{item.title}</ItemTitle>
-                </div>
-              )}
-            </Card>
-          ))}
-        </IconGrid>
-        <AccountActions>
-          <ActionButton onClick={handleLogoutClick}>로그아웃</ActionButton>
-          <ActionButton onClick={handleDeleteClick}>회원탈퇴</ActionButton>
-        </AccountActions>
-        {modalVisible && (
-          <Modal
-            msg={modalContent}
-            text1={modalActions.text1}
-            text2={modalActions.text2}
-            onCancel={modalActions.onCancel}
-            onConfirm={modalActions.onConfirm}
-          />
-        )}
-        {confirmModalVisible && (
-          <ConfirmModal
-            msg={confirmModalMessage}
-            onConfirm={handleCloseConfirmModal}
-          />
-        )}
-      </MyPageContainer>
-    </PageWrapper>
+    <ThemeProvider theme={Theme}>
+     <Header />
+      <Contain>
+      <PageWrapper>
+        <PageHeader>마이페이지</PageHeader>
+        <MyPageContainer>
+          <UserGreeting>
+            <StyledPerson1 style={{ width: '165.64px', height: '163.17px' }}>{userInfo.userImage}</StyledPerson1>
+            <GreetingContainer>
+              <UserName>{userInfo.name}</UserName>
+              <NameSuffix>님, 안녕하세요!</NameSuffix>
+            </GreetingContainer>
+          </UserGreeting>
+          <IconGrid>
+            {items.map(item => (
+              <Card key={item.id}>
+                {item.path ? (
+                  <Link to={item.path}>
+                    {React.createElement(iconMapping[item.icon], { className: 'icon' })}
+                    <ItemTitle>{item.title}</ItemTitle>
+                  </Link>
+                ) : (
+                  <div>
+                    {React.createElement(iconMapping[item.icon], { className: 'icon' })}
+                    <ItemTitle>{item.title}</ItemTitle>
+                  </div>
+                )}
+              </Card>
+            ))}
+          </IconGrid>
+          <AccountActions>
+            <ActionButton onClick={handleLogoutClick}>로그아웃</ActionButton>
+            <ActionButton onClick={handleDeleteClick}>회원탈퇴</ActionButton>
+          </AccountActions>
+          {modalVisible && (
+            <Modal
+              msg={modalContent}
+              text1={modalActions.text1}
+              text2={modalActions.text2}
+              onCancel={modalActions.onCancel}
+              onConfirm={modalActions.onConfirm}
+            />
+          )}
+          {confirmModalVisible && (
+            <ConfirmModal
+              msg={confirmModalMessage}
+              onConfirm={handleCloseConfirmModal}
+            />
+          )}
+        </MyPageContainer>
+      </PageWrapper>
+      </Contain>
+    </ThemeProvider>
   );
 }
 
