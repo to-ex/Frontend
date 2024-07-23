@@ -48,6 +48,8 @@ const BackGround = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.colors.WHITE};
   box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  z-index: 1000;
 `;
 
 const Container = styled.div`
