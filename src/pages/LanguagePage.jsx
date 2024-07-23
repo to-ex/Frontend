@@ -348,26 +348,20 @@ const Overlay = styled.div`
 `;
 
 const staticDatas = [
-  { month: 7, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 7, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 7, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 7, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 7, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 7, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 7, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 7, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 8, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 8, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 8, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 8, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
-  { month: 8, date: '', day: '', time: '', kind: '', location: '', address: '', region: '', category: 'IELTS' },
+  { month: 7, date: '1', day: '월', time: '10:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '서울', testCategory: 'TOEFL' },
+  { month: 7, date: '2', day: '화', time: '11:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '서울', testCategory: 'TOEFL' },
+  { month: 7, date: '3', day: '수', time: '12:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '서울', testCategory: 'TOEFL' },
+  { month: 7, date: '4', day: '목', time: '13:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '서울', testCategory: 'IELTS' },
+  { month: 7, date: '5', day: '금', time: '14:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '서울', testCategory: 'IELTS' },
+  { month: 8, date: '6', day: '토', time: '15:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '인천', testCategory: 'IELTS' },
+    { month: 8, date: '6', day: '토', time: '15:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '인천', testCategory: 'IELTS' },
 ];
 
 function LanguagePage() {
   const [selectedExamType, setSelectedExamType] = useState('토플');
   const [selectedMonth, setSelectedMonth] = useState(7);
   const [examData] = useState(staticDatas); // 정적 데이터 사용
-  const [dropdownOpen, setDropdownOpen] = useState({ region: false, type: false, ieltsType: false, date: false });
+  const [dropdownOpen, setDropdownOpen] = useState({ testArea: false, type: false, ieltsType: false, date: false });
   const [selectedRegion, setSelectedRegion] = useState('전체');
   const [selectedType, setSelectedType] = useState('전체');
   const [selectedDateRange, setSelectedDateRange] = useState('전체');
@@ -391,8 +385,8 @@ function LanguagePage() {
 
   const filterExams = () => {
     return examData.filter(exam => {
-      const isCategoryMatch = selectedExamType === '전체' || exam.category === (selectedExamType === '토플' ? 'TOEFL' : 'IELTS');
-      const isRegionMatch = selectedRegion === '전체' || exam.region === selectedRegion;
+      const isCategoryMatch = selectedExamType === '전체' || exam.testCategory === (selectedExamType === '토플' ? 'TOEFL' : 'IELTS');
+      const isRegionMatch = selectedRegion === '전체' || exam.testArea === selectedRegion;
       const isTypeMatch = selectedType === '전체' || exam.type === selectedType;
       const isMonthMatch = selectedMonth === exam.month;
       const isDateMatch = isDateInRange(exam.date);
@@ -418,10 +412,10 @@ function LanguagePage() {
     }));
   };
 
-  const handleRegionSelect = (region) => {
-    console.log('Selected Region:', region);
-    setSelectedRegion(region);
-    setDropdownOpen(prevState => ({ ...prevState, region: false }));
+  const handleRegionSelect = (testArea) => {
+    console.log('Selected Region:', testArea);
+    setSelectedRegion(testArea);
+    setDropdownOpen(prevState => ({ ...prevState, testArea: false }));
   };
 
   const handleTypeSelect = (type) => {
@@ -454,7 +448,7 @@ function LanguagePage() {
         <Bg2Icon src="../assets/images/Bg2.svg" alt="bg2" />
       </Bg2IconWrap>
       <Container>
-        <Overlay show={isDropdownOpen} onClick={() => setDropdownOpen({ region: false, type: false, ieltsType: false, date: false })} />
+        <Overlay show={isDropdownOpen} onClick={() => setDropdownOpen({ testArea: false, type: false, ieltsType: false, date: false })} />
         <Title>어학 시험 일정</Title>
         <Subtitle>원하는 시험 일정을 미리 캘린더에 추가할 수 있어요!</Subtitle>
         <ExamTypeSelector>
@@ -485,11 +479,11 @@ function LanguagePage() {
         </MonthSelector>
         <DropdownWrapper>
           <DropdownContainer>
-            <DropdownButton onClick={() => toggleDropdown('region')} $isOpen={dropdownOpen.region}>
+            <DropdownButton onClick={() => toggleDropdown('rtestArea')} $isOpen={dropdownOpen.testArea}>
               {selectedRegion}
               <DropdownIcon />
             </DropdownButton>
-            <DropdownContent $show={dropdownOpen.region}>
+            <DropdownContent $show={dropdownOpen.testArea}>
               <button onClick={() => handleRegionSelect('전체')}>전체</button>
               <button onClick={() => handleRegionSelect('서울')}>서울</button>
               <button onClick={() => handleRegionSelect('인천')}>인천</button>
