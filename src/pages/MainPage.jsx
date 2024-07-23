@@ -14,6 +14,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link } from 'react-router-dom';
 import Header from "../components/Header";
+import ScrollToTop from '../components/ScrollToTop';
 
 const Container = styled.div`
   width: 1920px;
@@ -24,7 +25,7 @@ const Container = styled.div`
 
 const Contain = styled.div`
   box-sizing: border-box;
-  padding-top: 190px;
+  padding-top: 195px;
 `;
 
 const Banner = styled.div`
@@ -306,6 +307,7 @@ function MainPage() {
           </FeatureCard>
         </FeatureCards>
         </Contain>
+        <ScrollToTop />
       </Container>
     </ThemeProvider>
   );
