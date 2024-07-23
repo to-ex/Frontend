@@ -27,7 +27,7 @@ const Container = styled.div`
   width: 1424px;
   margin: 0 auto;
   box-sizing: border-box;
-  padding-top: 85px;
+  padding-top: 155px;
   text-align: center;
 `;
 
@@ -475,7 +475,7 @@ function LanguagePage() {
         </MonthSelector>
         <DropdownWrapper>
           <DropdownContainer>
-            <DropdownButton onClick={() => toggleDropdown('rtestArea')} $isOpen={dropdownOpen.testArea}>
+            <DropdownButton onClick={() => toggleDropdown('testArea')} $isOpen={dropdownOpen.testArea}>
               {selectedRegion}
               <DropdownIcon />
             </DropdownButton>
