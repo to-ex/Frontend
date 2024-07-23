@@ -4,6 +4,15 @@ import styled, { ThemeProvider } from 'styled-components';
 import { Theme } from '../styles/Theme';
 // import { ReactComponent as PersonCamIcon } from '../assets/images/person_cam.svg'; 
 import { ReactComponent as CamIcon } from '../assets/images/cam.svg';
+import Header from "../components/Header";
+
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -17,8 +26,7 @@ const Container = styled.div`
   box-sizing: border-box;  
   box-shadow: 0px 0px 3px 3px rgba(0,0,0,0.1); 
   border-radius: 10px;
-  margin: auto;
-  margin-top: 150px;
+  margin-top: 185px;
 `;
 
 const AvatarContainer = styled.div`
@@ -250,6 +258,8 @@ function MyInfo() {
 
   return (
     <ThemeProvider theme={Theme}>
+      <PageWrapper>
+      <Header />
       <Container>
       <AvatarContainer onClick={handleAvatarClick}>
       {avatar ? (
@@ -296,6 +306,7 @@ function MyInfo() {
         </InputRow>
         <Button $isNicknameAvailable={isNicknameAvailable} onClick={handleSave}>저장</Button>
       </Container>
+      </PageWrapper>
     </ThemeProvider>
   );
 }
