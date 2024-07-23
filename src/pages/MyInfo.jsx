@@ -6,6 +6,13 @@ import { Theme } from '../styles/Theme';
 import { ReactComponent as CamIcon } from '../assets/images/cam.svg';
 import Header from "../components/Header";
 
+const HeaderWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+`;
+
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -27,6 +34,7 @@ const Container = styled.div`
   box-shadow: 0px 0px 3px 3px rgba(0,0,0,0.1); 
   border-radius: 10px;
   margin-top: 185px;
+  margin-bottom: 100px;
 `;
 
 const AvatarContainer = styled.div`
@@ -259,53 +267,55 @@ function MyInfo() {
   return (
     <ThemeProvider theme={Theme}>
       <PageWrapper>
-      <Header />
-      <Container>
-      <AvatarContainer onClick={handleAvatarClick}>
-      {avatar ? (
-        <>
-          <AvatarImage src={avatar} alt="Avatar" />
-          <Overlay>
-            <CamIcon />
-          </Overlay>
-        </>
-      ) : (
-        <>
-          <AvatarImage src={userInfo.userImage} alt="Avatar" />
-          <Overlay>
-            <CamIcon />
-          </Overlay>
-        </>
-      )}
-    </AvatarContainer>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-          accept="image/*"
-        />
-        <TitleContainer>
-          <Title>닉네임</Title>
-          {isNicknameAvailable !== null && (
-            <StatusMessage>
-              {isNicknameAvailable ? "사용 가능한 닉네임입니다." : "이미 사용중인 닉네임입니다."}
-            </StatusMessage>
-          )}
-        </TitleContainer>
-        <InputRow>
-          <InputContainer>
-            <Input
-              placeholder="닉네임"
-              value={nickname}
-              onChange={handleNicknameChange}
-            />
-            <CloseButton onClick={handleClearNickname}>X</CloseButton>
-          </InputContainer>
-          <NicknameButton onClick={handleCheckNickname}>중복 확인</NicknameButton>
-        </InputRow>
-        <Button $isNicknameAvailable={isNicknameAvailable} onClick={handleSave}>저장</Button>
-      </Container>
+        <HeaderWrapper>
+          <Header />
+        </HeaderWrapper>
+        <Container>
+        <AvatarContainer onClick={handleAvatarClick}>
+        {avatar ? (
+          <>
+            <AvatarImage src={avatar} alt="Avatar" />
+            <Overlay>
+              <CamIcon />
+            </Overlay>
+          </>
+        ) : (
+          <>
+            <AvatarImage src={userInfo.userImage} alt="Avatar" />
+            <Overlay>
+              <CamIcon />
+            </Overlay>
+          </>
+        )}
+      </AvatarContainer>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+            accept="image/*"
+          />
+          <TitleContainer>
+            <Title>닉네임</Title>
+            {isNicknameAvailable !== null && (
+              <StatusMessage>
+                {isNicknameAvailable ? "사용 가능한 닉네임입니다." : "이미 사용중인 닉네임입니다."}
+              </StatusMessage>
+            )}
+          </TitleContainer>
+          <InputRow>
+            <InputContainer>
+              <Input
+                placeholder="닉네임"
+                value={nickname}
+                onChange={handleNicknameChange}
+              />
+              <CloseButton onClick={handleClearNickname}>X</CloseButton>
+            </InputContainer>
+            <NicknameButton onClick={handleCheckNickname}>중복 확인</NicknameButton>
+          </InputRow>
+          <Button $isNicknameAvailable={isNicknameAvailable} onClick={handleSave}>저장</Button>
+        </Container>
       </PageWrapper>
     </ThemeProvider>
   );
