@@ -13,6 +13,7 @@ import Banner3Background from '../assets/images/Banner3.svg';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link } from 'react-router-dom';
+import Header from "../components/Header";
 
 const Container = styled.div`
   width: 1920px;
@@ -23,7 +24,7 @@ const Container = styled.div`
 
 const Contain = styled.div`
   box-sizing: border-box;
-  padding-top: 180px;
+  padding-top: 190px;
 `;
 
 const Banner = styled.div`
@@ -141,7 +142,7 @@ const FeatureCards = styled.div`
   display: flex;
   width: 1348px;
   margin: auto;
-  margin-top: 50px;
+  margin-top: 80px;
   gap: 40px;
   margin-bottom: 50px;
 `;
@@ -221,6 +222,7 @@ const NoteIconWrap = styled.div`
 function MainPage() {
   return (
     <ThemeProvider theme={Theme}>
+     <Header />
       <Container>
         <Contain>
         <StyledSlider {...sliderSettings}>
