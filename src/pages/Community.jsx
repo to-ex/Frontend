@@ -15,6 +15,7 @@ import BackgroundAnimation from "../components/BackgroundAnimation";
 import Paging from "../components/Paging";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Header from "../components/Header";
 
 const AppWrapper = styled.div`
   width: 1920px;
@@ -616,9 +617,10 @@ const Community = () => {
     
     return (
     <ThemeProvider theme={Theme}>
+       <Header />
         <AppWrapper>
         <WriteWrapper>
-            <Link to="#">
+            <Link to="/postwrite">
                 <WriteGoIcon src="../assets/images/WriteGo.svg" alt="작성하기 아이콘" />
             </Link>
         </WriteWrapper>

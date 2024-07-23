@@ -10,6 +10,7 @@ import { ReactComponent as SendIcon } from "../assets/images/Send.svg";
 import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import Header from "../components/Header";
 
 const Container = styled.div`
   width: 1920px;
@@ -391,6 +392,7 @@ const WriteMe = () => {
 
   return (
     <ThemeProvider theme={Theme}>
+       <Header />
       <Container>
         <MainTitle>공유해요</MainTitle>
         <ContentBox

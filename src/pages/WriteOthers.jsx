@@ -7,6 +7,7 @@ import { ReactComponent as Comment } from "../assets/images/ChatCircle.svg";
 import { ReactComponent as SendIcon } from "../assets/images/Send.svg";
 import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 const Container = styled.div`
   width: 1920px;
@@ -346,6 +347,7 @@ const WriteOthers = () => {
 
   return (
     <ThemeProvider theme={Theme}>
+       <Header />
       <Container>
         <MainTitle>공유해요</MainTitle>
         <ContentBox
