@@ -6,6 +6,7 @@ import { ReactComponent as Trash } from "../assets/images/Trash.svg";
 import { ReactComponent as Send } from "../assets/images/Send.svg";
 import ScheduleCategoryDropDown from "./ScheduleCategoryDropDown";
 import { AxiosCalendarDelete } from "../api/AxiosCalendar";
+import SelectCalendar from "./SelectCalendar";
 
 const CustomModal = ({
   $modalIsOpen,
@@ -16,12 +17,19 @@ const CustomModal = ({
   CategoryTypes,
   onDelete,
 }) => {
+  const [data, setData] = useState({});
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
+  const [calendarIsOpen, setCalendarIsOpen] = useState(false);
   useEffect(() => {
     if ($modalIsOpen) {
       setDropdownIsOpen(false);
+      setCalendarIsOpen(false);
     }
   }, [$modalIsOpen]);
+
+  const handleSelectCalendar = () => {
+    setCalendarIsOpen(!calendarIsOpen);
+  };
 
   const handleDeleteSchedule = async () => {
     try {
@@ -74,7 +82,7 @@ const CustomModal = ({
                 </ModalTopBtnBox>
               </ModalTopBox>
               <ModalBottomBtnBox>
-                <ModalBottomBtn>
+                <ModalBottomBtn onClick={handleSelectCalendar}>
                   <CalendarIcon />
                   <ModalText>
                     {formatStartDate !== formatEndDate
@@ -100,11 +108,20 @@ const CustomModal = ({
           }
         />
       )}
+      {$modalIsOpen && calendarIsOpen && (
+        <>
+          <SelectCalendar calendarIsOpen={calendarIsOpen} />
+        </>
+      )}
     </>
   );
 };
 
 export default CustomModal;
+
+const F = styled.div`
+  z-index: 99999999 !important;
+`;
 
 const ModalLeftBox = styled.div`
   width: 100%;
@@ -148,12 +165,13 @@ const ModalBottomBtnBox = styled.div`
 `;
 
 const ModalBottomBtn = styled.button`
-  width: auto;
-  height: 24px;
+  width: 280px;
+  height: 27px;
   background-color: transparent;
   border: none;
   display: flex;
-  margin-left: 100px;
+  margin: 15px 0 0 100px;
+  /* border: 1px red solid; */
 `;
 
 const ModalText = styled.p`

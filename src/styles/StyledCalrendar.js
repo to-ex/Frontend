@@ -115,10 +115,14 @@ export const StyledScheduleLine = styled.div`
       : "0"};
   position: absolute;
   color: #fff;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: keep-all;
   font-weight: 600;
   font-size: 20px;
   display: flex;
-  justify-content: center;
+  padding-left: 10px;
   align-items: center;
   cursor: pointer;
 `;

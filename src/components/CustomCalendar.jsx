@@ -14,10 +14,10 @@ import CustomModal from "./CustomModal";
 import { AxiosCalendarGet } from "../api/AxiosCalendar";
 
 const CustomCalendar = () => {
-  const [selectedTab, setSelectedTab] = useState("ALL");
-  const [events, setEvents] = useState([]);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedTab, setSelectedTab] = useState("ALL"); // 달력의 카테고리
+  const [events, setEvents] = useState([]); // 전체 일정
+  const [modalIsOpen, setModalIsOpen] = useState(false); // 모달이 열렸는지
+  const [selectedEvent, setSelectedEvent] = useState(null); // 달력에서 누른 일정
 
   const Tabs = [
     {
