@@ -1,20 +1,20 @@
-import React from 'react';
-import styled, { ThemeProvider } from 'styled-components';
-import Slider from 'react-slick';
-import { Theme } from '../styles/Theme';
-import { ReactComponent as CalculatorIcon } from '../assets/images/Calculator.svg';
-import { ReactComponent as CalendarIcon } from '../assets/images/Calendar.svg';
-import { ReactComponent as WindowsIcon } from '../assets/images/Windows.svg';
-import { ReactComponent as NoteIcon } from '../assets/images/Note.svg';
-import CardBackground from '../assets/images/Card.svg';
-import Banner1Background from '../assets/images/Banner1.svg';
-import Banner2Background from '../assets/images/Banner2.svg';
-import Banner3Background from '../assets/images/Banner3.svg';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import { Link } from 'react-router-dom';
+import React from "react";
+import styled, { ThemeProvider } from "styled-components";
+import Slider from "react-slick";
+import { Theme } from "../styles/Theme";
+import { ReactComponent as CalculatorIcon } from "../assets/images/Calculator.svg";
+import { ReactComponent as CalendarIcon } from "../assets/images/Calendar.svg";
+import { ReactComponent as WindowsIcon } from "../assets/images/Windows.svg";
+import { ReactComponent as NoteIcon } from "../assets/images/Note.svg";
+import CardBackground from "../assets/images/Card.svg";
+import Banner1Background from "../assets/images/Banner1.svg";
+import Banner2Background from "../assets/images/Banner2.svg";
+import Banner3Background from "../assets/images/Banner3.svg";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { Link } from "react-router-dom";
 import Header from "../components/Header";
-import ScrollToTop from '../components/ScrollToTop';
+import ScrollToTop from "../components/ScrollToTop";
 
 const Container = styled.div`
   width: 1920px;
@@ -110,7 +110,7 @@ const StyledSlider = styled(Slider)`
 
   .slick-dots li button:before {
     font-size: 12px;
-    color: #FFA7B6;
+    color: #ffa7b6;
     opacity: 1;
   }
 
@@ -134,9 +134,9 @@ const sliderSettings = {
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: false,
-  autoplay: true,  
-  autoplaySpeed: 2500,  
-  cssEase: 'ease-in-out', 
+  autoplay: true,
+  autoplaySpeed: 2500,
+  cssEase: "ease-in-out",
 };
 
 const FeatureCards = styled.div`
@@ -223,89 +223,96 @@ const NoteIconWrap = styled.div`
 function MainPage() {
   return (
     <ThemeProvider theme={Theme}>
-     <Header />
+      <Header />
       <Container>
         <Contain>
-        <StyledSlider {...sliderSettings}>
-          <div>
-            <MainBanner1>
-              <BannerContent>
-                <p>최대 500만원 지원!</p>
-                <p>미래에셋 교환학생 장학금</p>
-                <h4>지금 바로 미래에셋 홈페이지에서 자세하게 확인해 보세요!</h4>
-                <Button href="https://miraeassetfoundation-recruit.com/">
-                  이동하기 ↗
-                </Button>
-              </BannerContent>
-            </MainBanner1>
-          </div>
-          <div>
-            <MainBanner2>
-              <BannerContent>
-                <p>연간 400~500만원</p>
-                <p>서울장학재단 학업장려금 지원!</p>
-                <h4>지금 한국장학재단 홈페이지에서 자세하게 확인해 보세요!</h4>
-                <Button href="https://www.hissf.or.kr/Programs/user/scholarship/university/exchange.asp">
-                  이동하기 ↗
-                </Button>
-              </BannerContent>
-            </MainBanner2>
-          </div>
-          <div>
-          <MainBanner3>
-              <BannerContent>
-                <p>최대 4,000유로 지원!</p>
-                <p>아센듀오 교환학생 장학금</p>
-                <h4>지금 바로 아셈듀오 홈페이지에서 자세하게 확인해 보세요!</h4>
-                <Button href="https://www.asemduo.org/02_programs/programs_01.php">
-                  이동하기 ↗
-                </Button>
-              </BannerContent>
-            </MainBanner3>
-          </div>
-        </StyledSlider>
-        <FeatureCards>
-          <FeatureCard>
-            <h2>학사</h2>
-            <p>원하는 국가 선택 후 바로 확인!</p>
-            <CalculatorIconWrap>
-              <CalculatorIcon src="../assets/images/Calculator.svg" alt="학사 아이콘" />
-            </CalculatorIconWrap>
-            <Link to="/study">
-              ↗
-            </Link>
-          </FeatureCard>
-          <FeatureCard>
-            <h2>어학</h2>
-            <p>어학시험일정 관리도 한번에!</p>
-            <NoteIconWrap>
-              <NoteIcon src="../assets/images/Note.svg" alt="어학 아이콘" />
-            </NoteIconWrap>
-            <Link to="/language">
-              ↗
-            </Link>
-          </FeatureCard>
-          <FeatureCard>
-            <h2>커뮤니티</h2>
-            <p>혼자 하는 고민은 이제 그만!</p>
-            <WindowsIconWrap>
-              <WindowsIcon src="../assets/images/Windows.svg" alt="커뮤니티 아이콘" />
-            </WindowsIconWrap>
-            <Link to="/community">
-              ↗
-            </Link>
-          </FeatureCard>
-          <FeatureCard>
-            <h2>캘린더</h2>
-            <p>교환학생 준비 더욱 간편하게!</p>
-            <CalendarIconWrap>
-              <CalendarIcon src="../assets/images/Calendar.svg" alt="캘린더 아이콘" />
-            </CalendarIconWrap>
-            <Link to="/calendar">
-              ↗
-            </Link>
-          </FeatureCard>
-        </FeatureCards>
+          <StyledSlider {...sliderSettings}>
+            <div>
+              <MainBanner1>
+                <BannerContent>
+                  <p>최대 500만원 지원!</p>
+                  <p>미래에셋 교환학생 장학금</p>
+                  <h4>
+                    지금 바로 미래에셋 홈페이지에서 자세하게 확인해 보세요!
+                  </h4>
+                  <Button href="https://miraeassetfoundation-recruit.com/">
+                    이동하기 ↗
+                  </Button>
+                </BannerContent>
+              </MainBanner1>
+            </div>
+            <div>
+              <MainBanner2>
+                <BannerContent>
+                  <p>연간 400~500만원</p>
+                  <p>서울장학재단 학업장려금 지원!</p>
+                  <h4>
+                    지금 한국장학재단 홈페이지에서 자세하게 확인해 보세요!
+                  </h4>
+                  <Button href="https://www.hissf.or.kr/Programs/user/scholarship/university/exchange.asp">
+                    이동하기 ↗
+                  </Button>
+                </BannerContent>
+              </MainBanner2>
+            </div>
+            <div>
+              <MainBanner3>
+                <BannerContent>
+                  <p>최대 4,000유로 지원!</p>
+                  <p>아센듀오 교환학생 장학금</p>
+                  <h4>
+                    지금 바로 아셈듀오 홈페이지에서 자세하게 확인해 보세요!
+                  </h4>
+                  <Button href="https://www.asemduo.org/02_programs/programs_01.php">
+                    이동하기 ↗
+                  </Button>
+                </BannerContent>
+              </MainBanner3>
+            </div>
+          </StyledSlider>
+          <FeatureCards>
+            <FeatureCard>
+              <h2>학사</h2>
+              <p>원하는 국가 선택 후 바로 확인!</p>
+              <CalculatorIconWrap>
+                <CalculatorIcon
+                  src="../assets/images/Calculator.svg"
+                  alt="학사 아이콘"
+                />
+              </CalculatorIconWrap>
+              <Link to="/visa">↗</Link>
+            </FeatureCard>
+            <FeatureCard>
+              <h2>어학</h2>
+              <p>어학시험일정 관리도 한번에!</p>
+              <NoteIconWrap>
+                <NoteIcon src="../assets/images/Note.svg" alt="어학 아이콘" />
+              </NoteIconWrap>
+              <Link to="/language">↗</Link>
+            </FeatureCard>
+            <FeatureCard>
+              <h2>커뮤니티</h2>
+              <p>혼자 하는 고민은 이제 그만!</p>
+              <WindowsIconWrap>
+                <WindowsIcon
+                  src="../assets/images/Windows.svg"
+                  alt="커뮤니티 아이콘"
+                />
+              </WindowsIconWrap>
+              <Link to="/community">↗</Link>
+            </FeatureCard>
+            <FeatureCard>
+              <h2>캘린더</h2>
+              <p>교환학생 준비 더욱 간편하게!</p>
+              <CalendarIconWrap>
+                <CalendarIcon
+                  src="../assets/images/Calendar.svg"
+                  alt="캘린더 아이콘"
+                />
+              </CalendarIconWrap>
+              <Link to="/calendar">↗</Link>
+            </FeatureCard>
+          </FeatureCards>
         </Contain>
         <ScrollToTop />
       </Container>
