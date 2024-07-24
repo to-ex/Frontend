@@ -67,23 +67,24 @@ const CustomModal = ({
     }
   };
 
-  const handleUpdateSchedule = () => {
-    console.log(selectedEvent);
-  };
-  // const handleUpdateSchedule = async () => {
-  //   try {
-  //     await AxiosCalendarUpdate(selectedEvent.scheduleId, {
-  //       content: title,
-  //       scheduleCategory: category,
-  //       startDate,
-  //       endDate,
-  //     });
-  //     closeModal();
-  //     alert("수정 되었습니다!");
-  //   } catch (error) {
-  //     console.error("Error updating data:", error);
-  //   }
+  // const handleUpdateSchedule = () => {
+  //   console.log(selectedEvent);
   // };
+
+  const handleUpdateSchedule = async () => {
+    try {
+      await AxiosCalendarUpdate(selectedEvent.scheduleId, {
+        content: title,
+        scheduleCategory: category,
+        startDate,
+        endDate,
+      });
+      closeModal();
+      alert("수정 되었습니다!");
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
+  };
 
   if (!selectedEvent) return null; // selectedEvent가 없는 경우 컴포넌트를 렌더링하지 않음
 
