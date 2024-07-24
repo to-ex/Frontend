@@ -1,3 +1,4 @@
+// 필요한 import 구문들 추가
 import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Theme } from "../styles/Theme";
@@ -306,132 +307,132 @@ const PostBox = styled.div`
   box-sizing: border-box;
   padding: 10px 20px;
   margin-right: 45px;
-  `;
-  
+`;
+
 const PostText = styled.p`
-    font-size: 20px;
+  font-size: 20px;
 `;
 
 const PostImage = styled.div`
-    width: 267px;
-    height: 155px;
-    background-color: #ddd;
+  width: 267px;
+  height: 155px;
+  background-color: #ddd;
 `;
-    
+
 const PostFooter = styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-top: 310px;
-    box-sizing: border-box;
-    padding: 0px 45px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 310px;
+  box-sizing: border-box;
+  padding: 0px 45px;
 `;
 
 const ReactionBox = styled.div`
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 `;
 
 const HeartIcon = styled.button`
-    width: 26px;
-    height: 26px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+  width: 26px;
+  height: 26px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 `;
 
 const CommentIconBox = styled.div`
-    display: flex;
-    align-items: center;
-    margin-left: 15px;
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
 `;
 
 const Likes = styled.p`
-    font-size: 20px;
-    font-weight: 500;
-    margin-left: 10px;
+  font-size: 20px;
+  font-weight: 500;
+  margin-left: 10px;
 `;
 
 const CommentCount = styled.p`
-    font-size: 20px;
-    font-weight: 500;
-    margin-left: 6px;
+  font-size: 20px;
+  font-weight: 500;
+  margin-left: 6px;
 `;
 
 const CreatedDt = styled.p`
-    color: #adadad;
-    font-size: 20px;
-    font-weight: 500;
+  color: #adadad;
+  font-size: 20px;
+  font-weight: 500;
 `;
 
 const NumberOfPosts = styled.p`
-    width: 97px;
-    height: 28px;
-    line-height: 28px;
-    font-size: 15px;
-    color: ${({ theme }) => theme.colors.RED03};
-    border-radius: 50px;
-    background-color: #FFF4F6;
-    text-align: center;
-    margin-top: -10px;
-    margin-left: 62px;
+  width: 97px;
+  height: 28px;
+  line-height: 28px;
+  font-size: 15px;
+  color: ${({ theme }) => theme.colors.RED03};
+  border-radius: 50px;
+  background-color: #FFF4F6;
+  text-align: center;
+  margin-top: -10px;
+  margin-left: 62px;
 `;
 
 const ModalOverlay = styled.div`
-    position: fixed;
-    top: 88px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: ${({ $show }) => ($show ? 'block' : 'none')};
-    z-index: 20;
+  position: fixed;
+  top: 88px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: ${({ $show }) => ($show ? 'block' : 'none')};
+  z-index: 20;
 `;
 
 const ModalContent = styled.div`
-    position: absolute;
-    top: 465px; 
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: ${({ theme }) => theme.colors.WHITE};
-    width: 990px;
-    height: 324px;
-    box-sizing: border-box;
-    border-radius: 20px;
-    z-index: 30;
-    display: ${({ $show }) => ($show ? 'block' : 'none')};
+  position: absolute;
+  top: 465px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: ${({ theme }) => theme.colors.WHITE};
+  width: 990px;
+  height: 324px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  z-index: 30;
+  display: ${({ $show }) => ($show ? 'block' : 'none')};
 `;
 
 const FilterOption = styled.div`
-    box-sizing: border-box;
-    text-align: center;
-    line-height: 81px;
-    font-size: 22px;
-    font-weight: 600;
-    height: 81px;
-    border-bottom: 1px solid #EAEAEA;
-    cursor: pointer;
+  box-sizing: border-box;
+  text-align: center;
+  line-height: 81px;
+  font-size: 22px;
+  font-weight: 600;
+  height: 81px;
+  border-bottom: 1px solid #EAEAEA;
+  cursor: pointer;
 
-    &:last-child {
+  &:last-child {
     border-bottom: none;
-    }
+  }
 
-    &:hover {
+  &:hover {
     background-color: #FFF4F6;
     color: ${({ theme }) => theme.colors.RED04};
-    }
+  }
 
-    &:last-child:hover {
+  &:last-child:hover {
     border-radius: 0 0 20px 20px;
-    }
+  }
 
-    &:first-child:hover {
+  &:first-child:hover {
     border-radius: 20px 20px 0 0;
-    }
+  }
 `;
 
 const PagingWrapper = styled.div`
-    margin-top: 22px; 
-    margin-bottom: 90px; 
+  margin-top: 22px; 
+  margin-bottom: 90px; 
 `;
 
 const fetchPosts = async (searchTerm, boardCategory, countryTag, page, size) => {
@@ -445,292 +446,276 @@ const fetchPosts = async (searchTerm, boardCategory, countryTag, page, size) => 
         size: size,
       },
     });
-    return response.data.data.content;
+    if (response.status === 200) {
+      return response.data.data.content;
+    } else {
+      console.error('Error fetching posts:', response.status);
+      return [];
+    }
   } catch (error) {
     console.error('Error fetching posts:', error);
     throw error;
   }
-}
+};
+
 
 const Community = () => {
-    const [boardCategory, setBoardCategory] = useState('');
-    const [countryTag, setCountryTag] = useState('');
+  const [boardCategory, setBoardCategory] = useState('');
+  const [countryTag, setCountryTag] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const contentPerPage = 4; 
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedHashtags, setSelectedHashtags] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const [hashtags, setHashtags] = useState([
+    { tag: '🇪🇸 스페인', count: 0 },
+    { tag: '🇩🇪 독일', count: 0 },
+    { tag: '🇬🇧 영국', count: 0 },
+    { tag: '🇫🇷 프랑스', count: 0 },
+    { tag: '🇮🇹 이탈리아', count: 0 },
+  ]);
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(1); //현재 페이지 및 페이징 설정
-    const contentPerPage = 4; 
-    const [isOpen, setIsOpen] = useState(false); // 검색바 확장 상태 추가
-    const [selectedHashtags, setSelectedHashtags] = useState([]);
-    // const [posts, setPosts] = useState([]);
-    const [posts, setPosts] = useState([
-    {
-        id: 1,
-        title: '스페인 UAB 교환학생 후기',
-        author: '김퓨처',
-        boardCategory: "공유해요",
-        countrytag: "스페인",
-        comments: '스페인의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 스페인의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
-        img: '',
-        isLiked: false,
-        likes: 3,
-        commentcount: 8,
-        createdDt: '2024.05.07',
-    },
-    {
-        id: 2,
-        title: '독일 UAB 교환학생 후기',
-        author: '이퓨처',
-        boardCategory: "공유해요",
-        countrytag: "독일",
-        comments: '독일의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 독일의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
-        img: '',
-        isLiked: false,
-        likes: 2,
-        commentcount: 5,
-        createdDt: '2024.06.07',
-    },
-    {
-        id: 3,
-        title: '프랑스 UAB 교환학생 후기',
-        author: '박퓨처',
-        boardCategory: "공유해요",
-        countrytag: "프랑스",
-        comments: '프랑스의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 프랑스의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
-        img: '',
-        isLiked: false,
-        likes: 4,
-        commentcount: 7,
-        createdDt: '2024.07.07',
-    },
-    {
-        id: 4,
-        title: '이탈리아 UAB 교환학생 후기',
-        author: '최퓨처',
-        boardCategory: "공유해요",
-        countrytag: "이탈리아",
-        comments: '이탈리아의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 이탈리아의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
-        img: '',
-        isLiked: false,
-        likes: 5,
-        commentcount: 6,
-        createdDt: '2024.08.07',
-    },
-    {
-        id: 5,
-        title: '영국 UAB 교환학생 후기',
-        author: '강퓨처',
-        boardCategory: "공유해요",
-        countrytag: "영국",
-        comments: '영국의 경우 1월말에서 2,3월까지는 꽤 쌀쌀해서 경량 패딩에 목도리를 하고 안에는 목폴라를 껴입었던 것 같습니다. 그에 반해 여름에는 매우 덥고 햇빛이 정말 강합니다. 저의 경우 얼굴에 일광화상까지 입었는데 썬크림을 잘 챙겨 바르셔야 합니다. 영국의 집에는 대부분 에어컨이 없어서 집이 정말 더웠는데 손선풍기로 버텼던 것 같습니다. 탁상용 선풍기를 챙겨 가시는 걸 강력 추천드립니다.',
-        img: '',
-        isLiked: false,
-        likes: 6,
-        commentcount: 9,
-        createdDt: '2024.09.07',
-    },
-    ]);
+  const loadPosts = async () => {
+    try {
+      const fetchedPosts = await fetchPosts(searchTerm, boardCategory, countryTag, currentPage, contentPerPage);
+      setPosts(fetchedPosts);
 
-    useEffect(() => {
-      const loadPosts = async () => {
-        try {
-          const fetchedPosts = await fetchPosts(searchTerm, boardCategory, countryTag, currentPage, contentPerPage);
-          setPosts(fetchedPosts);
-        } catch (error) {
-          console.error('Error loading posts:', error);
-        }
+      const keywordCounts = {
+        '스페인': 0,
+        '독일': 0,
+        '영국': 0,
+        '프랑스': 0,
+        '이탈리아': 0,
       };
-  
-      loadPosts();
-    }, [searchTerm, boardCategory, countryTag, currentPage]);
 
-    const handleBoardCategoryChange = (category) => {
-      setBoardCategory(category);
-    };
-  
-    const handleCountryTagChange = (tag) => {
-      setCountryTag(tag);
-    };
+      fetchedPosts.forEach(post => {
+        if (post.countrytag === 'SPAIN') keywordCounts['스페인']++;
+        if (post.countrytag === 'GERMANY') keywordCounts['독일']++;
+        if (post.countrytag === 'ENGLAND') keywordCounts['영국']++;
+        if (post.countrytag === 'FRANCE') keywordCounts['프랑스']++;
+        if (post.countrytag === 'ITALY') keywordCounts['이탈리아']++;
+      });
 
-    const hashtags = [
-    { tag: '🇪🇸 스페인', count: 9999999 },
-    { tag: '🇩🇪 독일', count: 800 },
-    { tag: '🇬🇧 영국', count: 1200 },
-    { tag: '🇫🇷 프랑스', count: 950 },
-    { tag: '🇮🇹 이탈리아', count: 600 },
-    ];
-
-    const toggleHeart = (id) => {
-        setPosts((prevPosts) =>
-            prevPosts.map((post) =>
-            post.id === id ? { ...post, isLiked: !post.isLiked, likes: post.isLiked ? post.likes - 1 : post.likes + 1 } : post
-            )
-        );
-    };
-
-    const handleHashtagClick = (tag) => {
-    if (!selectedHashtags.some(selectedTag => selectedTag.value === tag)) {
-        setSelectedHashtags([...selectedHashtags, { value: tag, type: 'hashtag' }]);
+      setHashtags(hashtags.map(tag => ({
+        ...tag,
+        count: keywordCounts[tag.tag.split(' ')[1]] || 0,
+      })));
+    } catch (error) {
+      console.error('Error loading posts:', error);
     }
-    };
+  };
 
-    const removeHashtag = (tag) => {
-        setSelectedHashtags(selectedHashtags.filter((t) => t.value !== tag));
-    };
+  useEffect(() => {
+    loadPosts();
+  }, [searchTerm, boardCategory, countryTag, currentPage]);
 
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const handleBoardCategoryChange = (category) => {
+    setBoardCategory(category);
+  };
 
-    const toggleSearchBar = () => {
-        setIsOpen(!isOpen);
-        setIsFilterOpen(false); // 검색바를 클릭할 때 필터 모달이 열리지 않도록
-    };
+  const handleCountryTagChange = (tag) => {
+    setCountryTag(tag);
+  };
 
-    const openFilterModal = (event) => {
-        event.stopPropagation(); // 필터 아이콘 클릭 시 검색바 이벤트 전파 방지
-        setIsFilterOpen(true);
-        setIsOpen(false); // 필터 모달을 열 때 검색바가 열리지 않도록
-    };
+  const categoryMap = {
+    SHARE: '공유해요',
+    QUESTION: '질문 있어요',
+    TALK: '떠들어요',
+  };
 
-    const closeFilterModal = () => {
-        setIsFilterOpen(false);
-    };
+  const countryMap = {
+    SPAIN: '🇪🇸 스페인',
+    GERMANY: '🇩🇪 독일',
+    ENGLAND: '🇬🇧 영국',
+    FRANCE: '🇫🇷 프랑스',
+    ITALY: '🇮🇹 이탈리아',
+  };
 
-    const handleFilterClick = (filter) => {
-        if (!selectedHashtags.some(tag => tag.value === filter)) {
-            setSelectedHashtags([...selectedHashtags, { value: filter, type: 'filter' }]);
-        }
-        closeFilterModal();
-    };
+  const getCategoryInKorean = (category) => categoryMap[category] || category;
+  const getCountryInKorean = (country) => countryMap[country] || country;
 
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-    };
+  const toggleHeart = (id) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === id ? { ...post, isLiked: !post.isLiked, likes: post.isLiked ? post.likes - 1 : post.likes + 1 } : post
+      )
+    );
+  };
 
-      
-    const indexOfLastPost = currentPage * contentPerPage;
-    const indexOfFirstPost = indexOfLastPost - contentPerPage;
-    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-    const count = posts.length;
+  const handleHashtagClick = (tag) => {
+    if (!selectedHashtags.some(selectedTag => selectedTag.value === tag)) {
+      setSelectedHashtags([...selectedHashtags, { value: tag, type: 'hashtag' }]);
+    }
+  };
 
-    const setPage = (page) => {
+  const removeHashtag = (tag) => {
+    setSelectedHashtags(selectedHashtags.filter((t) => t.value !== tag));
+  };
+
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const toggleSearchBar = () => {
+    setIsOpen(!isOpen);
+    setIsFilterOpen(false);
+  };
+
+  const openFilterModal = (event) => {
+    event.stopPropagation();
+    setIsFilterOpen(true);
+    setIsOpen(false);
+  };
+
+  const closeFilterModal = () => {
+    setIsFilterOpen(false);
+  };
+
+  const handleFilterClick = (filter) => {
+    if (!selectedHashtags.some(tag => tag.value === filter)) {
+      setSelectedHashtags([...selectedHashtags, { value: filter, type: 'filter' }]);
+    }
+    closeFilterModal();
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const indexOfLastPost = currentPage * contentPerPage;
+  const indexOfFirstPost = indexOfLastPost - contentPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const count = posts.length;
+
+  const setPage = (page) => {
     setCurrentPage(page);
-    };
-    
-    return (
+  };
+
+  const handleSearch = (e) => { //검색 아이콘을 클릭했을 때 호출
+    e.stopPropagation(); // 이벤트 전파 방지
+    setIsOpen(false); // 해시태그 리스트를 닫음
+    loadPosts(); // 검색을 수행, 호출하여 게시글 가져옴
+  };
+  
+
+  return (
     <ThemeProvider theme={Theme}>
-       <Header />
-        <AppWrapper>
+      <Header />
+      <AppWrapper>
         <WriteWrapper>
-            <Link to="/postwrite">
-                <WriteGoIcon src="../assets/images/WriteGo.svg" alt="작성하기 아이콘" />
-            </Link>
+          <Link to="/postwrite">
+            <WriteGoIcon src="../assets/images/WriteGo.svg" alt="작성하기 아이콘" />
+          </Link>
         </WriteWrapper>
         <TitleIconWrap>
-            <TitleIcon src="../assets/images/Title.svg" alt="타이틀 배너" />
+          <TitleIcon src="../assets/images/Title.svg" alt="타이틀 배너" />
         </TitleIconWrap>
         <BackgroundAnimation />
         <SearchBarWrapper>
-            <SearchBar $isOpen={isOpen} onClick={toggleSearchBar}>
+          <SearchBar $isOpen={isOpen} onClick={toggleSearchBar}>
             <CharacterIconWrap>
-                <CharacterIcon src="../assets/images/Character.svg" alt="캐릭터 이모티콘" />
+              <CharacterIcon src="../assets/images/Character.svg" alt="캐릭터 이모티콘" />
             </CharacterIconWrap>
             <SearchInput
-                type="text"
-                placeholder="교환학생 준비, 투엑스에게 물어보세요!"
-                value={searchTerm}
-                onChange={handleSearchChange}
+              type="text"
+              placeholder="교환학생 준비, 투엑스에게 물어보세요!"
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
-            <SearchIconWrap>
-                <SearchIcon />
+            <SearchIconWrap onClick={handleSearch}>
+              <SearchIcon />
             </SearchIconWrap>
             <FilterIconWrap onClick={openFilterModal}>
-                <FilterIcon />
+              <FilterIcon />
             </FilterIconWrap>
             <HashtagList $show={isOpen}>
-                {hashtags.map((tag, index) => (
+              {hashtags.map((tag, index) => (
                 <HashtagItem key={index} onClick={() => handleHashtagClick(tag.tag)}>
-                    <HashTagContain>
+                  <HashTagContain>
                     <HashIcon />
                     {tag.tag}
-                    </HashTagContain>
-                    <NumberOfPosts>
-                    {tag.count}
-                    </NumberOfPosts>
+                  </HashTagContain>
+                  <NumberOfPosts>
+                    게시글 {tag.count}개
+                  </NumberOfPosts>
                 </HashtagItem>
-                ))}
+              ))}
             </HashtagList>
-            </SearchBar>
-            <SelectedHashtags>
+          </SearchBar>
+          <SelectedHashtags>
             {selectedHashtags.map((tag, index) => (
-                tag.type === 'filter' ? (
+              tag.type === 'filter' ? (
                 <HashtagButton2 key={index} onClick={() => removeHashtag(tag.value)}>
-                    # {tag.value}
+                  # {tag.value}
                 </HashtagButton2>
-                ) : (
+              ) : (
                 <HashtagButton1 key={index} onClick={() => removeHashtag(tag.value)}>
-                    # {tag.value}
+                  # {tag.value}
                 </HashtagButton1>
-                )
+              )
             ))}
-            </SelectedHashtags>
+          </SelectedHashtags>
         </SearchBarWrapper>
         <PostList>
-            {currentPosts.map((post) => (
+          {currentPosts.map((post) => (
             <Post key={post.id}>
-                <PostBackground />
-                <PostContentWrapper>
+              <PostBackground />
+              <PostContentWrapper>
                 <PostHeader>
-                    <PostAvatar>{post.authorProfileImgUrl}</PostAvatar>
-                    <PostInfo>
+                  <PostAvatar>{post.authorProfileImgUrl}</PostAvatar>
+                  <PostInfo>
                     <PostTitle>
-                        {post.title} <AuthorSpan>| {post.author}</AuthorSpan>
+                      {post.title} <AuthorSpan>| {post.author}</AuthorSpan>
                     </PostTitle>
                     <PostActions>
-                        <PostActionButton1># {post.boardCategory}</PostActionButton1>
-                        <PostActionButton2># {post.countrytag}</PostActionButton2>
+                      <PostActionButton1># {getCategoryInKorean(post.boardCategory)}</PostActionButton1>
+                      <PostActionButton2># {getCountryInKorean(post.countrytag)}</PostActionButton2>
                     </PostActions>
-                    </PostInfo>
+                  </PostInfo>
                 </PostHeader>
                 <PostContent>
-                    <PostBox>
+                  <PostBox>
                     <PostText>{post.comments}</PostText>
-                    </PostBox>
-                    <PostImage>{post.imgUrl}</PostImage>
+                  </PostBox>
+                  <PostImage>{post.imgUrl}</PostImage>
                 </PostContent>
                 <PostFooter>
-                    <ReactionBox>
+                  <ReactionBox>
                     <HeartIcon onClick={() => toggleHeart(post.id)}>
-                        <img src={post.isLiked ? FullHeart : EmptyHeart} alt="Heart Icon" />
+                      <img src={post.isLiked ? FullHeart : EmptyHeart} alt="Heart Icon" />
                     </HeartIcon>
                     <Likes>{post.likes}</Likes>
                     <CommentIconBox>
-                        <img src={CommentIcon} alt="Comment Icon" />
-                        <CommentCount>{post.commentcount}</CommentCount>
+                      <img src={CommentIcon} alt="Comment Icon" />
+                      <CommentCount>{post.commentcount}</CommentCount>
                     </CommentIconBox>
-                    </ReactionBox>
-                    <CreatedDt>{post.createdDt}</CreatedDt>
+                  </ReactionBox>
+                  <CreatedDt>{post.createdDt}</CreatedDt>
                 </PostFooter>
-                </PostContentWrapper>
+              </PostContentWrapper>
             </Post>
-            ))}
-            <PagingWrapper>
+          ))}
+          <PagingWrapper>
             <Paging
-            page={currentPage}
-            count={count}
-            setPage={setPage}
-            contentPerPage={contentPerPage}
+              page={currentPage}
+              count={count}
+              setPage={setPage}
+              contentPerPage={contentPerPage}
             />
-        </PagingWrapper>
+          </PagingWrapper>
         </PostList>
         <ModalOverlay $show={isFilterOpen} onClick={closeFilterModal} />
         <ModalContent $show={isFilterOpen}>
-            <FilterOption onClick={() => handleFilterClick('전체')}># 전체</FilterOption>
-            <FilterOption onClick={() => handleFilterClick('떠들어요')}># 떠들어요</FilterOption>
-            <FilterOption onClick={() => handleFilterClick('질문 있어요')}># 질문 있어요</FilterOption>
-            <FilterOption onClick={() => handleFilterClick('공유해요')}># 공유해요</FilterOption>
+          <FilterOption onClick={() => handleFilterClick('전체')}># 전체</FilterOption>
+          <FilterOption onClick={() => handleFilterClick('떠들어요')}># 떠들어요</FilterOption>
+          <FilterOption onClick={() => handleFilterClick('질문 있어요')}># 질문 있어요</FilterOption>
+          <FilterOption onClick={() => handleFilterClick('공유해요')}># 공유해요</FilterOption>
         </ModalContent>
-        </AppWrapper>
+      </AppWrapper>
     </ThemeProvider>
-    );
+  );
 };
 
 export default Community;
+
+
+
