@@ -108,7 +108,9 @@ export const StyledScheduleLine = styled.div`
   width: 100%;
   height: 39px;
   border-radius: ${(props) =>
-    props.$isStartDate
+    props.$isEquleDate
+      ? "50px"
+      : props.$isStartDate
       ? "50px 0 0 50px"
       : props.$isEndDate
       ? "0 50px 50px 0"
