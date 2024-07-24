@@ -4,9 +4,7 @@ import "./App.css";
 import { ThemeProvider } from "styled-components";
 import { Theme } from "./styles/Theme";
 import Header from "./components/Header";
-import CustomCalendar from "./components/CustomCalendar";
-import CustomModal from "./components/CustomModal";
-import SelectCalendar from "./components/SelectCalendar";
+import CustomCalendar from "./pages/CustomCalendar";
 
 function App() {
   return (
@@ -14,7 +12,6 @@ function App() {
       <Header />
       <Routes>
         <Route path="/calendar" element={<CustomCalendar />} />
-        <Route path="/selectcalendar" element={<SelectCalendar />} />
       </Routes>
     </ThemeProvider>
   );
