@@ -5,7 +5,6 @@ import "react-calendar/dist/Calendar.css";
 import { ReactComponent as NextIcon } from "../assets/images/NextMonth.svg";
 import { ReactComponent as PrevIcon } from "../assets/images/PrevMonth.svg";
 import moment from "moment";
-import "moment/locale/ko";
 import {
   StyledCalendarWrapper,
   StyledScheduleLine,
@@ -151,14 +150,6 @@ const CustomCalendar = () => {
     );
   };
 
-  const formatStartDate =
-    selectedEvent &&
-    moment(selectedEvent.startDate).locale("ko").format("M월 D일 (ddd)");
-
-  const formatEndDate =
-    selectedEvent &&
-    moment(selectedEvent.endDate).locale("ko").format("M월 D일 (ddd)");
-
   return (
     <StyledCalendarWrapper>
       <TabBar>
@@ -227,8 +218,6 @@ const CustomCalendar = () => {
         $modalIsOpen={modalIsOpen}
         closeModal={closeModal}
         selectedEvent={selectedEvent}
-        formatStartDate={formatStartDate}
-        formatEndDate={formatEndDate}
         CategoryTypes={Tabs}
         onDelete={handleDeleteEvent}
       />

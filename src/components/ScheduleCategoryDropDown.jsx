@@ -8,7 +8,7 @@ import {
 } from "../styles/StyledDropDown";
 import { ReactComponent as NoteIcon } from "../assets/images/NoteIcon.svg";
 
-const ScheduleCategoryDropDown = ({ selected, isOpen }) => {
+const ScheduleCategoryDropDown = ({ selected, onCategoryChange }) => {
   const [selectedName, setSelectedName] = useState(selected);
   const [active, setActive] = useState(false);
 
@@ -35,6 +35,12 @@ const ScheduleCategoryDropDown = ({ selected, isOpen }) => {
       offcolor: "rgba(99, 227, 255, 0.3)",
     },
   ];
+
+  const handleCategorySelect = (name) => {
+    setSelectedName(name);
+    setActive(false);
+    onCategoryChange(name); // 콜백 호출
+  };
   return (
     <>
       <StyledSelectedLabel onClick={() => setActive(!active)}>
@@ -51,8 +57,7 @@ const ScheduleCategoryDropDown = ({ selected, isOpen }) => {
                   key={element.index}
                   $index={element.index}
                   onClick={() => {
-                    setSelectedName(element.name);
-                    setActive(false);
+                    handleCategorySelect(element.name);
                   }}
                   $isSelected={selectedName === element.name}
                 >

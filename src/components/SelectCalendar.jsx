@@ -7,14 +7,18 @@ import moment from "moment";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const SelectCalendar = ({ calendarIsOpen }) => {
+const SelectCalendar = ({ calendarIsOpen, onDateChange }) => {
   const [isOpen, setIsOpen] = useState(calendarIsOpen);
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+
   const handleDateChange = (selectedDate) => {
-    setStartDate(moment(selectedDate[0]).format("YYYY-MM-DD"));
-    setEndDate(moment(selectedDate[1]).format("YYYY-MM-DD"));
+    const start = moment(selectedDate[0]).format("YYYY-MM-DD");
+    const end = moment(selectedDate[1]).format("YYYY-MM-DD");
+    setStartDate(start);
+    setEndDate(end);
+    onDateChange(start, end); // 콜백 호출
   };
 
   useEffect(() => {

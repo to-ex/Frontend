@@ -1,3 +1,4 @@
+// CustomModal.js
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "react-modal";
@@ -5,30 +6,54 @@ import { ReactComponent as CalendarIcon } from "../assets/images/CalendarIcon.sv
 import { ReactComponent as Trash } from "../assets/images/Trash.svg";
 import { ReactComponent as Send } from "../assets/images/Send.svg";
 import ScheduleCategoryDropDown from "./ScheduleCategoryDropDown";
-import { AxiosCalendarDelete } from "../api/AxiosCalendar";
+import { AxiosCalendarDelete, AxiosCalendarUpdate } from "../api/AxiosCalendar";
 import SelectCalendar from "./SelectCalendar";
+import moment from "moment";
+import "moment/locale/ko";
 
 const CustomModal = ({
   $modalIsOpen,
   closeModal,
   selectedEvent,
-  formatStartDate,
-  formatEndDate,
   CategoryTypes,
   onDelete,
 }) => {
-  const [data, setData] = useState({});
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const [calendarIsOpen, setCalendarIsOpen] = useState(false);
+  const [category, setCategory] = useState(CategoryTypes);
+  const [startDate, setStartDate] = useState(
+    selectedEvent ? selectedEvent.startDate : ""
+  );
+  const [endDate, setEndDate] = useState(
+    selectedEvent ? selectedEvent.endDate : ""
+  );
+  const [title, setTitle] = useState(
+    selectedEvent ? selectedEvent.content : ""
+  );
+  const formatStartDate =
+    selectedEvent && moment(startDate).locale("ko").format("M월 D일 (ddd)");
+
+  const formatEndDate =
+    selectedEvent && moment(endDate).locale("ko").format("M월 D일 (ddd)");
+  console.log($modalIsOpen);
   useEffect(() => {
     if ($modalIsOpen) {
       setDropdownIsOpen(false);
       setCalendarIsOpen(false);
     }
-  }, [$modalIsOpen]);
+  }, [$modalIsOpen, selectedEvent]);
 
   const handleSelectCalendar = () => {
     setCalendarIsOpen(!calendarIsOpen);
+  };
+
+  const handleDateChange = (start, end) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
+
+  const handleCategoryChange = (selectedCategory) => {
+    setCategory(selectedCategory);
   };
 
   const handleDeleteSchedule = async () => {
@@ -41,6 +66,26 @@ const CustomModal = ({
       console.error("Error deleting data:", error);
     }
   };
+
+  const handleUpdateSchedule = () => {
+    console.log(selectedEvent);
+  };
+  // const handleUpdateSchedule = async () => {
+  //   try {
+  //     await AxiosCalendarUpdate(selectedEvent.scheduleId, {
+  //       content: title,
+  //       scheduleCategory: category,
+  //       startDate,
+  //       endDate,
+  //     });
+  //     closeModal();
+  //     alert("수정 되었습니다!");
+  //   } catch (error) {
+  //     console.error("Error updating data:", error);
+  //   }
+  // };
+
+  if (!selectedEvent) return null; // selectedEvent가 없는 경우 컴포넌트를 렌더링하지 않음
 
   return (
     <>
@@ -67,37 +112,37 @@ const CustomModal = ({
           },
         }}
       >
-        {selectedEvent && (
-          <>
-            <ModalLeftBox>
-              <ModalTopBox>
-                <ModalTitle defaultValue={selectedEvent.content}></ModalTitle>
-                <ModalTopBtnBox>
-                  <ModalTopBtn onClick={handleDeleteSchedule}>
-                    <Trash />
-                  </ModalTopBtn>
-                  <ModalTopBtn onClick={closeModal}>
-                    <Send />
-                  </ModalTopBtn>
-                </ModalTopBtnBox>
-              </ModalTopBox>
-              <ModalBottomBtnBox>
-                <ModalBottomBtn onClick={handleSelectCalendar}>
-                  <CalendarIcon />
-                  <ModalText>
-                    {formatStartDate !== formatEndDate
-                      ? formatStartDate + " - " + formatEndDate
-                      : formatStartDate}
-                  </ModalText>
-                </ModalBottomBtn>
-              </ModalBottomBtnBox>
-            </ModalLeftBox>
-          </>
-        )}
+        <ModalLeftBox>
+          <ModalTopBox>
+            <ModalTitle
+              $dafaultValue={selectedEvent.content}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <ModalTopBtnBox>
+              <ModalTopBtn onClick={handleDeleteSchedule}>
+                <Trash />
+              </ModalTopBtn>
+              <ModalTopBtn onClick={handleUpdateSchedule}>
+                <Send />
+              </ModalTopBtn>
+            </ModalTopBtnBox>
+          </ModalTopBox>
+          <ModalBottomBtnBox>
+            <ModalBottomBtn onClick={handleSelectCalendar}>
+              <CalendarIcon />
+              <ModalText>
+                {formatStartDate !== formatEndDate
+                  ? `${formatStartDate} - ${formatEndDate}`
+                  : formatStartDate}
+              </ModalText>
+            </ModalBottomBtn>
+          </ModalBottomBtnBox>
+        </ModalLeftBox>
       </Modal>
       {$modalIsOpen && (
         <ScheduleCategoryDropDown
           isOpen={dropdownIsOpen}
+          onCategoryChange={handleCategoryChange}
           list={CategoryTypes}
           selected={
             selectedEvent.scheduleCategory === "VISA"
@@ -109,19 +154,16 @@ const CustomModal = ({
         />
       )}
       {$modalIsOpen && calendarIsOpen && (
-        <>
-          <SelectCalendar calendarIsOpen={calendarIsOpen} />
-        </>
+        <SelectCalendar
+          calendarIsOpen={calendarIsOpen}
+          onDateChange={handleDateChange}
+        />
       )}
     </>
   );
 };
 
 export default CustomModal;
-
-const F = styled.div`
-  z-index: 99999999 !important;
-`;
 
 const ModalLeftBox = styled.div`
   width: 100%;
@@ -165,13 +207,12 @@ const ModalBottomBtnBox = styled.div`
 `;
 
 const ModalBottomBtn = styled.button`
-  width: 280px;
+  width: 300px;
   height: 27px;
   background-color: transparent;
   border: none;
   display: flex;
   margin: 15px 0 0 100px;
-  /* border: 1px red solid; */
 `;
 
 const ModalText = styled.p`
