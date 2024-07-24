@@ -22,7 +22,7 @@ const Header = () => {
         <MainTabBar>
           <TabBar
             tabs={[
-              { id: 0, title: "학사", url: "/study" }, // 각 주소 변경 예정
+              { id: 0, title: "비자", url: "/visa" }, // 각 주소 변경 예정
               { id: 1, title: "어학", url: "/language" },
               { id: 2, title: "커뮤니티", url: "/community" },
               { id: 3, title: "캘린더", url: "/calendar" },
