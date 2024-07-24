@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import kakaoLogo from "../assets/images/KakaoLogo.svg";
-import naverLogo from "../assets/images/NaverLogo.svg";
-import googleLogo from "../assets/images/GoogleLogo.svg";
+// import naverLogo from "../assets/images/NaverLogo.svg";
+// import googleLogo from "../assets/images/GoogleLogo.svg";
 
 const LoginButton = () => {
   const Companies = [
@@ -14,27 +14,27 @@ const LoginButton = () => {
       img: kakaoLogo,
       imgSize: "25px",
     },
-    {
-      id: 1,
-      title: "naver",
-      btnColor: "#03C75A",
-      textColor: "#FFF",
-      text: "네이버로 시작하기",
-      img: naverLogo,
-      imgSize: "20px",
-    },
-    {
-      id: 2,
-      title: "google",
-      btnColor: "#FFF",
-      textColor: "#000",
-      text: "구글로 시작하기",
-      img: googleLogo,
-      imgSize: "35px",
-    },
+    // {
+    //   id: 1,
+    //   title: "naver",
+    //   btnColor: "#03C75A",
+    //   textColor: "#FFF",
+    //   text: "네이버로 시작하기",
+    //   img: naverLogo,
+    //   imgSize: "20px",
+    // },
+    // {
+    //   id: 2,
+    //   title: "google",
+    //   btnColor: "#FFF",
+    //   textColor: "#000",
+    //   text: "구글로 시작하기",
+    //   img: googleLogo,
+    //   imgSize: "35px",
+    // },
   ];
 
-  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
+  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT_URI}&response_type=code`;
 
   const loginHandler = () => {
     window.location.href = link;
