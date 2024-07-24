@@ -9,11 +9,13 @@ import ScrollToTop from "./components/ScrollToTop";
 function App() {
   return (
     <ThemeProvider theme={Theme}>
-      <Header />
-      <ScrollToTop />    
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-      </Routes>
+      <Router>
+        <Header />
+        <ScrollToTop />    
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+          </Routes>
+      </Router>
     </ThemeProvider>
   );
 }
