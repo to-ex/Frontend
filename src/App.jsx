@@ -4,11 +4,13 @@ import { Theme } from "./styles/Theme";
 import MainPage from './pages/MainPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from "./components/Header";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <ThemeProvider theme={Theme}>
-      <Header />  
+      <Header />
+      <ScrollToTop />    
       <Routes>
         <Route path="/" element={<MainPage />} />
       </Routes>
