@@ -272,7 +272,7 @@ function MainPage() {
           </StyledSlider>
           <FeatureCards>
             <FeatureCard>
-              <h2>학사</h2>
+              <h2>비자</h2>
               <p>원하는 국가 선택 후 바로 확인!</p>
               <CalculatorIconWrap>
                 <CalculatorIcon
