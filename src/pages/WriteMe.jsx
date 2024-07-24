@@ -14,7 +14,6 @@ import Header from "../components/Header";
 
 const Container = styled.div`
   width: 1920px;
-  height: 980px;
   padding-top: 88px;
   display: flex;
   align-items: center;
@@ -36,6 +35,7 @@ const ContentBoxWrapper = styled.div`
   border-radius: 20px;
   padding: 70px 110px;
   box-sizing: border-box;
+  margin-bottom: 90px;
 `;
 
 const Top = styled.div`
@@ -242,6 +242,8 @@ const CommentCount = styled.p`
 const Comments = styled.div`
   margin-top: 18px;
   margin-bottom: 40px;
+  max-height: 150px;  
+  overflow-y: auto;  
 `;
 
 const CommentBox = styled.div`
@@ -343,7 +345,8 @@ const WriteMe = () => {
     ismine: true,
     comments: [
       { id: 1, user: '김퓨처', date: '2시간전', text: '어쩌구 저쩌구 댓글... 어쩌구 저쩌구....' },
-      { id: 2, user: '김퓨처', date: '3일전', text: '어쩌구 저쩌구 댓글....' }
+      { id: 2, user: '김퓨처', date: '3일전', text: '어쩌구 저쩌구 댓글....' },
+      { id: 3, user: '김퓨처', date: '3일전', text: '어쩌구 저쩌구 댓글....' }
     ]
   };
 
