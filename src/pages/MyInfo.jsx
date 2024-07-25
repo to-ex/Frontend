@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import styled, { ThemeProvider } from 'styled-components';
 import { Theme } from '../styles/Theme';
-// import { ReactComponent as PersonCamIcon } from '../assets/images/person_cam.svg'; 
 import { ReactComponent as CamIcon } from '../assets/images/cam.svg';
 import Header from "../components/Header";
 
@@ -174,7 +173,7 @@ function MyInfo() {
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(null); 
   const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '', userImage: '' });
 
-  const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE2OTM3NzJ9.ZyEMm1scyNkxFVcPrJMnIfpGHkPJuJn5SCefH-oTjaDU4SdYEYT0O8QHILYmlpoS5fRonCJ3lbxo4Et6vHcXUA';
+  const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMTk2NDM1N30.19oTN1P6EqzvRFuNKSk0XIwE6lOsV_a5SNp33-OuzqPvG-zUlGlE83akOeyCAIxziMxlluBhcJKtPh4ASUufow';
 
   useEffect(() => {
     const fetchUserInfo = async () => {  //사용자 정보 가져오기(연동 완료)
@@ -243,9 +242,11 @@ function MyInfo() {
     }
   };
 
-  const handleSave = async () => { // 사용자 정보 수정 후 저장(연동 완료)
+  const handleSave = async () => {
     const formData = new FormData();
-    formData.append('image', fileInputRef.current.files[0]);
+    if (fileInputRef.current.files[0]) {
+      formData.append('image', fileInputRef.current.files[0]);
+    }
     formData.append('name', nickname);
     formData.append('email', userInfo.email);
 
