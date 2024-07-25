@@ -4,29 +4,37 @@ import LoginButton from "../components/LoginButton";
 
 const Login = () => {
   return (
-    <Container>
-      <LogoImg src={Logo} alt="LogoImg" />
-      <Text>
-        <b>로그인</b>이 <br />
-        필요한 서비스에요!
-      </Text>
-      <LineBox>
-        <Line />
-        <p>로그인 / 회원가입</p>
-        <Line />
-      </LineBox>
-      <LoginButton />
-    </Container>
+    <BackGround>
+      <Container>
+        <LogoImg src={Logo} alt="LogoImg" />
+        <Text>
+          <b>로그인</b>이 <br />
+          필요한 서비스에요!
+        </Text>
+        <LineBox>
+          <Line />
+          <p>로그인 / 회원가입</p>
+          <Line />
+        </LineBox>
+        <LoginButton />
+      </Container>
+    </BackGround>
   );
 };
 
 export default Login;
 
-const Container = styled.div`
+const BackGround = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-top: 138px;
+`;
+
+const Container = styled.div`
+  margin-top: 170px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const LogoImg = styled.img`
