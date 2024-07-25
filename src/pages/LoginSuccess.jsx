@@ -3,17 +3,18 @@ import Confetti from "../components/Confetti";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-const LoginSuccess = () => {
+const LoginSuccess = ({ onLogin }) => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
 
   useEffect(() => {
+    onLogin();
     const timer = setTimeout(() => {
       navigate("/");
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, [navigate, onLogin]);
 
   return (
     <>
