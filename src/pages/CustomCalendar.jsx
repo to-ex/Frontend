@@ -13,10 +13,10 @@ import CustomModal from "../components/CustomModal";
 import { AxiosCalendarGet } from "../api/AxiosCalendar";
 
 const CustomCalendar = () => {
-  const [selectedTab, setSelectedTab] = useState("ALL"); // 달력의 카테고리
-  const [events, setEvents] = useState([]); // 전체 일정
-  const [modalIsOpen, setModalIsOpen] = useState(false); // 모달이 열렸는지
-  const [selectedEvent, setSelectedEvent] = useState(null); // 달력에서 누른 일정
+  const [selectedTab, setSelectedTab] = useState("ALL");
+  const [events, setEvents] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const Tabs = [
     {
@@ -49,57 +49,10 @@ const CustomCalendar = () => {
     },
   ];
 
-  // const data = [
-  //   {
-  //     scheduleId: 8,
-  //     scheduleCategory: "VISA",
-  //     content: "비자 인터뷰 예약",
-  //     isDone: false,
-  //     userId: 3486609159,
-  //     startDate: "2024-07-01",
-  //     endDate: "2024-07-15",
-  //     type: "CALENDAR",
-  //   },
-  //   {
-  //     scheduleId: 9,
-  //     scheduleCategory: "TEST",
-  //     content: "어학 시험 준비",
-  //     isDone: true,
-  //     userId: 3486609159,
-  //     startDate: "2024-07-01",
-  //     endDate: "2024-07-15",
-  //     type: "CALENDAR",
-  //   },
-  //   {
-  //     scheduleId: 10,
-  //     scheduleCategory: "VISA",
-  //     content: "Update Schedule",
-  //     isDone: true,
-  //     userId: 3486609159,
-  //     startDate: null,
-  //     endDate: null,
-  //     type: "CHECKLIST",
-  //   },
-  //   {
-  //     scheduleId: 11,
-  //     scheduleCategory: "VISA",
-  //     content: "Update Schedule",
-  //     isDone: true,
-  //     userId: 3486609159,
-  //     startDate: null,
-  //     endDate: null,
-  //     type: "CHECKLIST",
-  //   },
-  // ];
-
-  // useEffect(() => {
-  //   setEvents(data);
-  // }, []);
   const fetchData = async () => {
     try {
-      await AxiosCalendarGet().then((res) => {
-        setEvents(res.data);
-      });
+      const response = await AxiosCalendarGet();
+      setEvents(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -125,6 +78,14 @@ const CustomCalendar = () => {
 
   const handleDeleteEvent = (deletedEventId) => {
     setEvents(events.filter((event) => event.scheduleId !== deletedEventId));
+  };
+
+  const handleUpdateEvent = (updatedEvent) => {
+    setEvents(
+      events.map((event) =>
+        event.scheduleId === updatedEvent.scheduleId ? updatedEvent : event
+      )
+    );
   };
 
   const getFilteredEvents = () => {
@@ -185,11 +146,7 @@ const CustomCalendar = () => {
           let html = [];
           const dayEvents = getEventsForDate(date);
           dayEvents.forEach((event, index) => {
-            let momentDate = moment(
-              date,
-              "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (한국 표준시)"
-            );
-            momentDate = moment(momentDate).format("YYYY-MM-DD");
+            let momentDate = moment(date).format("YYYY-MM-DD");
             const isStartDate = event.startDate === momentDate;
             const isEndDate = event.endDate === momentDate;
             const isEqualDate = event.endDate === event.startDate;
@@ -206,7 +163,7 @@ const CustomCalendar = () => {
                 style={{ top: `${(index + 1) * 45}px` }}
                 $isStartDate={isStartDate}
                 $isEndDate={isEndDate}
-                $isEquleDate={isEqualDate}
+                $isEqualDate={isEqualDate}
                 onClick={() => handleEventClick(event)}
               >
                 {event.startDate === momentDate ? event.content : null}
@@ -220,8 +177,10 @@ const CustomCalendar = () => {
         $modalIsOpen={modalIsOpen}
         closeModal={closeModal}
         selectedEvent={selectedEvent}
+        setSelectedEvent={setSelectedEvent}
         CategoryTypes={Tabs}
         onDelete={handleDeleteEvent}
+        onUpdate={handleUpdateEvent} // Pass this prop to handle updates
       />
     </StyledCalendarWrapper>
   );

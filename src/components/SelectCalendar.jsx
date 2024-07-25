@@ -1,14 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ReactComponent as NextIcon } from "../assets/images/MonoNextMonth.svg";
 import { ReactComponent as PrevIcon } from "../assets/images/MonoPrevMonth.svg";
 import Calendar from "react-calendar";
 import { StyledSelectCalendarWrapper } from "../styles/StyledSelectCalendar";
 import moment from "moment";
-import { useState } from "react";
-import { useEffect } from "react";
 
 const SelectCalendar = ({ calendarIsOpen, onDateChange }) => {
-  const [isOpen, setIsOpen] = useState(calendarIsOpen);
+  const isOpen = calendarIsOpen;
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");

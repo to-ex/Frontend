@@ -11,6 +11,7 @@ const Redirection = () => {
         localStorage.setItem("accessToken", r.data.data.accessToken);
         localStorage.setItem("refreshToken", r.data.data.refreshToken);
         localStorage.setItem("name", r.data.data.name);
+        localStorage.setItem("id", r.data.data.id);
         navigate("/loginSuccess");
       })
       .catch((error) => {

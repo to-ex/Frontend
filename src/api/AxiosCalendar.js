@@ -4,10 +4,9 @@ import Axios from "./Axios";
 
 export const AxiosCalendarGet = async () => {
   try {
-    const userId = 2;
-    const token =
-      "eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEzLCJlbWFpbCI6Imh5b3JpZTAxMDNAZ21haWwuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6Imh5b3JpZTAxMDNAZ21haWwuY29tIiwiZXhwIjoxNzIxOTA3MDA2fQ.0yGDsBbicAAvCx55vO-H81NyNmgq4ExbBMQ5dHl5bZLmgmpI_CVWlo7uLdaP4iv-JM8I73D-ohYxAclJlxLUIA";
-    const response = await Axios.get(`/api/v1/schedule?userId=${userId}`, {
+    const id = localStorage.getItem("id");
+    const token = localStorage.getItem("accessToken");
+    const response = await Axios.get(`/api/v1/schedule?userId=${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response;
@@ -19,8 +18,7 @@ export const AxiosCalendarGet = async () => {
 
 export const AxiosCalendarDelete = async (scheduleId) => {
   try {
-    const token =
-      "eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEzLCJlbWFpbCI6Imh5b3JpZTAxMDNAZ21haWwuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6Imh5b3JpZTAxMDNAZ21haWwuY29tIiwiZXhwIjoxNzIxOTA3MDA2fQ.0yGDsBbicAAvCx55vO-H81NyNmgq4ExbBMQ5dHl5bZLmgmpI_CVWlo7uLdaP4iv-JM8I73D-ohYxAclJlxLUIA";
+    const token = localStorage.getItem("accessToken");
     const response = await Axios.delete(`/api/v1/schedule/${scheduleId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -31,11 +29,10 @@ export const AxiosCalendarDelete = async (scheduleId) => {
   }
 };
 
-export const AxiosCalendarUpdate = async (scheduleId) => {
+export const AxiosCalendarUpdate = async (scheduleId, data) => {
   try {
-    const token =
-      "eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEzLCJlbWFpbCI6Imh5b3JpZTAxMDNAZ21haWwuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6Imh5b3JpZTAxMDNAZ21haWwuY29tIiwiZXhwIjoxNzIxOTA3MDA2fQ.0yGDsBbicAAvCx55vO-H81NyNmgq4ExbBMQ5dHl5bZLmgmpI_CVWlo7uLdaP4iv-JM8I73D-ohYxAclJlxLUIA";
-    const response = await Axios.patch(`/api/v1/schedule/${scheduleId}`, {
+    const token = localStorage.getItem("accessToken");
+    const response = await Axios.patch(`/api/v1/schedule/${scheduleId}`, data, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response;

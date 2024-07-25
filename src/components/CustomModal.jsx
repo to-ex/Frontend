@@ -1,4 +1,3 @@
-// CustomModal.js
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "react-modal";
@@ -10,17 +9,20 @@ import { AxiosCalendarDelete, AxiosCalendarUpdate } from "../api/AxiosCalendar";
 import SelectCalendar from "./SelectCalendar";
 import moment from "moment";
 import "moment/locale/ko";
-
 const CustomModal = ({
   $modalIsOpen,
   closeModal,
   selectedEvent,
   CategoryTypes,
   onDelete,
+  onUpdate, // Add this prop
+  setSelectedEvent,
 }) => {
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const [calendarIsOpen, setCalendarIsOpen] = useState(false);
-  const [category, setCategory] = useState(CategoryTypes);
+  const [category, setCategory] = useState(
+    selectedEvent ? selectedEvent.scheduleCategory : ""
+  );
   const [startDate, setStartDate] = useState(
     selectedEvent ? selectedEvent.startDate : ""
   );
@@ -30,18 +32,28 @@ const CustomModal = ({
   const [title, setTitle] = useState(
     selectedEvent ? selectedEvent.content : ""
   );
+  const [isDone, setIsDone] = useState(
+    selectedEvent ? selectedEvent.isDone : false
+  );
+
   const formatStartDate =
     selectedEvent && moment(startDate).locale("ko").format("M월 D일 (ddd)");
-
   const formatEndDate =
     selectedEvent && moment(endDate).locale("ko").format("M월 D일 (ddd)");
-  console.log($modalIsOpen);
+
   useEffect(() => {
-    if ($modalIsOpen) {
+    if ($modalIsOpen && selectedEvent) {
       setDropdownIsOpen(false);
       setCalendarIsOpen(false);
+      setTitle(selectedEvent.content || "");
+      setStartDate(selectedEvent.startDate || "");
+      setEndDate(selectedEvent.endDate || "");
+      setCategory(selectedEvent.scheduleCategory || "");
+      setIsDone(selectedEvent.isDone || false);
+    } else {
+      setSelectedEvent(null);
     }
-  }, [$modalIsOpen, selectedEvent]);
+  }, [$modalIsOpen, selectedEvent, setSelectedEvent]);
 
   const handleSelectCalendar = () => {
     setCalendarIsOpen(!calendarIsOpen);
@@ -53,10 +65,22 @@ const CustomModal = ({
   };
 
   const handleCategoryChange = (selectedCategory) => {
+    selectedCategory =
+      selectedCategory === "비자"
+        ? "VISA"
+        : selectedCategory === "어학"
+        ? "TEST"
+        : "ETC";
+    console.log(selectedCategory);
     setCategory(selectedCategory);
   };
 
   const handleDeleteSchedule = async () => {
+    if (!selectedEvent) {
+      console.error("No selected event to delete");
+      return;
+    }
+
     try {
       await AxiosCalendarDelete(selectedEvent.scheduleId);
       onDelete(selectedEvent.scheduleId);
@@ -67,18 +91,24 @@ const CustomModal = ({
     }
   };
 
-  // const handleUpdateSchedule = () => {
-  //   console.log(selectedEvent);
-  // };
-
   const handleUpdateSchedule = async () => {
+    if (!selectedEvent) {
+      console.error("No selected event to update");
+      return;
+    }
+
     try {
-      await AxiosCalendarUpdate(selectedEvent.scheduleId, {
+      const updatedEvent = {
+        ...selectedEvent,
         content: title,
         scheduleCategory: category,
-        startDate,
-        endDate,
-      });
+        startDate: startDate,
+        endDate: endDate,
+        isDone: isDone,
+      };
+
+      await AxiosCalendarUpdate(selectedEvent.scheduleId, updatedEvent);
+      onUpdate(updatedEvent);
       closeModal();
       alert("수정 되었습니다!");
     } catch (error) {
@@ -86,14 +116,13 @@ const CustomModal = ({
     }
   };
 
-  if (!selectedEvent) return null; // selectedEvent가 없는 경우 컴포넌트를 렌더링하지 않음
+  if (!selectedEvent) return null;
 
   return (
     <>
       <Modal
         isOpen={$modalIsOpen}
         onRequestClose={closeModal}
-        contentLabel="Event Modal"
         style={{
           overlay: {
             backgroundColor: "rgba(54, 55, 58, 0.7)",
@@ -116,7 +145,7 @@ const CustomModal = ({
         <ModalLeftBox>
           <ModalTopBox>
             <ModalTitle
-              $dafaultValue={selectedEvent.content}
+              value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <ModalTopBtnBox>
@@ -173,14 +202,12 @@ const ModalLeftBox = styled.div`
   flex-direction: column;
   justify-content: space-between;
 `;
-
 const ModalTopBox = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 `;
-
 const ModalTitle = styled.input`
   font-weight: 600;
   font-size: 20px;
@@ -188,25 +215,21 @@ const ModalTitle = styled.input`
   border: none;
   outline: none;
 `;
-
 const ModalTopBtnBox = styled.div`
   display: flex;
   gap: 16px;
 `;
-
 const ModalTopBtn = styled.button`
   width: auto;
   height: auto;
   background-color: transparent;
   border: none;
 `;
-
 const ModalBottomBtnBox = styled.div`
   width: 100%;
   display: flex;
   gap: 36px;
 `;
-
 const ModalBottomBtn = styled.button`
   width: 300px;
   height: 27px;
@@ -215,7 +238,6 @@ const ModalBottomBtn = styled.button`
   display: flex;
   margin: 15px 0 0 100px;
 `;
-
 const ModalText = styled.p`
   font-size: 20px;
   font-weight: 500;
