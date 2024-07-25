@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Confetti from "../components/Confetti";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const LoginSuccess = () => {
+  const navigate = useNavigate();
+  const name = localStorage.getItem("name");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate("/");
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [navigate]);
+
   return (
     <>
       <Confetti />
       <TextBox>
         <Text>
-          <RedText>김퓨처</RedText>
+          <RedText>{name}</RedText>
           님,
           <br />
           환영합니다!
