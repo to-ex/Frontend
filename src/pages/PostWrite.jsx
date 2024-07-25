@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { Theme } from "../styles/Theme";
 import ConfirmModal from "../components/ConfirmModal";
 import axios from 'axios';
@@ -192,12 +192,12 @@ const HiddenFileInput = styled.input`
 `;
 
 const PostWrite = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [country, setCountry] = useState('');
   const [board, setBoard] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState({
     country: false,
@@ -222,10 +222,7 @@ const PostWrite = () => {
   };
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-    }
+    setImages([...e.target.files]);
   };
 
   const handleCloseConfirmModal = () => {
@@ -234,32 +231,33 @@ const PostWrite = () => {
 
   const handlePostSubmit = async () => {
     const formData = new FormData();
-    formData.append('boardReq', JSON.stringify({
+    const boardReq = {
       title,
       boardCategory: board,
       countryTag: country,
       content,
-    }));
-    if (image) {
+    };
+
+    formData.append('boardReq', new Blob([JSON.stringify(boardReq)], { type: 'application/json' }));
+    images.forEach((image) => {
       formData.append('images', image);
-    }
-  
+    });
+
     try {
-      const response = await axios.post('http://43.200.144.133:8080/api/v1/board/', formData, {
+      const response = await axios.post('http://43.200.144.133:8080/api/v1/board', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE2OTM3NzJ9.ZyEMm1scyNkxFVcPrJMnIfpGHkPJuJn5SCefH-oTjaDU4SdYEYT0O8QHILYmlpoS5fRonCJ3lbxo4Et6vHcXUA`
+          Authorization: `Bearer eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMTk4NTY0NH0.2D5CttM0H_TuZ0tWjfGBVy5UvKjgE13m6hhvf0GwJmCHZu83UZ_S5FJ4mdf3aI7NagqIDq1fsvH5LSWxTJbdCg`
         }
       });
       console.log(response.data);
       setConfirmModalVisible(true);
-      
     } catch (error) {
       console.error('Failed to submit post:', error.response ? error.response.data : error.message);
       alert('Failed to submit post: ' + (error.response ? error.response.data : error.message));
     }
   };
-  
+
   return (
     <ThemeProvider theme={Theme}>
       <Container>
@@ -269,11 +267,11 @@ const PostWrite = () => {
               {country || '국가를 선택해주세요.'}
             </DropdownButton>
             <DropdownContent $show={dropdownOpen.country}>
-              <button onClick={() => { setCountry('🇪🇸  스페인'); toggleDropdown('country'); }}>🇪🇸  스페인</button>
-              <button onClick={() => { setCountry('🇩🇪  독일'); toggleDropdown('country'); }}>🇩🇪  독일</button>
-              <button onClick={() => { setCountry('🇬🇧  영국'); toggleDropdown('country'); }}>🇬🇧  영국</button>
-              <button onClick={() => { setCountry('🇫🇷  프랑스'); toggleDropdown('country'); }}>🇫🇷  프랑스</button>
-              <button onClick={() => { setCountry('🇮🇹  이탈리아'); toggleDropdown('country'); }}>🇮🇹  이탈리아</button>
+              <button onClick={() => { setCountry('SPAIN'); toggleDropdown('country'); }}>🇪🇸  스페인</button>
+              <button onClick={() => { setCountry('GERMANY'); toggleDropdown('country'); }}>🇩🇪  독일</button>
+              <button onClick={() => { setCountry('ENGLAND'); toggleDropdown('country'); }}>🇬🇧  영국</button>
+              <button onClick={() => { setCountry('FRANCE'); toggleDropdown('country'); }}>🇫🇷  프랑스</button>
+              <button onClick={() => { setCountry('ITALY'); toggleDropdown('country'); }}>🇮🇹  이탈리아</button>
             </DropdownContent>
           </div>
           <div>
@@ -281,10 +279,9 @@ const PostWrite = () => {
               {board || '게시판을 선택해주세요.'}
             </DropdownButton>
             <DropdownContent $show={dropdownOpen.board}>
-              <button onClick={() => { setBoard('전체'); toggleDropdown('board'); }}>전체</button>
-              <button onClick={() => { setBoard('떠들어요'); toggleDropdown('board'); }}>떠들어요</button>
-              <button onClick={() => { setBoard('질문 있어요'); toggleDropdown('board'); }}>질문 있어요</button>
-              <button onClick={() => { setBoard('공유해요'); toggleDropdown('board'); }}>공유해요</button>
+              <button onClick={() => { setBoard('SHARE'); toggleDropdown('board'); }}>공유해요</button>
+              <button onClick={() => { setBoard('QUESTION'); toggleDropdown('board'); }}>질문 있어요</button>
+              <button onClick={() => { setBoard('TALK'); toggleDropdown('board'); }}>떠들어요</button>
             </DropdownContent>
           </div>
         </DropdownWrapper>
@@ -304,25 +301,26 @@ const PostWrite = () => {
             <ImageUploadInfo>이미지 파일 (JPG, PNG, GIF) 3개를 첨부할 수 있어요.</ImageUploadInfo>
             <ImageUploadButton
               onClick={() => document.getElementById('imageUpload').click()}
-              image={image ? URL.createObjectURL(image) : null}
+              image={images[0] ? URL.createObjectURL(images[0]) : null}
             >
-              {image ? '' : '+'}
+              {images[0] ? '' : '+'}
             </ImageUploadButton>
             <HiddenFileInput
               id="imageUpload"
               type="file"
               accept="image/*"
+              multiple
               onChange={handleImageUpload}
             />
           </ImageUploadWrapper>
           <SubmitButton onClick={handlePostSubmit} enabled={isButtonEnabled}>등록</SubmitButton>
         </ContentsBox>
         {confirmModalVisible && (
-        <ConfirmModal
-          msg="등록 되었어요!"
-          onConfirm={handleCloseConfirmModal}
-        />
-      )}
+          <ConfirmModal
+            msg="등록 되었어요!"
+            onConfirm={handleCloseConfirmModal}
+          />
+        )}
       </Container>
     </ThemeProvider>
   );
