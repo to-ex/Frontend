@@ -10,7 +10,7 @@ import { ReactComponent as Profile } from '../assets/images/profile.svg';
 import { ReactComponent as Writing } from '../assets/images/writing.svg';
 import { ReactComponent as Scrap } from '../assets/images/scrap.svg';
 import { ReactComponent as Checklist } from '../assets/images/checklist.svg';
-import { ReactComponent as Calendar } from '../assets/images/calendar.svg';
+import { ReactComponent as Calendar } from '../assets/images/Calendar.svg';
 import Header from "../components/Header";
 import ScrollToTop from '../components/ScrollToTop';
 
