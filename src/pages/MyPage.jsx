@@ -159,7 +159,6 @@ const iconMapping = {
 };
 
 function MyPage() {
-  //const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '', userImage: ''});
   const [userInfo, setUserInfo] = useState({ userId: null, name: null, email: null, userImage: null });
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -180,10 +179,10 @@ function MyPage() {
     { id: 5, title: '캘린더', icon: 'calendar', path: '/calendar' } //추후 경로 수정 필요
   ]);
 
-  useEffect(() => {
+  useEffect(() => {  //회원 정보 조회 api 연동
     const fetchUserInfo = async () => {
       try {
-        const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE4MDEzMzB9.impBgrgiYYs8821Gxsg3x9k-_h3Efqc14VCUMN-Hs8gN8YZ-5KwVCUJKDuKbo6MoEQzZCYpuAdFPKeDMD6M9EA';
+        const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMTk2NDM1N30.19oTN1P6EqzvRFuNKSk0XIwE6lOsV_a5SNp33-OuzqPvG-zUlGlE83akOeyCAIxziMxlluBhcJKtPh4ASUufow';
         const response = await axios.get('http://43.200.144.133:8080/api/v1/user/mypage', {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -213,17 +212,9 @@ function MyPage() {
     setModalVisible(true);
   };
 
-  
-//   const confirmLogout = () => {
-//     console.log("User logged out");
-//     setModalVisible(false);
-//     setConfirmModalMessage('로그아웃 되었어요');
-//     setConfirmModalVisible(true);
-//   };
-
- const confirmLogout = async () => {
+ const confirmLogout = async () => { //로그아웃 api 연동
     try {
-      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE4MDEzMzB9.impBgrgiYYs8821Gxsg3x9k-_h3Efqc14VCUMN-Hs8gN8YZ-5KwVCUJKDuKbo6MoEQzZCYpuAdFPKeDMD6M9EA';
+      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMTk2NDM1N30.19oTN1P6EqzvRFuNKSk0XIwE6lOsV_a5SNp33-OuzqPvG-zUlGlE83akOeyCAIxziMxlluBhcJKtPh4ASUufow';
       await axios.post('http://43.200.144.133:8080/api/v1/auth/logout', null, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -252,16 +243,9 @@ const handleDeleteClick = () => {
     setModalVisible(true);
   };
 
-//   const confirmDeletion = () => {
-//     console.log("User Deletion");
-//     setModalVisible(false);
-//     setConfirmModalMessage('회원탈퇴 처리가 완료되었어요');
-//     setConfirmModalVisible(true);
-//   };
-
- const confirmDeletion = async () => {
+ const confirmDeletion = async () => { //회원 탈퇴 api 연동
     try {
-      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE4MDEzMzB9.impBgrgiYYs8821Gxsg3x9k-_h3Efqc14VCUMN-Hs8gN8YZ-5KwVCUJKDuKbo6MoEQzZCYpuAdFPKeDMD6M9EA';
+      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMTk2NDM1N30.19oTN1P6EqzvRFuNKSk0XIwE6lOsV_a5SNp33-OuzqPvG-zUlGlE83akOeyCAIxziMxlluBhcJKtPh4ASUufow';
       await axios.delete('http://43.200.144.133:8080/api/v1/auth/withdraw', {
         headers: {
           Authorization: `Bearer ${token}`
