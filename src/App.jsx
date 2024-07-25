@@ -1,6 +1,7 @@
 import "./App.css";
 import { ThemeProvider } from "styled-components";
 import { Theme } from "./styles/Theme";
+import MyInfo from "./pages/MyInfo";
 import VisaGuide from "./pages/VisaGuide";
 import MainPage from "./pages/MainPage";
 import MyPage from "./pages/MyPage";
