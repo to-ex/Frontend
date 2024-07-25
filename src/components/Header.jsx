@@ -27,7 +27,11 @@ const Header = ({ isLogin, onLogout }) => {
               { id: 2, title: "커뮤니티", url: "/community" },
               { id: 3, title: "캘린더", url: "/calendar" },
               { id: 4, title: "체크리스트", url: "/checklist" },
-              { id: 5, title: "마이페이지", url: "/mypage" },
+              {
+                id: 5,
+                title: "마이페이지",
+                url: isLogin ? "/mypage" : "/login",
+              },
             ]}
           />
         </MainTabBar>
