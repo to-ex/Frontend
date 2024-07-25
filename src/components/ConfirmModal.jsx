@@ -33,7 +33,7 @@ const ModalContent = styled.div`
 const ConfirmButton = styled.button`
     background-color: #FF244A;
     color: white;
-    width: 191px;
+    width: 400px;
     height: 58px;
     margin: 10px;
     border: none;
