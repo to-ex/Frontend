@@ -3,14 +3,14 @@ import logo from "../assets/images/Logo.svg";
 import TabBar from "./TabBar";
 import { useNavigate } from "react-router-dom";
 import Tab from "./Tab";
-import { useState } from "react";
 
-const Header = () => {
+const Header = ({ isLogin, onLogout }) => {
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(false);
+
   const handleLogin = () => {
-    setIsLogin(!isLogin);
-    if (!isLogin) {
+    if (isLogin) {
+      onLogout();
+    } else {
       navigate("/login");
     }
   };
@@ -22,17 +22,21 @@ const Header = () => {
         <MainTabBar>
           <TabBar
             tabs={[
-              { id: 0, title: "학사", url: "/study" }, // 각 주소 변경 예정
+              { id: 0, title: "비자", url: "/visa" },
               { id: 1, title: "어학", url: "/language" },
               { id: 2, title: "커뮤니티", url: "/community" },
               { id: 3, title: "캘린더", url: "/calendar" },
               { id: 4, title: "체크리스트", url: "/checklist" },
-              { id: 5, title: "마이페이지", url: "/mypage" },
+              {
+                id: 5,
+                title: "마이페이지",
+                url: isLogin ? "/mypage" : "/login",
+              },
             ]}
           />
         </MainTabBar>
         <Tab color="GRAY" onClick={handleLogin}>
-          {isLogin === false ? "로그인" : "로그아웃"}
+          {isLogin ? "로그아웃" : "로그인"}
         </Tab>
       </Container>
     </BackGround>
@@ -48,6 +52,8 @@ const BackGround = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.colors.WHITE};
   box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  z-index: 1000;
 `;
 
 const Container = styled.div`
