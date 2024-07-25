@@ -10,16 +10,9 @@ import { ReactComponent as Profile } from '../assets/images/profile.svg';
 import { ReactComponent as Writing } from '../assets/images/writing.svg';
 import { ReactComponent as Scrap } from '../assets/images/scrap.svg';
 import { ReactComponent as Checklist } from '../assets/images/checklist.svg';
-import { ReactComponent as Calendar } from '../assets/images/Calendar.svg';
-import Header from "../components/Header";
+import { ReactComponent as Calendar } from '../assets/images/calendar2.svg';
 import ScrollToTop from '../components/ScrollToTop';
 
-const HeaderWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-`;
 
 const Contain = styled.div`
   box-sizing: border-box;
@@ -34,7 +27,6 @@ const PageWrapper = styled.div`
   flex-direction: column;
   align-items: center; 
   margin: 0 auto;
-  margin-top: 180px;  /* 헤더와의 마진 */
   
   a { 
     text-decoration: none;  
@@ -63,6 +55,7 @@ const MyPageContainer = styled.div`
   position: relative;
   margin-bottom: 70px;
   border: 2px solid #E1E1E1;
+  margin-top: 88px;
 `;
 
 const UserGreeting = styled.div`
@@ -266,9 +259,6 @@ const handleDeleteClick = () => {
 
 return (
 <ThemeProvider theme={Theme}>
-    <HeaderWrapper>
-    <Header />
-    </HeaderWrapper>
     <Contain>
     <PageWrapper>
         <PageHeader>마이페이지</PageHeader>
