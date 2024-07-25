@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import styled, { keyframes, ThemeProvider } from 'styled-components';
 import { ReactComponent as DropdownIcon } from '../assets/images/Dropdown.svg';
 import { Theme } from '../styles/Theme'; 
@@ -9,7 +9,7 @@ import { ReactComponent as Bg2Icon } from '../assets/images/Bg2.svg';
 import { ReactComponent as WarningIcon } from '../assets/images/Warning.svg';
 import { ReactComponent as IeltsText } from '../assets/images/IeltsText.svg';
 import { ReactComponent as ToeflText } from '../assets/images/ToeflText.svg';
-// import axios from 'axios';
+import axios from 'axios';
 
 const Bg1IconWrap = styled.div`
   position: absolute;
@@ -43,6 +43,7 @@ const Subtitle = styled.p`
   margin-bottom: 40px;
   text-align: left;
 `;
+
 const grow = keyframes`
   0% {
     transform: scale(1);
@@ -213,7 +214,7 @@ const ExamItem = styled.div`
     display: flex;
     margin-left: 0px;
  }
-  button {
+  Button {
     position: absolute;
     top: 80px;
     right: 90px;
@@ -303,8 +304,13 @@ const DropdownWrapper = styled.div`
 
 const ArrowButtonContainer = styled.div`
   display: flex;
-  width: 280.83px;
-  height: 58px;
+  gap: 20px;
+  margin-left: 315px;
+`;
+
+const ArrowButtonContainer2 = styled.div`
+  display: flex;
+  gap: 20px;
 `;
 
 const ArrowButton = styled.a`
@@ -342,63 +348,11 @@ const Overlay = styled.div`
   display: ${props => (props.show ? 'block' : 'none')};
 `;
 
-const staticDatas = [
-  { month: 7, date: '1', day: '월', time: '10:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '서울', testCategory: 'TOEFL' },
-  { month: 7, date: '2', day: '화', time: '11:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '서울', testCategory: 'TOEFL' },
-  { month: 7, date: '3', day: '수', time: '12:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '서울', testCategory: 'TOEFL' },
-  { month: 7, date: '4', day: '목', time: '13:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '서울', testCategory: 'IELTS' },
-  { month: 7, date: '5', day: '금', time: '14:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '서울', testCategory: 'IELTS' },
-  { month: 8, date: '6', day: '토', time: '15:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '인천', testCategory: 'IELTS' },
-    { month: 8, date: '6', day: '토', time: '15:00', kind: 'paper', location: '강남 테스트 센터 (메이플넥스)', address: '서울특별시 강남구 테헤란로 223 큰길타워빌딩 지하 1층', testArea: '인천', testCategory: 'IELTS' },
-];
-
 function LanguagePage() {
   const [selectedExamType, setSelectedExamType] = useState('토플');
   const [selectedMonth, setSelectedMonth] = useState(7);
-  const [examData] = useState(staticDatas); // 정적 데이터 사용
-  const [dropdownOpen, setDropdownOpen] = useState({ testArea: false, type: false, ieltsType: false, date: false });
-  const [selectedRegion, setSelectedRegion] = useState('전체');
-  const [selectedType, setSelectedType] = useState('전체');
-  const [selectedDateRange, setSelectedDateRange] = useState('전체');
-  const isDropdownOpen = Object.values(dropdownOpen).some(open => open);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const contentPerPage = 4; 
-  const count = examData.length;
-
-  const isDateInRange = (date) => {
-    const day = parseInt(date, 10);
-    if (selectedDateRange === '1~10') {
-      return day >= 1 && day <= 10;
-    } else if (selectedDateRange === '11~20') {
-      return day >= 11 && day <= 20;
-    } else if (selectedDateRange === '21~31') {
-      return day >= 21 && day <= 31;
-    }
-    return true; // 전체인 경우
-  };
-
-  const filterExams = () => {
-    return examData.filter(exam => {
-      const isCategoryMatch = selectedExamType === '전체' || exam.testCategory === (selectedExamType === '토플' ? 'TOEFL' : 'IELTS');
-      const isRegionMatch = selectedRegion === '전체' || exam.testArea === selectedRegion;
-      const isTypeMatch = selectedType === '전체' || exam.type === selectedType;
-      const isMonthMatch = selectedMonth === exam.month;
-      const isDateMatch = isDateInRange(exam.date);
-
-      console.log('Exam:', exam);
-      console.log('isCategoryMatch:', isCategoryMatch);
-      console.log('isRegionMatch:', isRegionMatch);
-      console.log('isTypeMatch:', isTypeMatch);
-      console.log('isMonthMatch:', isMonthMatch);
-      console.log('isDateMatch:', isDateMatch);
-
-      return isCategoryMatch && isRegionMatch && isTypeMatch && isMonthMatch && isDateMatch;
-    });
-  };
-
-  const filteredExamData = filterExams();
-  const displayedExams = filteredExamData.slice((currentPage - 1) * contentPerPage, currentPage * contentPerPage);
+  const [examData, setExamData] = useState([]);
+  const [dropdownOpen, setDropdownOpen] = useState({ testArea: false, testType: false, ieltsType: false, testDate: false });
 
   const toggleDropdown = (dropdown) => {
     setDropdownOpen(prevState => ({
@@ -407,22 +361,62 @@ function LanguagePage() {
     }));
   };
 
+  const [selectedRegion, setSelectedRegion] = useState('전체');
+  const [selectedType, setSelectedType] = useState('전체');
+  const [selectedDateRange, setSelectedDateRange] = useState('전체');
+
+  const isDropdownOpen = Object.values(dropdownOpen).some(open => open);
+  const [currentPage, setCurrentPage] = useState(1);
+  const contentPerPage = 4;
+
+  const isDateInRange = (date) => {
+    const day = date.split('-')[2];
+    return selectedDateRange === '전체' || selectedDateRange === day;
+  };
+
+  const fetchExamData = useCallback(async () => {
+    try {
+      const response = await axios.get('http://43.200.144.133:8080/api/v1/engTest/getAll', {
+        params: {
+          category: selectedExamType === '토플' ? 'TOEFL' : 'IELTS',
+          area: selectedRegion !== '전체' ? selectedRegion : undefined,
+          type: selectedType !== '전체' ? selectedType.toUpperCase() : undefined,
+          date: selectedDateRange !== '전체' ? `2024-07-${selectedDateRange}일` : undefined,
+        },
+      });
+      console.log('API Response:', response.data);
+      setExamData(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [selectedExamType, selectedRegion, selectedType, selectedDateRange]);
+  
+  useEffect(() => {
+    fetchExamData();
+}, [fetchExamData, selectedMonth, selectedRegion, selectedType, selectedDateRange]);
+
+  const filterExams = () => {
+    return examData.filter(exam => {
+      const isCategoryMatch = selectedExamType === '전체' || exam.testCategory === (selectedExamType === '토플' ? 'TOEFL' : 'IELTS');
+      const isRegionMatch = selectedRegion === '전체' || exam.testArea === selectedRegion;
+      const isTypeMatch = selectedType === '전체' || exam.testType === selectedType.toUpperCase();  
+      const isMonthMatch = selectedMonth === new Date(exam.testDate).getMonth() + 1;
+      const isDateMatch = isDateInRange(exam.testDate);
+      return isCategoryMatch && isRegionMatch && isTypeMatch && isMonthMatch && isDateMatch;
+    });
+  };
+  
+  const filteredExamData = filterExams();
+  const displayedExams = filteredExamData.slice((currentPage - 1) * contentPerPage, currentPage * contentPerPage);
+
   const handleRegionSelect = (testArea) => {
-    console.log('Selected testArea:', testArea);
     setSelectedRegion(testArea);
     setDropdownOpen(prevState => ({ ...prevState, testArea: false }));
   };
 
-  const handleTypeSelect = (type) => {
-    console.log('Selected Type:', type);
-    setSelectedType(type);
-    setDropdownOpen(prevState => ({ ...prevState, type: false }));
-  };
-
-  const handleDateRangeSelect = (range) => {
-    console.log('Selected Date Range:', range);
-    setSelectedDateRange(range);
-    setDropdownOpen(prevState => ({ ...prevState, date: false }));
+  const handleDateRangeSelect = (day) => {
+    setSelectedDateRange(day.toString().padStart(2, '0')); // 선택한 날짜를 두 자리로 설정
+    setDropdownOpen(prevState => ({ ...prevState, testDate: false }));
   };
 
   const setPage = (page) => {
@@ -430,9 +424,56 @@ function LanguagePage() {
   };
 
   const handleExamTypeSelect = (examType) => {
-    console.log('Selected Exam Type:', examType);
     setSelectedExamType(examType);
   };
+
+  const handleTypeSelect = (type) => {
+    setSelectedType(type);
+    setDropdownOpen(prevState => ({ ...prevState, testType: false }));
+  };
+
+  const formatDate = (date) => {
+    const day = date.split('-')[2]; // 'YYYY-MM-DD' 형식에서 'DD' 부분만 추출
+    return day.startsWith('0') ? day.substring(1) : day; // '0'으로 시작하면 제거
+  };
+  
+  const formatTime = (time) => {
+    const [hour, minute] = time.split(':');
+    const hourInt = parseInt(hour, 10);
+    const period = hourInt < 12 ? '오전' : '오후';
+    const formattedHour = hourInt % 12 === 0 ? 12 : hourInt % 12;
+    return `${period} ${formattedHour}:${minute}`;
+  };
+  
+  const getExamLink = () => {
+    if (selectedExamType === '토플') {
+      return "https://www.kr.ets.org/toefl/test-takers/ibt/schedule.html";
+    } else if (selectedExamType === '아이엘츠') {
+      return "https://ieltskorea.org/korea/test-dates";
+    }
+  };
+
+  const getExamLink2 = (examType) => {
+    if (examType === '토플') {
+      return "https://www.kr.ets.org/toefl/test-takers/ibt/schedule.html/engTest/{testId}";
+    } else if (examType === '아이엘츠') {
+      return "https://ieltskorea.org/korea/test-dates";
+    }
+  };
+
+  // const addExamToCalendar = async (userId, testId) => {
+  //   try {
+  //     const response = await axios.post(`http://43.200.144.133:8080/api/v1/schedule/engTest/${testId}`, {
+  //       userId: userId,
+  //       testId: testId
+  //     });
+  //     console.log(response.data);
+  //     alert('캘린더에 일정이 추가되었습니다.');
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert('일정을 추가하는 중 오류가 발생했습니다.');
+  //   }
+  // };
 
   return (
     <ThemeProvider theme={Theme}>
@@ -493,15 +534,15 @@ function LanguagePage() {
           </DropdownContainer>
           {selectedExamType === '토플' && (
             <DropdownContainer>
-              <DropdownButton onClick={() => toggleDropdown('type')} $isOpen={dropdownOpen.type}>
-                {selectedType}
-                <DropdownIcon />
-              </DropdownButton>
-              <DropdownContent $show={dropdownOpen.type}>
-                <button onClick={() => handleTypeSelect('전체')}>전체</button>
-                <button onClick={() => handleTypeSelect('Paper')}>Paper</button>
-                <button onClick={() => handleTypeSelect('Home')}>Home</button>
-              </DropdownContent>
+             <DropdownButton onClick={() => toggleDropdown('testType')} $isOpen={dropdownOpen.testType}>
+              {selectedType}
+              <DropdownIcon />
+            </DropdownButton>
+            <DropdownContent $show={dropdownOpen.testType}>
+              <button onClick={() => handleTypeSelect('전체')}>전체</button>
+              <button onClick={() => handleTypeSelect('Paper')}>Paper</button>
+              <button onClick={() => handleTypeSelect('Home')}>Home</button>
+            </DropdownContent>
             </DropdownContainer>
           )}
           {selectedExamType === '아이엘츠' && (
@@ -518,46 +559,49 @@ function LanguagePage() {
             </DropdownContainer>
           )}
           <DropdownContainer>
-            <DropdownButton onClick={() => toggleDropdown('date')} $isOpen={dropdownOpen.date}>
-              {selectedDateRange}
+            <DropdownButton onClick={() => toggleDropdown('testDate')} $isOpen={dropdownOpen.testDate}>
+             {selectedDateRange === '전체' ? '전체' : `${selectedDateRange}일`}
               <DropdownIcon />
             </DropdownButton>
-            <DropdownContent $show={dropdownOpen.date}>
+            <DropdownContent $show={dropdownOpen.testDate}>
               <button onClick={() => handleDateRangeSelect('전체')}>전체</button>
               {[...Array(31).keys()].map(day => (
                 <button
                   key={day + 1}
                   onClick={() => handleDateRangeSelect(day + 1)}
                 >
-                  {day + 1}
+                  {day + 1}일
                 </button>
-
               ))}
             </DropdownContent>
           </DropdownContainer>
+          <ArrowButtonContainer>
+          <ArrowButton href={getExamLink()}>시험 신청 바로가기 ↗</ArrowButton>
+            <ArrowButton href="https://ieltskorea.org/korea/test-dates">캘린더에 추가하기 ↗</ArrowButton>
+          </ArrowButtonContainer>
         </DropdownWrapper>
         {filteredExamData.length === 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '220px', marginBottom: '370px',}}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '220px', marginBottom: '370px' }}>
             {selectedExamType === '토플' && selectedType === 'Home' ? (
               <>
                 <div style={{ marginBottom: '50px' }}>
-                  <ToeflText width="723" height="192"/>
+                  <ToeflText width="723" height="192" />
                 </div>
-                <ArrowButtonContainer>
+                <ArrowButtonContainer2>
                   <ArrowButton href="https://www.kr.ets.org/toefl/test-takers/ibt/schedule.html">시험 신청 바로가기 ↗</ArrowButton>
-                </ArrowButtonContainer>
+                </ArrowButtonContainer2>
               </>
             ) : selectedExamType === '아이엘츠' && selectedType === 'Computer' ? (
               <>
                 <div style={{ marginBottom: '50px' }}>
-                  <IeltsText width="723" height="192"/>
+                  <IeltsText width="723" height="192" />
                 </div>
-                <ArrowButtonContainer>
+                <ArrowButtonContainer2>
                   <ArrowButton href="https://ieltskorea.org/korea/test-dates">시험 신청 바로가기 ↗</ArrowButton>
-                </ArrowButtonContainer>
+                </ArrowButtonContainer2>
               </>
             ) : (
-              <WarningIcon width="442" height="279"/>
+              <WarningIcon width="442" height="279" />
             )}
           </div>
         ) : (
@@ -566,25 +610,25 @@ function LanguagePage() {
               {displayedExams.map((exam, index) => (
                 <ExamItem key={index}>
                   <div className="schedule">
-                    <h3 className="exam-date">{exam.date}일</h3>
-                    <h3 className="exam-day">{exam.day}요일</h3>
+                  <h3 className="exam-date">{formatDate(exam.testDate)}일</h3>
+                    <h3 className="exam-day">{['일', '월', '화', '수', '목', '금', '토'][new Date(exam.testDate).getDay()]}요일</h3>
                   </div>
                   <div className="substance">
                     <div className="choice">
-                      <p className="exam-time">{exam.time}</p>
-                      <p className="exam-kind">{exam.kind}</p>
+                      <p className="exam-time">{formatTime(exam.testTime)}</p>
+                      <p className="exam-kind">{exam.testType}</p>
                     </div>
-                    <h3 className="exam-location">{exam.location}</h3>
-                    <p className="exam-address">{exam.address}</p>
+                    <h3 className="exam-location">{exam.testPlaceName}</h3>
+                    <p className="exam-address">{exam.testPlaceAddress}</p>
                   </div>
-                  <button>시험 신청 바로가기</button>
+                  <button onClick={() => window.location.href = getExamLink2(selectedExamType)}>시험 신청 바로가기</button>
                 </ExamItem>
               ))}
             </ExamList>
             <PagingWrapper>
               <Paging
                 page={currentPage}
-                count={count}
+                count={filteredExamData.length}
                 setPage={setPage}
                 contentPerPage={contentPerPage}
               />
