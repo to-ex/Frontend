@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { Theme } from "./styles/Theme";
+import LanguagePage from './pages/LanguagePage';
 import Login from "./pages/Login";
 import Redirection from "./pages/Redirection";
 import "./App.css";
@@ -56,6 +57,7 @@ function App() {
           <Route path="/calendar" element={<CustomCalendar />} />
           <Route path="/community" element={<Community />} />
           <Route path="/WriteClick/:boardId" element={<WriteClick />} />
+          <Route path="/Language" element={<LanguagePage />} />
         </Routes>
       </Router>
     </ThemeProvider>
