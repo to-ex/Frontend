@@ -5,7 +5,7 @@ import { ReactComponent as EmptyHeart } from "../assets/images/EmptyHeart.svg";
 import { ReactComponent as FullHeart } from "../assets/images/FullHeart.svg";
 import { ReactComponent as Comment } from "../assets/images/ChatCircle.svg";
 import { ReactComponent as SendIcon } from "../assets/images/Send.svg";
-import { ReactComponent as ProfileIcon } from "../assets/images/Profile.svg";
+import { ReactComponent as ProfileIcon } from "../assets/images/profile.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 import Header from "../components/Header";
@@ -338,7 +338,7 @@ const WriteClick = () => {
 
   const fetchPost = async () => {
     try {
-      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjAyNDU4M30.e1GOXBjaQG6jwK665B-7nXZrd58-mphYGDucMFhbDXLoXzM1Jwp6Ya51XKvhgUXea-G7M23gj_rfVx_Fv5ZM5A';
+      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg';
       const response = await axios.get(`http://43.200.144.133:8080/api/v1/board/${boardId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -352,7 +352,33 @@ const WriteClick = () => {
       setComments(postData.commentList.content);
       setCommentCount(postData.comments);
     } catch (error) {
-      console.error('Error fetching post:', error);
+      if (error.response && error.response.status === 401) {
+        try {
+          const refreshResponse = await axios.patch('http://43.200.144.133:8080/api/v1/auth/user/refresh', null, {
+            headers: {
+              RefreshToken: 'eyJ0eXBlIjoiUmVmcmVzaCIsImFsZyI6IkhTNTEyIn0.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IlJlZnJlc2giLCJzdWIiOiJ3amRnbWxkdXMyOEBuYXZlci5jb20iLCJleHAiOjE3MjU1OTg2NDF9.xJK7K1U3xKAuwvj-_8B6tT2HIfJiXkuUU0yn9g8BxGyQL243R9iOWHrhr0YSMd_mR7kpCZJWDu_WWiyaauLSvw',
+            },
+          });
+          const newAccessToken = refreshResponse.data.data.accessToken;
+          const retryResponse = await axios.get(`http://43.200.144.133:8080/api/v1/board/${boardId}`, {
+            headers: {
+              Authorization: `Bearer ${newAccessToken}`,
+            },
+          });
+          let postData = retryResponse.data.data;
+          postData = mapDataToKorean(postData);
+          setPost(postData);
+          setHeart(postData.isLiked);
+          setHeartCount(postData.likes);
+          setComments(postData.commentList.content);
+          setCommentCount(postData.comments);
+        } catch (refreshError) {
+          console.error('Failed to refresh token or fetch post:', refreshError);
+          alert(refreshError.response?.data?.message || 'Failed to refresh token or fetch post');
+        }
+      } else {
+        console.error('Error fetching post:', error);
+      }
     }
   };
 
@@ -362,7 +388,7 @@ const WriteClick = () => {
 
   const submitComment = async (commentContent) => {
     try {
-      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjAyNDU4M30.e1GOXBjaQG6jwK665B-7nXZrd58-mphYGDucMFhbDXLoXzM1Jwp6Ya51XKvhgUXea-G7M23gj_rfVx_Fv5ZM5A';
+      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg';
       const response = await axios.post(`http://43.200.144.133:8080/api/v1/comment/${boardId}`, 
         { content: commentContent },
         {
@@ -371,12 +397,8 @@ const WriteClick = () => {
           },
         }
       );
-  
       if (response.status === 201) {
-        console.log('Comment submitted successfully:', response.data);
         const newCommentData = response.data.data;
-  
-        // 새로운 댓글 데이터를 현재 댓글 리스트에 추가하여 상태 업데이트
         setComments((prevComments) => [...prevComments, newCommentData]);
         setCommentCount((prevCount) => prevCount + 1);
         fetchPost();
@@ -384,21 +406,49 @@ const WriteClick = () => {
         console.error('Failed to submit comment:', response.status);
       }
     } catch (error) {
-      console.error('Error submitting comment:', error);
+      if (error.response && error.response.status === 401) {
+        try {
+          const refreshResponse = await axios.patch('http://43.200.144.133:8080/api/v1/auth/user/refresh', null, {
+            headers: {
+              RefreshToken: 'eyJ0eXBlIjoiUmVmcmVzaCIsImFsZyI6IkhTNTEyIn0.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IlJlZnJlc2giLCJzdWIiOiJ3amRnbWxkdXMyOEBuYXZlci5jb20iLCJleHAiOjE3MjU1OTg2NDF9.xJK7K1U3xKAuwvj-_8B6tT2HIfJiXkuUU0yn9g8BxGyQL243R9iOWHrhr0YSMd_mR7kpCZJWDu_WWiyaauLSvw',
+            },
+          });
+          const newAccessToken = refreshResponse.data.data.accessToken;
+          const retryResponse = await axios.post(`http://43.200.144.133:8080/api/v1/comment/${boardId}`, 
+            { content: commentContent },
+            {
+              headers: {
+                Authorization: `Bearer ${newAccessToken}`,
+              },
+            }
+          );
+          if (retryResponse.status === 201) {
+            const newCommentData = retryResponse.data.data;
+            setComments((prevComments) => [...prevComments, newCommentData]);
+            setCommentCount((prevCount) => prevCount + 1);
+            fetchPost();
+          } else {
+            console.error('Failed to submit comment:', retryResponse.status);
+          }
+        } catch (refreshError) {
+          console.error('Failed to refresh token or submit comment:', refreshError);
+          alert(refreshError.response?.data?.message || 'Failed to refresh token or submit comment');
+        }
+      } else {
+        console.error('Error submitting comment:', error);
+      }
     }
   };
   
   const toggleHeart = async () => {
     try {
-      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjAyNDU4M30.e1GOXBjaQG6jwK665B-7nXZrd58-mphYGDucMFhbDXLoXzM1Jwp6Ya51XKvhgUXea-G7M23gj_rfVx_Fv5ZM5A';
-   const url = `http://43.200.144.133:8080/api/v1/like/${boardId}`;
-        
+      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg';
+      const url = `http://43.200.144.133:8080/api/v1/like/${boardId}`;
       const response = await axios.post(url, {}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
       if (response.status === 200) {
         setHeart((prevHeart) => !prevHeart);
         setHeartCount((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
@@ -406,7 +456,33 @@ const WriteClick = () => {
         console.error('Failed to toggle heart:', response.status);
       }
     } catch (error) {
-      console.error('Error toggling heart:', error);
+      if (error.response && error.response.status === 401) {
+        try {
+          const refreshResponse = await axios.patch('http://43.200.144.133:8080/api/v1/auth/user/refresh', null, {
+            headers: {
+              RefreshToken: 'eyJ0eXBlIjoiUmVmcmVzaCIsImFsZyI6IkhTNTEyIn0.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IlJlZnJlc2giLCJzdWIiOiJ3amRnbWxkdXMyOEBuYXZlci5jb20iLCJleHAiOjE3MjU1OTg2NDF9.xJK7K1U3xKAuwvj-_8B6tT2HIfJiXkuUU0yn9g8BxGyQL243R9iOWHrhr0YSMd_mR7kpCZJWDu_WWiyaauLSvw',
+            },
+          });
+          const newAccessToken = refreshResponse.data.data.accessToken;
+          const url = `http://43.200.144.133:8080/api/v1/like/${boardId}`;
+          const retryResponse = await axios.post(url, {}, {
+            headers: {
+              Authorization: `Bearer ${newAccessToken}`,
+            },
+          });
+          if (retryResponse.status === 200) {
+            setHeart((prevHeart) => !prevHeart);
+            setHeartCount((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
+          } else {
+            console.error('Failed to toggle heart:', retryResponse.status);
+          }
+        } catch (refreshError) {
+          console.error('Failed to refresh token or toggle heart:', refreshError);
+          alert(refreshError.response?.data?.message || 'Failed to refresh token or toggle heart');
+        }
+      } else {
+        console.error('Error toggling heart:', error);
+      }
     }
   };
    
