@@ -13,7 +13,6 @@ import Banner3Background from "../assets/images/Banner3.svg";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
-import Header from "../components/Header";
 import ScrollToTop from "../components/ScrollToTop";
 
 const Container = styled.div`
@@ -223,7 +222,6 @@ const NoteIconWrap = styled.div`
 function MainPage() {
   return (
     <ThemeProvider theme={Theme}>
-      <Header />
       <Container>
         <Contain>
           <StyledSlider {...sliderSettings}>
