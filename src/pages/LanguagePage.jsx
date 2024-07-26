@@ -583,7 +583,7 @@ function LanguagePage() {
           </DropdownContainer>
           <ArrowButtonContainer>
           <ArrowButton href={getExamLink()}>시험 신청 바로가기 ↗</ArrowButton>
-            <ArrowButton1 to="/calender">캘린더에 기록하기 ↗</ArrowButton1>
+            <ArrowButton1 to="/calendar">캘린더에 기록하기 ↗</ArrowButton1>
           </ArrowButtonContainer>
         </DropdownWrapper>
         {filteredExamData.length === 0 ? (
