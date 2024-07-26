@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TodoItem from "./TodoItem";
-import { useState } from "react";
 import { ReactComponent as BigStepLine } from "../assets/images/BigStepLine.svg";
 import { ReactComponent as YellowTab } from "../assets/images/YellowTab.svg";
 import { ReactComponent as BlueTab } from "../assets/images/BlueTab.svg";
 import { ReactComponent as BlankListIcon } from "../assets/images/BlankListIcon.svg";
 
 function TodoList({ data }) {
-  const [todos, setTodos] = useState(data);
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    setTodos(data);
+  }, [data]);
+
   const handleToggle = (id) => {
     const updatedTodos = todos.map((todo) => {
       if (todo.scheduleId === id) {

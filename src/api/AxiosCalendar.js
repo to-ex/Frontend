@@ -1,5 +1,3 @@
-// 전체 조회 get
-
 import Axios from "./Axios";
 
 export const AxiosCalendarGet = async () => {

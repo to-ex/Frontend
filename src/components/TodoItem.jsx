@@ -4,6 +4,7 @@ import { ReactComponent as BlankBoxIcon } from "../assets/images/BlankBox.svg";
 import { ReactComponent as CheckBoxIcon } from "../assets/images/CheckBox.svg";
 
 function TodoItem({ todo, onToggle }) {
+  console.log(todo);
   return (
     <ItemContainer>
       <CustomCheckbox
