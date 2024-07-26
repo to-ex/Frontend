@@ -5,6 +5,7 @@ import { ReactComponent as BigStepLine } from "../assets/images/BigStepLine.svg"
 import { ReactComponent as YellowTab } from "../assets/images/YellowTab.svg";
 import { ReactComponent as BlueTab } from "../assets/images/BlueTab.svg";
 import { ReactComponent as BlankListIcon } from "../assets/images/BlankListIcon.svg";
+import { AxiosCheckListDone } from "../api/AxiosCheckList";
 
 function TodoList({ data }) {
   const [todos, setTodos] = useState([]);
@@ -12,11 +13,18 @@ function TodoList({ data }) {
   useEffect(() => {
     setTodos(data);
   }, [data]);
-
-  const handleToggle = (id) => {
+  const handleToggle = async (id) => {
     const updatedTodos = todos.map((todo) => {
       if (todo.scheduleId === id) {
-        return { ...todo, isDone: !todo.isDone };
+        const updatedTodo = { ...todo, isDone: !todo.isDone };
+        AxiosCheckListDone(id)
+          .then((response) => {
+            console.log("Status updated:", response.data);
+          })
+          .catch((error) => {
+            console.error("Failed to update status:", error);
+          });
+        return updatedTodo;
       }
       return todo;
     });
@@ -154,7 +162,8 @@ const AddButton = styled.button`
   font-size: 20px;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: ${({ theme }) => theme.colors.RED01};
+    color: ${({ theme }) => theme.colors.WHITE};
   }
 `;
 
