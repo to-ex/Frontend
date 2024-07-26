@@ -1,4 +1,3 @@
-// 필요한 import 구문들 추가
 import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Theme } from "../styles/Theme";
@@ -14,9 +13,10 @@ import FullHeart from "../assets/images/FullHeart.svg";
 import CommentIcon from "../assets/images/ChatCircle.svg";
 import BackgroundAnimation from "../components/BackgroundAnimation";
 import Paging from "../components/Paging";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from "../components/Header";
+
 
 const AppWrapper = styled.div`
   width: 1920px;
@@ -311,12 +311,14 @@ const PostBox = styled.div`
 
 const PostText = styled.p`
   font-size: 20px;
+  color: ${({ theme }) => theme.colors.BLACK};
 `;
 
-const PostImage = styled.div`
+const PostImage = styled.img`
   width: 267px;
   height: 155px;
-  background-color: #ddd;
+  object-fit: cover;  
+  border-radius: 12px; 
 `;
 
 const PostFooter = styled.div`
@@ -437,16 +439,18 @@ const PagingWrapper = styled.div`
 
 const fetchPosts = async (searchTerm, boardCategory, countryTag, page, size) => {
   try {
+    console.log("Fetching posts with:", { searchTerm, boardCategory, countryTag });
     const response = await axios.get('http://43.200.144.133:8080/api/v1/board', {
       params: {
         keyword: searchTerm,
         boardCategory: boardCategory,
         countryTag: countryTag,
-        page: page,
-        size: size,
+        page: 0,
+        size: 20,
       },
     });
     if (response.status === 200) {
+      console.log(response.data.data.content); // 응답 데이터 확인을 위한 콘솔 로그 추가
       return response.data.data.content;
     } else {
       console.error('Error fetching posts:', response.status);
@@ -458,6 +462,20 @@ const fetchPosts = async (searchTerm, boardCategory, countryTag, page, size) => 
   }
 };
 
+const fetchPostContent = async (postId) => {
+  try {
+    const response = await axios.get(`http://43.200.144.133:8080/api/v1/board/${postId}`);
+    if (response.status === 200) {
+      return response.data.data.content;
+    } else {
+      console.error('Error fetching post content:', response.status);
+      return '';
+    }
+  } catch (error) {
+    console.error('Error fetching post content:', error);
+    return '';
+  }
+};
 
 const Community = () => {
   const [boardCategory, setBoardCategory] = useState('');
@@ -468,6 +486,7 @@ const Community = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedHashtags, setSelectedHashtags] = useState([]);
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate(); 
   const [hashtags, setHashtags] = useState([
     { tag: '🇪🇸 스페인', count: 0 },
     { tag: '🇩🇪 독일', count: 0 },
@@ -479,7 +498,17 @@ const Community = () => {
   const loadPosts = async () => {
     try {
       const fetchedPosts = await fetchPosts(searchTerm, boardCategory, countryTag, currentPage, contentPerPage);
-      setPosts(fetchedPosts);
+      const updatedPosts = await Promise.all(fetchedPosts.map(async (post) => {
+        const content = await fetchPostContent(post.boardId);
+        return {
+          ...post,
+          content,
+          boardCategory: getCategoryInKorean(post.boardCategory),
+          countryTag: getCountryInKorean(post.countryTag),
+        };
+      }));
+      setPosts(updatedPosts);
+      console.log("Fetched Posts: ", updatedPosts);
 
       const keywordCounts = {
         '스페인': 0,
@@ -488,15 +517,15 @@ const Community = () => {
         '프랑스': 0,
         '이탈리아': 0,
       };
-
-      fetchedPosts.forEach(post => {
-        if (post.countrytag === 'SPAIN') keywordCounts['스페인']++;
-        if (post.countrytag === 'GERMANY') keywordCounts['독일']++;
-        if (post.countrytag === 'ENGLAND') keywordCounts['영국']++;
-        if (post.countrytag === 'FRANCE') keywordCounts['프랑스']++;
-        if (post.countrytag === 'ITALY') keywordCounts['이탈리아']++;
+  
+      updatedPosts.forEach(post => {
+        if (post.countryTag === '🇪🇸 스페인') keywordCounts['스페인']++;
+        if (post.countryTag === '🇩🇪 독일') keywordCounts['독일']++;
+        if (post.countryTag === '🇬🇧 영국') keywordCounts['영국']++;
+        if (post.countryTag === '🇫🇷 프랑스') keywordCounts['프랑스']++;
+        if (post.countryTag === '🇮🇹 이탈리아') keywordCounts['이탈리아']++;
       });
-
+      
       setHashtags(hashtags.map(tag => ({
         ...tag,
         count: keywordCounts[tag.tag.split(' ')[1]] || 0,
@@ -510,12 +539,9 @@ const Community = () => {
     loadPosts();
   }, [searchTerm, boardCategory, countryTag, currentPage]);
 
-  const handleBoardCategoryChange = (category) => {
-    setBoardCategory(category);
-  };
-
-  const handleCountryTagChange = (tag) => {
-    setCountryTag(tag);
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Date(dateString).toLocaleDateString('ko-KR', options);
   };
 
   const categoryMap = {
@@ -532,6 +558,18 @@ const Community = () => {
     ITALY: '🇮🇹 이탈리아',
   };
 
+  const hashtagMap = {
+    '스페인': 'SPAIN',
+    '독일': 'GERMANY',
+    '영국': 'ENGLAND',
+    '프랑스': 'FRANCE',
+    '이탈리아': 'ITALY',
+    '공유해요': 'SHARE',
+    '질문 있어요': 'QUESTION',
+    '떠들어요': 'TALK',
+    '전체': ''
+  };
+  
   const getCategoryInKorean = (category) => categoryMap[category] || category;
   const getCountryInKorean = (country) => countryMap[country] || country;
 
@@ -544,13 +582,27 @@ const Community = () => {
   };
 
   const handleHashtagClick = (tag) => {
-    if (!selectedHashtags.some(selectedTag => selectedTag.value === tag)) {
-      setSelectedHashtags([...selectedHashtags, { value: tag, type: 'hashtag' }]);
+    const tagType = tag.includes('🇪🇸') || tag.includes('🇩🇪') || tag.includes('🇬🇧') || tag.includes('🇫🇷') || tag.includes('🇮🇹') ? 'countryTag' : 'filter';
+    const value = tagType === 'countryTag' ? tag.split(' ')[1] : tag;
+    const englishValue = hashtagMap[value];
+    
+    if (!selectedHashtags.some(selectedTag => selectedTag.value === englishValue)) {
+      setSelectedHashtags([...selectedHashtags, { value: englishValue, displayValue: tag, type: tagType }]);
+      if (tagType === 'countryTag') {
+        setCountryTag(englishValue);
+      } else {
+        setBoardCategory(englishValue);
+      }
     }
   };
 
   const removeHashtag = (tag) => {
     setSelectedHashtags(selectedHashtags.filter((t) => t.value !== tag));
+    if (tag === boardCategory) {
+      setBoardCategory('');
+    } else if (tag === countryTag) {
+      setCountryTag('');
+    }
   };
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -571,14 +623,35 @@ const Community = () => {
   };
 
   const handleFilterClick = (filter) => {
-    if (!selectedHashtags.some(tag => tag.value === filter)) {
-      setSelectedHashtags([...selectedHashtags, { value: filter, type: 'filter' }]);
+    const englishFilter = hashtagMap[filter];
+    
+    if (!selectedHashtags.some(tag => tag.value === englishFilter)) {
+      setSelectedHashtags([...selectedHashtags, { value: englishFilter, displayValue: filter, type: 'filter' }]);
+      setBoardCategory(englishFilter);
     }
     closeFilterModal();
   };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleSearch = () => {
+    const { searchTerm, boardCategory, countryTag } = getFilterValues(selectedHashtags);
+    loadPosts(searchTerm, boardCategory, countryTag, currentPage, contentPerPage);
+  };
+
+  useEffect(() => {
+    const { searchTerm, boardCategory, countryTag } = getFilterValues(selectedHashtags);
+    loadPosts(searchTerm, boardCategory, countryTag, currentPage, contentPerPage);
+  }, [selectedHashtags, currentPage]);
+
+  const getFilterValues = (selectedHashtags) => {
+    const searchTerm = selectedHashtags.find(tag => tag.type === 'search')?.value || '';
+    const boardCategory = selectedHashtags.find(tag => tag.type === 'boardCategory')?.value || '';
+    const countryTag = selectedHashtags.find(tag => tag.type === 'countryTag')?.value || '';
+    
+    return { searchTerm, boardCategory, countryTag };
   };
 
   const indexOfLastPost = currentPage * contentPerPage;
@@ -589,13 +662,6 @@ const Community = () => {
   const setPage = (page) => {
     setCurrentPage(page);
   };
-
-  const handleSearch = (e) => { //검색 아이콘을 클릭했을 때 호출
-    e.stopPropagation(); // 이벤트 전파 방지
-    setIsOpen(false); // 해시태그 리스트를 닫음
-    loadPosts(); // 검색을 수행, 호출하여 게시글 가져옴
-  };
-  
 
   return (
     <ThemeProvider theme={Theme}>
@@ -645,11 +711,11 @@ const Community = () => {
             {selectedHashtags.map((tag, index) => (
               tag.type === 'filter' ? (
                 <HashtagButton2 key={index} onClick={() => removeHashtag(tag.value)}>
-                  # {tag.value}
+                  # {tag.displayValue}
                 </HashtagButton2>
               ) : (
                 <HashtagButton1 key={index} onClick={() => removeHashtag(tag.value)}>
-                  # {tag.value}
+                  # {tag.displayValue}
                 </HashtagButton1>
               )
             ))}
@@ -657,39 +723,39 @@ const Community = () => {
         </SearchBarWrapper>
         <PostList>
           {currentPosts.map((post) => (
-            <Post key={post.id}>
+            <Post key={post.boardId}>
               <PostBackground />
               <PostContentWrapper>
                 <PostHeader>
-                  <PostAvatar>{post.authorProfileImgUrl}</PostAvatar>
+                  <PostAvatar style={{backgroundImage: `url(${post.authorProfileImgUrl || 'https://via.placeholder.com/50'})`}} />
                   <PostInfo>
-                    <PostTitle>
+                    <PostTitle onClick={() => navigate(post.isMine === 'Y' ? `/WriteMe/${post.boardId}` : `/WriteOthers/${post.boardId}`)}> 
                       {post.title} <AuthorSpan>| {post.author}</AuthorSpan>
                     </PostTitle>
                     <PostActions>
                       <PostActionButton1># {getCategoryInKorean(post.boardCategory)}</PostActionButton1>
-                      <PostActionButton2># {getCountryInKorean(post.countrytag)}</PostActionButton2>
+                      <PostActionButton2># {getCountryInKorean(post.countryTag)}</PostActionButton2>
                     </PostActions>
                   </PostInfo>
                 </PostHeader>
                 <PostContent>
                   <PostBox>
-                    <PostText>{post.comments}</PostText>
+                    <PostText>{post.content}</PostText>
                   </PostBox>
-                  <PostImage>{post.imgUrl}</PostImage>
+                  <PostImage src={post.imgUrl ? post.imgUrl : 'https://via.placeholder.com/267x155'} alt="Post Image" />
                 </PostContent>
                 <PostFooter>
                   <ReactionBox>
-                    <HeartIcon onClick={() => toggleHeart(post.id)}>
+                    <HeartIcon onClick={() => toggleHeart(post.boardId)}>
                       <img src={post.isLiked ? FullHeart : EmptyHeart} alt="Heart Icon" />
                     </HeartIcon>
                     <Likes>{post.likes}</Likes>
                     <CommentIconBox>
                       <img src={CommentIcon} alt="Comment Icon" />
-                      <CommentCount>{post.commentcount}</CommentCount>
+                      <CommentCount>{post.comments}</CommentCount>
                     </CommentIconBox>
                   </ReactionBox>
-                  <CreatedDt>{post.createdDt}</CreatedDt>
+                  <CreatedDt>{formatDate(post.createdDt)}</CreatedDt>
                 </PostFooter>
               </PostContentWrapper>
             </Post>
@@ -716,6 +782,3 @@ const Community = () => {
 };
 
 export default Community;
-
-
-

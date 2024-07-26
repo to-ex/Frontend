@@ -17,8 +17,8 @@ function App() {
       <ScrollToTop />    
       <Routes>
         <Route path="/community" element={<Community />} />
-        <Route path="/WriteMe" element={<WriteMe />} />
-        <Route path="/WriteOthers" element={<WriteOthers />} />
+        <Route path="/WriteMe/:boardId" element={<WriteMe />} />
+        <Route path="/WriteOthers/:boardI" element={<WriteOthers />} />
       </Routes>
     </Router>
     </ThemeProvider>

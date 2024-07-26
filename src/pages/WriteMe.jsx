@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Theme } from "../styles/Theme";
 import { ReactComponent as Trashimg } from "../assets/images/Trash.svg";
@@ -8,7 +8,7 @@ import { ReactComponent as Comment } from "../assets/images/ChatCircle.svg";
 import { ReactComponent as Write } from "../assets/images/Write.svg";
 import { ReactComponent as SendIcon } from "../assets/images/Send.svg";
 import Modal from "../components/Modal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 import Header from "../components/Header";
 
@@ -121,7 +121,7 @@ const PostTitle = styled.h2`
 
 const TagBox = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-top: 10px;
 `;
 
@@ -326,56 +326,86 @@ const SendIconWrap = styled.div`
 
 const WriteMe = () => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
+  const { boardId } = useParams(); 
+  const [post, setPost] = useState(null);
+  const [heart, setHeart] = useState(false);
+  const [heartCount, setHeartCount] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [comments, setComments] = useState([]);
+  const [commentCount, setCommentCount] = useState(0);
 
-  const dummyData = {
-    index: 0,
-    title: "프랑스 교통카드",
-    writer: "김퓨처",
-    typetag: "질문있어요",
-    countrytag: "🇫🇷 프랑스",
-    text: `프랑스로 교환학생 준비 중인데 1년동안 무제한으로 이용할 수 있는 교통카드를 구매하는게 좋을까요??
-가격은 1년에 342유로 + 신청비 8유로로 350유로이고, 1년치 충전한다고 가정했을 때 약  750유로 정도 하더라고요..
-교환학생 다녀오신 분들 추천 좀 해주세요!!`,
-    contentimg: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwG3CZvGW--EbIiMVsaKDkwlGuy4zIvjP20A&s",
-    ishearted: true,
-    heartcount: 3,
-    commentcount: 9,
-    date: "2024.05.07",
-    ismine: true,
-    comments: [
-      { id: 1, user: '김퓨처', date: '2시간전', text: '어쩌구 저쩌구 댓글... 어쩌구 저쩌구....' },
-      { id: 2, user: '김퓨처', date: '3일전', text: '어쩌구 저쩌구 댓글....' },
-      { id: 3, user: '김퓨처', date: '3일전', text: '어쩌구 저쩌구 댓글....' }
-    ]
+  const boardCategoryMap = {
+    'SHARE': '공유해요',
+    'QUESTION': '질문 있어요',
+    'TALK': '떠들어요'
+  };
+
+  const countryTagMap = {
+    'SPAIN': '🇪🇸 스페인',
+    'GERMANY': '🇩🇪 독일',
+    'ENGLAND': '🇬🇧 영국',
+    'FRANCE': '🇫🇷 프랑스',
+    'ITALY': '🇮🇹 이탈리아'
+  };
+
+  const mapDataToKorean = useCallback((postData) => {
+    return {
+      ...postData,
+      boardCategory: boardCategoryMap[postData.boardCategory] || postData.boardCategory,
+      countryTag: countryTagMap[postData.countryTag] || postData.countryTag,
+    };
+  }, []);
+
+  const fetchPost = async () => {
+    try {
+      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjAyNDU4M30.e1GOXBjaQG6jwK665B-7nXZrd58-mphYGDucMFhbDXLoXzM1Jwp6Ya51XKvhgUXea-G7M23gj_rfVx_Fv5ZM5A';
+      const response = await axios.get(`http://43.200.144.133:8080/api/v1/board/${boardId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      let postData = response.data.data;
+      postData = mapDataToKorean(postData);
+      setPost(postData);
+      setHeart(postData.isLiked);
+      setHeartCount(postData.likes);
+      setComments(postData.commentList.content);
+      setCommentCount(postData.comments);
+    } catch (error) {
+      console.error('Error fetching post:', error);
+    }
   };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjEsImVtYWlsIjoicF96b0BuYXZlci5jb20iLCJ0eXBlIjoiQWNjZXNzIiwic3ViIjoicF96b0BuYXZlci5jb20iLCJleHAiOjE3MjE2OTM3NzJ9.ZyEMm1scyNkxFVcPrJMnIfpGHkPJuJn5SCefH-oTjaDU4SdYEYT0O8QHILYmlpoS5fRonCJ3lbxo4Et6vHcXUA';
-        const response = await axios.get('http://43.200.144.133:8080/api/v1/board/mypost', {
+    fetchPost();
+  }, [boardId, mapDataToKorean, comments]);  // comments 상태를 의존성 배열에 추가....
+  
+  const submitComment = async (commentContent) => {
+    try {
+      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjAyNDU4M30.e1GOXBjaQG6jwK665B-7nXZrd58-mphYGDucMFhbDXLoXzM1Jwp6Ya51XKvhgUXea-G7M23gj_rfVx_Fv5ZM5A';
+      const response = await axios.post(`http://43.200.144.133:8080/api/v1/comment/${boardId}`, 
+        { content: commentContent },
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          params: {
-            page: 1,
-            size: 4,
-          },
-        });
-        setPosts(response.data.data);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
+        }
+      );
+  
+      if (response.status === 201) {
+        console.log('Comment submitted successfully:', response.data);
+        const newCommentData = response.data.data;
+        setComments((prevComments) => [...prevComments, newCommentData]);
+        setCommentCount((prevCount) => prevCount + 1);
+      } else {
+        console.error('Failed to submit comment:', response.status);
       }
-    };
-
-    fetchPosts();
-  }, []);
-
-  const [heart, setHeart] = useState(dummyData.ishearted);
-  const [heartCount, setHeartCount] = useState(dummyData.heartcount);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+    }
+  };
+  
   const toggleHeart = () => {
     setHeart((prevHeart) => !prevHeart);
     setHeartCount((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
@@ -385,28 +415,47 @@ const WriteMe = () => {
     setIsModalVisible((prevVisible) => !prevVisible);
   };
 
-  const handlegopost = () => {
-    navigate("/post");
-  };
-
   const handleDelete = () => {
     toggleModal();
+    // 여기서 삭제 로직 추가
   };
+
+  const handleCommentChange = (event) => {
+    setNewComment(event.target.value);
+  };
+
+  const handleCommentSubmit = () => {
+    if (newComment.trim()) {
+      submitComment(newComment).then(() => {
+        setNewComment('');
+      });
+    } else {
+      alert('댓글을 입력해주세요!');
+    }
+  };
+    
+  if (!post) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <ThemeProvider theme={Theme}>
-       <Header />
+      <Header />
       <Container>
-        <MainTitle>공유해요</MainTitle>
+        <MainTitle>{post.boardCategory}</MainTitle>
         <ContentBox
-          dummyData={dummyData}
+          post={post}
           onDelete={handleDelete}
           toggleHeart={toggleHeart}
           heart={heart}
           heartCount={heartCount}
           isModalVisible={isModalVisible}
           toggleModal={toggleModal}
-          handlegopost={handlegopost}
+          newComment={newComment}
+          handleCommentChange={handleCommentChange}
+          handleCommentSubmit={handleCommentSubmit}
+          comments={comments}
+          commentCount={commentCount}
         />
       </Container>
     </ThemeProvider>
@@ -414,63 +463,75 @@ const WriteMe = () => {
 };
 
 const ContentBox = ({
-  dummyData,
+  post,
   onDelete,
   toggleHeart,
   heart,
   heartCount,
   isModalVisible,
   toggleModal,
-  handlegopost
+  newComment,
+  handleCommentChange,
+  handleCommentSubmit,
+  comments,
+  commentCount,
+  navigate, 
 }) => {
   const {
+    authorProfileImgUrl,
     title,
-    writer,
-    typetag,
-    countrytag,
-    text,
-    contentimg,
-    commentcount,
-    date,
-    ismine,
-    comments
-  } = dummyData;
+    author,
+    boardCategory,
+    countryTag,
+    imgUrlList,
+    content,
+  } = post;
+
+  const formatDateTime = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}.${month}.${day} ${hours}:${minutes}`;
+  };
 
   return (
     <ContentBoxWrapper>
       <Top>
         <UserInfo>
-          <Avatar src="https://via.placeholder.com/50" alt="User Avatar" />
+          <Avatar src={authorProfileImgUrl} alt="User Avatar" />
           <PostUserInfo>
-            <PostUserName>{writer}</PostUserName>
-            <PostDate>{date}</PostDate>
+            <PostUserName>{author}</PostUserName>
+            <PostDate>{formatDateTime(post.createdDt)}</PostDate>
           </PostUserInfo>
         </UserInfo>
       </Top>
       <Middle>
         <Content>
           <PostHeader>
-            <PostTitle>{title}</PostTitle>
-            {ismine && (
+          <PostTitle onClick={() => navigate(post.isMine ? `/WriteMe/${post.boardId}` : `/WriteOthers/${post.boardId}`)}> 
+              {title}
+            </PostTitle>
             <TopIconBtnBox>
-              <WriteBtn onClick={handlegopost}>
+              <WriteBtn>
                 <Write />
               </WriteBtn>
               <DeleteBtn onClick={toggleModal}>
                 <Trashimg />
               </DeleteBtn>
             </TopIconBtnBox>
-          )}
           </PostHeader>
           <TagBox>
-            <TypeTag># {typetag}</TypeTag>
-            <CountryTag># {countrytag}</CountryTag>
+            <TypeTag># {boardCategory}</TypeTag>
+            <CountryTag># {countryTag}</CountryTag>
           </TagBox>
           <ContentContain>
-          <Text>{text}</Text>
-          <ImgBox>
-            <ContentImg src={contentimg} alt={title} />
-          </ImgBox>
+            <Text>{content}</Text>
+            <ImgBox>
+              <ContentImg src={imgUrlList} alt="Post Image" />
+            </ImgBox>
           </ContentContain>
         </Content>
       </Middle>
@@ -483,30 +544,33 @@ const ContentBox = ({
           <CommentIcon>
             <Comment />
           </CommentIcon>
-          <CommentCount>{commentcount}</CommentCount>
+          <CommentCount>{commentCount}</CommentCount>
         </ReactionBox>
       </Bottom>
-
       <Comments>
         {comments.map(comment => (
-          <CommentBox key={comment.id}>
+          <CommentBox key={comment.commentId}>
             <CommentUserInfo>
-              <Avatar2 src="https://via.placeholder.com/50" alt="User Avatar" />
+              <Avatar2 src={comment.profileImgUrl} alt="User Avatar" />
               <CommentInfo>
-              <CommentDetails>
-                <CommentUserName>{comment.user}</CommentUserName>
-                <CommentDate>{comment.date}</CommentDate>
-              </CommentDetails>
-              <CommentText>{comment.text}</CommentText>
+                <CommentDetails>
+                  <CommentUserName>{comment.commenterName}</CommentUserName>
+                  <CommentDate>{formatDateTime(comment.createdDt)}</CommentDate>
+                </CommentDetails>
+                <CommentText>{comment.content}</CommentText>
               </CommentInfo>
             </CommentUserInfo>
           </CommentBox>
         ))}
       </Comments>
       <CommentInput>
-        <Avatar3 src="https://via.placeholder.com/50" alt="User Avatar" />
-        <Input src="https://via.placeholder.com/50" alt="User Avatar" placeholder="댓글을 입력해주세요!" />
-        <SendIconWrap>
+        <Avatar3 src={post.authorProfileImgUrl} alt="User Avatar" />
+        <Input 
+          placeholder="댓글을 입력해주세요!" 
+          value={newComment}
+          onChange={handleCommentChange}
+        />
+        <SendIconWrap onClick={handleCommentSubmit}>
           <SendIcon />
         </SendIconWrap>
       </CommentInput>
