@@ -1,32 +1,33 @@
 import styled from "styled-components";
-import Trashimg from "../assets/images/Trash.svg";
-import EmptyHeart from "../assets/images/EmptyHeart.svg";
-import FullHeart from "../assets/images/FullHeart.svg";
-import Comment from "../assets/images/ChatCircle.svg";
-import Write from "../assets/images/Write.svg";
+import { ReactComponent as TrashIcon } from "../assets/images/Trash.svg";
+import { ReactComponent as EmptyHeart } from "../assets/images/EmptyHeart.svg";
+import { ReactComponent as FullHeart } from "../assets/images/FullHeart.svg";
+import { ReactComponent as Comment } from "../assets/images/ChatCircle.svg";
+import { ReactComponent as WriteIcon } from "../assets/images/Write.svg";
 import { useState } from "react";
 import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
-const ContentBox = ({ dummyData, onDelete }) => {
+const ContentBox = ({ data, onDelete }) => {
   const navigate = useNavigate();
 
   const {
-    index,
+    boardId,
     title,
-    writer,
-    typetag,
-    countrytag,
+    author,
+    boardCategory,
+    countryTag,
     text,
-    contentimg,
-    ishearted,
+    imgUrl,
+    isLiked,
     heartcount,
-    commentcount,
-    date,
+    comments,
+    createdDt,
     ismine,
-  } = dummyData;
-
-  const [heart, setHeart] = useState(ishearted);
+  } = data;
+  const date = moment(createdDt).format("YYYY-MM-DD");
+  const [heart, setHeart] = useState(isLiked);
   const [heartCount, setHeartCount] = useState(heartcount);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -40,35 +41,59 @@ const ContentBox = ({ dummyData, onDelete }) => {
   };
 
   const handlegopost = () => {
+    ismine
+      ? navigate(`/WriteMe/:${boardId}`)
+      : navigate(`/WriteOthers/:${boardId}`);
+  };
+
+  const handlegowrite = () => {
     navigate("/post");
   };
 
   const handleDelete = () => {
-    onDelete(index);
+    onDelete(boardId);
     toggleModal();
   };
 
   return (
-    <Container>
+    <Container onClick={handlegopost}>
       <Top>
         <TitleTagBox>
           <Title>
             <TitleText>{title}</TitleText>
             <Bar>| </Bar>
-            <Writer>{writer}</Writer>
+            <Author>{author}</Author>
           </Title>
           <TagBox>
-            <TypeTag>#{typetag}</TypeTag>
-            <CountryTag>#{countrytag}</CountryTag>
+            <BoardCategory>
+              #
+              {boardCategory === "QUESTION"
+                ? " 질문 있어요"
+                : boardCategory === "SHARE"
+                ? " 공유해요"
+                : " 떠들어요"}
+            </BoardCategory>
+            <CountryTag>
+              #
+              {countryTag === "SPAIN"
+                ? " 스페인"
+                : countryTag === "GERMANY"
+                ? " 독일"
+                : countryTag === "ENGLAND"
+                ? " 영국"
+                : countryTag === "FRANCE"
+                ? " 프랑스"
+                : " 이탈리아"}
+            </CountryTag>
           </TagBox>
         </TitleTagBox>
         {ismine && (
           <TopIconBtnBox>
-            <WriteBtn onClick={handlegopost}>
-              <img src={Write} alt="Write Icon" />
+            <WriteBtn onClick={handlegowrite}>
+              <WriteIcon />
             </WriteBtn>
             <DeleteBtn onClick={toggleModal}>
-              <img src={Trashimg} alt="Trash Icon" />
+              <TrashIcon />
             </DeleteBtn>
           </TopIconBtnBox>
         )}
@@ -78,19 +103,19 @@ const ContentBox = ({ dummyData, onDelete }) => {
           <Text>{text}</Text>
         </Content>
         <ImgBox>
-          <ContentImg src={contentimg} alt={title} />
+          <ContentImg src={imgUrl} alt={title} />
         </ImgBox>
       </Middle>
       <Bottom>
         <ReactionBox>
           <HeartIcon onClick={toggleHeart}>
-            <img src={heart ? FullHeart : EmptyHeart} alt="Heart Icon" />
+            {heart ? <FullHeart /> : <EmptyHeart />}
           </HeartIcon>
           <HeartCount>{heartCount}</HeartCount>
           <CommentIcon>
-            <img src={Comment} alt="Comment Icon" />
+            <Comment />
           </CommentIcon>
-          <CommentCount>{commentcount}</CommentCount>
+          <CommentCount>{comments}</CommentCount>
         </ReactionBox>
         <Date>{date}</Date>
       </Bottom>
@@ -145,7 +170,7 @@ const Bar = styled.p`
   margin: 0 5px 0 0;
 `;
 
-const Writer = styled.p`
+const Author = styled.p`
   font-size: 22px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.GRAY03};
@@ -157,7 +182,7 @@ const TagBox = styled.div`
   gap: 15px;
 `;
 
-const TypeTag = styled.div`
+const BoardCategory = styled.div`
   width: 126px;
   height: 42px;
   font-size: 18px;
