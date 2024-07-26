@@ -6,7 +6,7 @@ import Modal from '../components/Modal';
 import ConfirmModal from '../components/ConfirmModal';
 import { Link } from 'react-router-dom';
 import { ReactComponent as Person1 } from '../assets/images/person1.svg';
-import { ReactComponent as Profile } from '../assets/images/profile.svg';
+import { ReactComponent as Profile } from '../assets/images/profile2.svg';
 import { ReactComponent as Writing } from '../assets/images/writing.svg';
 import { ReactComponent as Scrap } from '../assets/images/scrap.svg';
 import { ReactComponent as Checklist } from '../assets/images/checklist.svg';
