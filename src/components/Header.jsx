@@ -3,6 +3,7 @@ import logo from "../assets/images/Logo.svg";
 import TabBar from "./TabBar";
 import { useNavigate } from "react-router-dom";
 import Tab from "./Tab";
+import { useState } from "react";
 
 const Header = ({ isLogin, onLogout }) => {
   const navigate = useNavigate();

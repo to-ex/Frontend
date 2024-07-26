@@ -13,6 +13,8 @@ import MyPage from "./pages/MyPage";
 import Header from "./components/Header";
 import CustomCalendar from "./pages/CustomCalendar";
 import ScrollToTop from "./components/ScrollToTop";
+import Community from './pages/Community';
+import WriteClick from './pages/WriteClick';
 
 
 function App() {
@@ -50,6 +52,8 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/myinfo" element={<MyInfo />} />
           <Route path="/calendar" element={<CustomCalendar />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/WriteClick/:boardId" element={<WriteClick />} />
         </Routes>
       </Router>
     </ThemeProvider>
