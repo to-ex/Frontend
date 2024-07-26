@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ContentBox from "../components/ContentBox";
 import { useState } from "react";
 import { useEffect } from "react";
-import { AxiosMyPostsGet } from "../api/AxiosMyPosts";
+import { AxiosMyPostsGet, AxiosPostDelete } from "../api/AxiosMyPosts";
 
 const MyWrotePage = () => {
   const [content, setContent] = useState([]);
@@ -11,16 +11,6 @@ const MyWrotePage = () => {
   const [count, setCount] = useState(0);
   const [contentPerPage] = useState(3); // 한 페이지에 보여질 content 개수
   const [currentContent, setCurrentContent] = useState([]); // 현재 페이지에서 보여지는 contents
-
-  const setPage = (page) => {
-    setCurrentPage(page);
-  };
-
-  const handleDelete = (index) => {
-    setContent((prevContent) =>
-      prevContent.filter((item) => item.index !== index)
-    );
-  };
 
   const fetchData = async () => {
     try {
@@ -43,6 +33,23 @@ const MyWrotePage = () => {
     );
   }, [currentPage, contentPerPage, content]);
 
+  const setPage = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleDelete = async (scheduleId) => {
+    setContent((prevContent) =>
+      prevContent.filter((item) => item.scheduleId !== scheduleId)
+    );
+
+    try {
+      await AxiosPostDelete(scheduleId);
+      alert("삭제 되었습니다!");
+    } catch (error) {
+      console.error("Error deleting data:", error);
+    }
+  };
+
   return (
     <Container>
       <MainTitle>내가 쓴 글</MainTitle>
@@ -52,6 +59,7 @@ const MyWrotePage = () => {
             key={content.boardId}
             data={content}
             onDelete={handleDelete}
+            mypost={true}
           ></ContentBox>
         ))}
       </ContentBoxContainer>

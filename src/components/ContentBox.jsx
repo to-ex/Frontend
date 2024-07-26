@@ -18,41 +18,42 @@ const ContentBox = ({ data = {}, onDelete }) => {
     author,
     boardCategory,
     countryTag,
-    text,
+    content,
     imgUrl,
     isLiked,
-    heartcount,
+    likes,
     comments,
     createdDt,
-    ismine,
+    isMine,
   } = data;
+  const ismine = isMine === "Y" ? true : false;
   const date = moment(createdDt).format("YYYY-MM-DD");
   const [heart, setHeart] = useState(isLiked);
-  const [heartCount, setHeartCount] = useState(heartcount);
+  const [like, setlike] = useState(likes);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const toggleHeart = () => {
+  const toggleHeart = (e) => {
+    e.stopPropagation();
     setHeart((prevHeart) => !prevHeart);
-    setHeartCount((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
+    setlike((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
   };
 
-  const toggleModal = () => {
-    setIsModalVisible((prevVisible) => !prevVisible);
+  const toggleModal = (e) => {
+    e.stopPropagation();
+    setIsModalVisible((previsible) => !previsible);
   };
 
   const handlegopost = () => {
-    ismine
-      ? navigate(`/WriteMe/:${boardId}`)
-      : navigate(`/WriteOthers/:${boardId}`);
+    navigate(`/WriteClick/:${boardId}`);
   };
 
   const handlegowrite = () => {
     navigate("/post");
   };
 
-  const handleDelete = () => {
+  const handleDelete = (e) => {
+    e.stopPropagation();
     onDelete(boardId);
-    toggleModal();
   };
 
   return (
@@ -100,7 +101,7 @@ const ContentBox = ({ data = {}, onDelete }) => {
       </Top>
       <Middle>
         <Content>
-          <Text>{text}</Text>
+          <Text>{content}</Text>
         </Content>
         <ImgBox>
           <ContentImg src={imgUrl} alt={title} />
@@ -111,7 +112,7 @@ const ContentBox = ({ data = {}, onDelete }) => {
           <HeartIcon onClick={toggleHeart}>
             {heart ? <FullHeart /> : <EmptyHeart />}
           </HeartIcon>
-          <HeartCount>{heartCount}</HeartCount>
+          <HeartCounts>{like}</HeartCounts>
           <CommentIcon>
             <Comment />
           </CommentIcon>
@@ -139,6 +140,7 @@ const Container = styled.div`
   height: 410px;
   box-shadow: 0 0 10px #ebebeb;
   border-radius: 12px;
+  z-index: 0;
 `;
 
 const Top = styled.div`
@@ -221,6 +223,7 @@ const DeleteBtn = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
+  z-index: 10;
 `;
 
 const WriteBtn = styled.button`
@@ -230,6 +233,7 @@ const WriteBtn = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
+  z-index: 10;
 `;
 
 const Middle = styled.div`
@@ -294,7 +298,7 @@ const HeartIcon = styled.button`
   z-index: 10;
 `;
 
-const HeartCount = styled.p`
+const HeartCounts = styled.p`
   font-size: 20px;
   font-weight: 500;
   line-height: 0;
