@@ -433,7 +433,7 @@ const FilterOption = styled.div`
 
 const PagingWrapper = styled.div`
   margin-top: 22px; 
-  margin-bottom: 90px; 
+  margin-bottom: 200px; 
 `;
 
 const fetchPosts = async (searchTerm, boardCategory, countryTag, page, size) => {

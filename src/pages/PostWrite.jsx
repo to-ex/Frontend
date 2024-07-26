@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Theme } from "../styles/Theme";
 import ConfirmModal from "../components/ConfirmModal";
 import axios from 'axios';
@@ -193,6 +193,7 @@ const HiddenFileInput = styled.input`
 
 const PostWrite = () => {
   const { boardId } = useParams(); // URL에서 boardId를 가져옴
+  const navigate = useNavigate();
   const [country, setCountry] = useState('');
   const [board, setBoard] = useState('');
   const [title, setTitle] = useState('');
@@ -293,6 +294,7 @@ const PostWrite = () => {
       }
       console.log(response.data);
       setConfirmModalVisible(true);
+      navigate('/community');
     } catch (error) {
       if (error.response && error.response.status === 401) {
         try {
