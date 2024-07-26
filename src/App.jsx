@@ -18,6 +18,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import CheckList from "./pages/CheckList";
 import Community from './pages/Community';
 import WriteClick from './pages/WriteClick';
+import ScrapPage from "./pages/ScrapPage";
+import MyWrotePage from "./pages/MyWrotePage";
 
 function App() {
   const [isLogin, setIsLogin] = useState(!!localStorage.getItem("accessToken"));
@@ -59,6 +61,8 @@ function App() {
           <Route path="/WriteClick/:boardId" element={<WriteClick />} />
           <Route path="/Language" element={<LanguagePage />} />
           <Route path="/PostWrite" element={<PostWrite />} />
+          <Route path="/scrap" element={<ScrapPage />} />
+          <Route path="/myposts" element={<MyWrotePage />} />
         </Routes>
       </Router>
     </ThemeProvider>
