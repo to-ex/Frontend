@@ -17,7 +17,7 @@ const CustomCalendar = () => {
   const [events, setEvents] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-
+  console.log(modalIsOpen);
   const Tabs = [
     {
       index: 0,
@@ -67,6 +67,7 @@ const CustomCalendar = () => {
   };
 
   const handleEventClick = (event) => {
+    console.log("모달");
     setSelectedEvent(event);
     setModalIsOpen(true);
   };
@@ -180,7 +181,7 @@ const CustomCalendar = () => {
         setSelectedEvent={setSelectedEvent}
         CategoryTypes={Tabs}
         onDelete={handleDeleteEvent}
-        onUpdate={handleUpdateEvent} // Pass this prop to handle updates
+        onUpdate={handleUpdateEvent}
       />
     </StyledCalendarWrapper>
   );
@@ -196,7 +197,7 @@ const TabBar = styled.div`
   display: flex;
   gap: 23px;
   justify-content: center;
-  margin-top: 130px;
+  margin-top: 30px;
 `;
 
 const Tab = styled.button`
@@ -215,7 +216,7 @@ const Container = styled.div`
   height: 1230px;
   background-color: transparent;
   border-radius: 60px 60px 0 0;
-  margin-top: 380px;
+  margin-top: 360px;
   position: absolute;
   top: 10px;
   box-shadow: 0 -4px 10px 0 rgba(00, 00, 00, 0.1);

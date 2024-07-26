@@ -257,6 +257,7 @@ const ModalTopBtn = styled.button`
   height: auto;
   background-color: transparent;
   border: none;
+  z-index: 100000 !important;
 `;
 const ModalBottomBtnBox = styled.div`
   width: 100%;

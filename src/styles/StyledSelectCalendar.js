@@ -2,10 +2,11 @@ import styled from "styled-components";
 import "react-calendar/dist/Calendar.css";
 
 export const StyledSelectCalendarWrapper = styled.div`
-  z-index: 10000 !important;
   position: fixed;
   top: calc(50% + 50px);
   left: calc(50% - 120px);
+  z-index: 1001 !important;
+  margin: 0;
   .react-calendar {
     width: 354px;
     height: 444px;

@@ -6,13 +6,12 @@ export const StyledCalendarWrapper = styled.div`
   display: flex;
   justify-content: center;
   position: relative;
+  margin-top: 130px;
   .react-calendar {
-    z-index: -1;
     width: 100%;
     border: none;
     background-color: white;
     padding: 0 300px;
-    margin-top: 100px;
   }
 
   /* 전체 폰트 컬러 */
