@@ -43,7 +43,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 106px 0 113px 0;
+  padding: 146px 0 113px 0;
 `;
 
 const TextArea = styled.div`

@@ -16,7 +16,7 @@ const AddModal = ({ $modalIsOpen, closeModal, CategoryTypes, onPost }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [title, setTitle] = useState("");
-  const [isDone, setIsDone] = useState(false);
+  const isDone = false;
 
   const formatStartDate =
     startDate && moment(startDate).locale("ko").format("M월 D일 (ddd)");

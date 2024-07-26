@@ -3,7 +3,6 @@ import logo from "../assets/images/Logo.svg";
 import TabBar from "./TabBar";
 import { useNavigate } from "react-router-dom";
 import Tab from "./Tab";
-import { useState } from "react";
 
 const Header = ({ isLogin, onLogout }) => {
   const navigate = useNavigate();
@@ -27,11 +26,15 @@ const Header = ({ isLogin, onLogout }) => {
               { id: 1, title: "어학", url: "/language" },
               { id: 2, title: "커뮤니티", url: "/community" },
               { id: 3, title: "캘린더", url: "/calendar" },
-              { id: 4, title: "체크리스트", url: "/checklist" },
+              {
+                id: 4,
+                title: "체크리스트",
+                url: "/checklist",
+              },
               {
                 id: 5,
                 title: "마이페이지",
-                url: isLogin ? "/mypage" : "/login",
+                url: "/mypage",
               },
             ]}
           />

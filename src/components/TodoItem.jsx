@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { ReactComponent as BlankBoxIcon } from "../assets/images/BlankBox.svg";
 import { ReactComponent as CheckBoxIcon } from "../assets/images/CheckBox.svg";
 import CustomModal from "./CustomModal";
-import AddModal from "./AddModal";
 
 function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
   const Tabs = [

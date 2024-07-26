@@ -2,8 +2,8 @@ import styled from "styled-components";
 import "react-calendar/dist/Calendar.css";
 
 export const StyledSelectCalendarWrapper = styled.div`
-  z-index: 1200 !important;
-  position: fixed; /* position을 fixed로 설정하여 항상 화면의 동일한 위치에 유지 */
+  z-index: 100 !important;
+  position: fixed;
   top: calc(50% + 50px);
   left: calc(50% - 120px);
   .react-calendar {
@@ -135,4 +135,3 @@ export const StyledSelectCalendarWrapper = styled.div`
     }
   }
 `;
-// react-calendar__tile react-calendar__tile--active react-calendar__tile--range react-calendar__month-view__days__day react-calendar__month-view__days__day--weekend
