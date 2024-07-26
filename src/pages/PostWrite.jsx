@@ -229,7 +229,7 @@ const PostWrite = () => {
     setConfirmModalVisible(false);
   };
 
-  const handlePostSubmit = async () => {
+  const handlePostSubmit = async () => {      //게시글 작성 api 
     const formData = new FormData();
     const boardReq = {
       title,
@@ -237,24 +237,46 @@ const PostWrite = () => {
       countryTag: country,
       content,
     };
-
+  
     formData.append('boardReq', new Blob([JSON.stringify(boardReq)], { type: 'application/json' }));
     images.forEach((image) => {
       formData.append('images', image);
     });
-
+  
     try {
-      const response = await axios.post('http://43.200.144.133:8080/api/v1/board', formData, {
+      const response = await axios.post('http://43.200.144.133:8080/api/v1/board', formData, { 
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMTk4NTY0NH0.2D5CttM0H_TuZ0tWjfGBVy5UvKjgE13m6hhvf0GwJmCHZu83UZ_S5FJ4mdf3aI7NagqIDq1fsvH5LSWxTJbdCg`
-        }
+          Authorization: `Bearer eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg`,
+        },
       });
       console.log(response.data);
       setConfirmModalVisible(true);
     } catch (error) {
-      console.error('Failed to submit post:', error.response ? error.response.data : error.message);
-      alert('Failed to submit post: ' + (error.response ? error.response.data : error.message));
+      if (error.response && error.response.status === 401) {
+        try {
+          const refreshResponse = await axios.patch('http://43.200.144.133:8080/api/v1/auth/user/refresh', null, {
+            headers: {
+              RefreshToken: 'eyJ0eXBlIjoiUmVmcmVzaCIsImFsZyI6IkhTNTEyIn0.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IlJlZnJlc2giLCJzdWIiOiJ3amRnbWxkdXMyOEBuYXZlci5jb20iLCJleHAiOjE3MjU1OTg2NDF9.xJK7K1U3xKAuwvj-_8B6tT2HIfJiXkuUU0yn9g8BxGyQL243R9iOWHrhr0YSMd_mR7kpCZJWDu_WWiyaauLSvw',
+            },
+          });
+          const newAccessToken = refreshResponse.data.data.accessToken;
+          const retryResponse = await axios.post('http://43.200.144.133:8080/api/v1/board', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${newAccessToken}`,
+            },
+          });
+          console.log(retryResponse.data);
+          setConfirmModalVisible(true);
+        } catch (refreshError) {
+          console.error('Failed to refresh token or submit post:', refreshError.response ? refreshError.response.data : refreshError.message);
+          alert('Failed to refresh token or submit post: ' + (refreshError.response ? refreshError.response.data : refreshError.message));
+        }
+      } else {
+        console.error('Failed to submit post:', error.response ? error.response.data : error.message);
+        alert('Failed to submit post: ' + (error.response ? error.response.data : error.message));
+      }
     }
   };
 
