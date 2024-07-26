@@ -165,7 +165,7 @@ function MyPage() {
   });
   const [items] = useState([
     { id: 1, title: '내 정보 관리', icon: 'profile', path: '/myinfo' },
-    { id: 2, title: '나의 쓰기', icon: 'writing', path: '/mywrite' },
+    { id: 2, title: '나의 쓰기', icon: 'writing', path: '/myposts' },
     { id: 3, title: '스크랩', icon: 'scrap', path: '/scrap' },
     { id: 4, title: '체크리스트', icon: 'checklist', path: '/checklist' },
     { id: 5, title: '캘린더', icon: 'calendar', path: '/calendar' } 
