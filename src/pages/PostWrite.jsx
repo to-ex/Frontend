@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
-// import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import { Theme } from "../styles/Theme";
 import ConfirmModal from "../components/ConfirmModal";
 import axios from 'axios';
@@ -192,7 +192,7 @@ const HiddenFileInput = styled.input`
 `;
 
 const PostWrite = () => {
-  // const navigate = useNavigate();
+  const { boardId } = useParams(); // URL에서 boardId를 가져옴
   const [country, setCountry] = useState('');
   const [board, setBoard] = useState('');
   const [title, setTitle] = useState('');
@@ -205,6 +205,15 @@ const PostWrite = () => {
   });
 
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 상태 추가
+
+  useEffect(() => {
+    if (boardId) {
+      // 수정 모드일 경우 기존 데이터 로드
+      setIsEditMode(true);
+      loadExistingPost(boardId);
+    }
+  }, [boardId]);
 
   useEffect(() => {
     if (country && board && title && content) {
@@ -213,6 +222,25 @@ const PostWrite = () => {
       setIsButtonEnabled(false);
     }
   }, [country, board, title, content]);
+
+  const loadExistingPost = async (boardId) => {
+    try {
+      const token = localStorage.getItem('accessToken'); // 토큰 가져오기
+      const response = await axios.get(`http://43.200.144.133:8080/api/v1/board/${boardId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const { title, boardCategory, countryTag, content, images } = response.data.data;
+      setTitle(title);
+      setBoard(boardCategory);
+      setCountry(countryTag);
+      setContent(content);
+      setImages(images);
+    } catch (error) {
+      console.error('Failed to load post:', error.response ? error.response.data : error.message);
+    }
+  };
 
   const toggleDropdown = (dropdown) => {
     setDropdownOpen((prevState) => ({
@@ -229,7 +257,7 @@ const PostWrite = () => {
     setConfirmModalVisible(false);
   };
 
-  const handlePostSubmit = async () => {      //게시글 작성 api 
+  const handlePostSubmit = async () => {
     const formData = new FormData();
     const boardReq = {
       title,
@@ -242,31 +270,53 @@ const PostWrite = () => {
     images.forEach((image) => {
       formData.append('images', image);
     });
-  
+
     try {
-      const response = await axios.post('http://43.200.144.133:8080/api/v1/board', formData, { 
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg`,
-        },
-      });
+      const token = localStorage.getItem('accessToken'); // 토큰 가져오기
+      let response;
+      if (isEditMode) {
+        // 수정 모드일 경우 patch 요청
+        response = await axios.patch(`http://43.200.144.133:8080/api/v1/board/${boardId}`, formData, { 
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } else {
+        // 작성 모드일 경우 POST 요청
+        response = await axios.post('http://43.200.144.133:8080/api/v1/board', formData, { 
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
       console.log(response.data);
       setConfirmModalVisible(true);
     } catch (error) {
       if (error.response && error.response.status === 401) {
         try {
+          const refreshToken = localStorage.getItem('refreshToken');
           const refreshResponse = await axios.patch('http://43.200.144.133:8080/api/v1/auth/user/refresh', null, {
             headers: {
-              RefreshToken: 'eyJ0eXBlIjoiUmVmcmVzaCIsImFsZyI6IkhTNTEyIn0.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IlJlZnJlc2giLCJzdWIiOiJ3amRnbWxkdXMyOEBuYXZlci5jb20iLCJleHAiOjE3MjU1OTg2NDF9.xJK7K1U3xKAuwvj-_8B6tT2HIfJiXkuUU0yn9g8BxGyQL243R9iOWHrhr0YSMd_mR7kpCZJWDu_WWiyaauLSvw',
+              RefreshToken: refreshToken,
             },
           });
           const newAccessToken = refreshResponse.data.data.accessToken;
-          const retryResponse = await axios.post('http://43.200.144.133:8080/api/v1/board', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${newAccessToken}`,
-            },
-          });
+          localStorage.setItem('accessToken', newAccessToken);
+          const retryResponse = isEditMode
+            ? await axios.patch(`http://43.200.144.133:8080/api/v1/board/${boardId}`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer ${newAccessToken}`,
+                },
+              })
+            : await axios.post('http://43.200.144.133:8080/api/v1/board', formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer ${newAccessToken}`,
+                },
+              });
           console.log(retryResponse.data);
           setConfirmModalVisible(true);
         } catch (refreshError) {
@@ -335,11 +385,11 @@ const PostWrite = () => {
               onChange={handleImageUpload}
             />
           </ImageUploadWrapper>
-          <SubmitButton onClick={handlePostSubmit} enabled={isButtonEnabled}>등록</SubmitButton>
+          <SubmitButton onClick={handlePostSubmit} enabled={isButtonEnabled}>{isEditMode ? '수정' : '등록'}</SubmitButton>
         </ContentsBox>
         {confirmModalVisible && (
           <ConfirmModal
-            msg="등록 되었어요!"
+            msg={isEditMode ? "수정 되었어요!" : "등록 되었어요!"}
             onConfirm={handleCloseConfirmModal}
           />
         )}
