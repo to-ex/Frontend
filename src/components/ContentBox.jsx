@@ -50,7 +50,7 @@ const ContentBox = ({ data = {}, onDelete }) => {
   };
 
   const handlegopost = () => {
-    navigate(`/WriteClick/:${boardId}`);
+    navigate(`/WriteClick/${boardId}`);
   };
 
   const handleDelete = (e) => {

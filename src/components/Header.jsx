@@ -57,6 +57,7 @@ const BackGround = styled.div`
   background-color: ${({ theme }) => theme.colors.WHITE};
   box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1);
   position: fixed;
+  top: 0%;
   z-index: 1000;
 `;
 

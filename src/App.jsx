@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { Theme } from "./styles/Theme";
-import PostWrite from './pages/PostWrite';
-import LanguagePage from './pages/LanguagePage';
+import PostWrite from "./pages/PostWrite";
+import LanguagePage from "./pages/LanguagePage";
 import Login from "./pages/Login";
 import Redirection from "./pages/Redirection";
 import "./App.css";
@@ -16,10 +16,11 @@ import Header from "./components/Header";
 import CustomCalendar from "./pages/CustomCalendar";
 import ScrollToTop from "./components/ScrollToTop";
 import CheckList from "./pages/CheckList";
-import Community from './pages/Community';
-import WriteClick from './pages/WriteClick';
+import Community from "./pages/Community";
+import WriteClick from "./pages/WriteClick";
 import ScrapPage from "./pages/ScrapPage";
 import MyWrotePage from "./pages/MyWrotePage";
+import "./styles/GlobalFont.css";
 
 function App() {
   const [isLogin, setIsLogin] = useState(!!localStorage.getItem("accessToken"));

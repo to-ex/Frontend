@@ -79,7 +79,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin: 70px 0 65px 0;
+  margin: 120px 0 65px 0;
 `;
 
 const MainTitle = styled.p`
