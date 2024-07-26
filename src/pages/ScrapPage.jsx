@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { AxiosScrapGet } from "../api/AxiosScrap";
 
 const ScrapPage = () => {
-  const [content, setContent] = useState([]); // 초기값을 빈 배열로 설정
+  const [content, setContent] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [count, setCount] = useState(0);
   const [contentPerPage] = useState(3); // 한 페이지에 보여질 content 개수
@@ -37,13 +37,11 @@ const ScrapPage = () => {
     const indexOfLastContent = currentPage * contentPerPage; // 현재 페이지의 마지막 content index
     const indexOfFirstContent = indexOfLastContent - contentPerPage;
 
-    // content가 undefined가 아닌지 확인
     const validContent = content || [];
     setCount(validContent.length);
     setCurrentContent(
       validContent.slice(indexOfFirstContent, indexOfLastContent)
     );
-    // window.scrollTo(0, 0);
   }, [currentPage, contentPerPage, content]);
 
   return (

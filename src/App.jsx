@@ -11,7 +11,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/scrap" element={<ScrapPage />} />
-          <Route path="/mywrote" element={<MyWrotePage />} />
+          <Route path="/myposts" element={<MyWrotePage />} />
         </Routes>
       </Router>
     </ThemeProvider>

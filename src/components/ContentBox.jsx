@@ -9,7 +9,7 @@ import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 
-const ContentBox = ({ data, onDelete }) => {
+const ContentBox = ({ data = {}, onDelete }) => {
   const navigate = useNavigate();
 
   const {
@@ -291,6 +291,7 @@ const HeartIcon = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
+  z-index: 10;
 `;
 
 const HeartCount = styled.p`
