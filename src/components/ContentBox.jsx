@@ -3,11 +3,11 @@ import { ReactComponent as TrashIcon } from "../assets/images/Trash.svg";
 import { ReactComponent as EmptyHeart } from "../assets/images/EmptyHeart.svg";
 import { ReactComponent as FullHeart } from "../assets/images/FullHeart.svg";
 import { ReactComponent as Comment } from "../assets/images/ChatCircle.svg";
-import { ReactComponent as WriteIcon } from "../assets/images/Write.svg";
 import { useState } from "react";
 import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { AxiosHeartPost, AxiosScrapPost } from "../api/AxiosMyPosts";
 
 const ContentBox = ({ data = {}, onDelete }) => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const ContentBox = ({ data = {}, onDelete }) => {
     countryTag,
     content,
     imgUrl,
-    isLiked,
+    isScrapped,
     likes,
     comments,
     createdDt,
@@ -28,14 +28,20 @@ const ContentBox = ({ data = {}, onDelete }) => {
   } = data;
   const ismine = isMine === "Y" ? true : false;
   const date = moment(createdDt).format("YYYY-MM-DD");
-  const [heart, setHeart] = useState(isLiked);
-  const [like, setlike] = useState(likes);
+  const [heart, setHeart] = useState(isScrapped); // 하트 채워짐(스크랩)
+  const [like, setlike] = useState(likes); // 하트 수
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const toggleHeart = (e) => {
+  const toggleHeart = async (e) => {
     e.stopPropagation();
-    setHeart((prevHeart) => !prevHeart);
-    setlike((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
+    try {
+      await Promise.all([AxiosHeartPost(boardId), AxiosScrapPost(boardId)]);
+
+      setHeart(!heart);
+      setlike((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
   };
 
   const toggleModal = (e) => {
@@ -45,10 +51,6 @@ const ContentBox = ({ data = {}, onDelete }) => {
 
   const handlegopost = () => {
     navigate(`/WriteClick/:${boardId}`);
-  };
-
-  const handlegowrite = () => {
-    navigate("/post");
   };
 
   const handleDelete = (e) => {
@@ -90,9 +92,6 @@ const ContentBox = ({ data = {}, onDelete }) => {
         </TitleTagBox>
         {ismine && (
           <TopIconBtnBox>
-            <WriteBtn onClick={handlegowrite}>
-              <WriteIcon />
-            </WriteBtn>
             <DeleteBtn onClick={toggleModal}>
               <TrashIcon />
             </DeleteBtn>
@@ -220,16 +219,6 @@ const TopIconBtnBox = styled.div`
 const DeleteBtn = styled.button`
   width: 30px;
   height: 30px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-`;
-
-const WriteBtn = styled.button`
-  width: 24px;
-  height: 24px;
-  margin-top: 3px;
   background-color: transparent;
   border: none;
   cursor: pointer;

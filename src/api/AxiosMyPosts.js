@@ -16,9 +16,13 @@ export const AxiosMyPostsGet = async () => {
 export const AxiosPostDelete = async (scheduleId) => {
   try {
     const token = localStorage.getItem("accessToken");
-    const response = await Axios.delete(`/api/v1/board/${scheduleId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await Axios.delete(
+      `/api/v1/board/${scheduleId}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response;
   } catch (error) {
     console.log(error.response.data.detail);
@@ -29,10 +33,13 @@ export const AxiosPostDelete = async (scheduleId) => {
 export const AxiosHeartPost = async (boardId) => {
   try {
     const token = localStorage.getItem("accessToken");
-    alert("작성 되었습니다!");
-    const response = await Axios.post(`/api/v1/like/${boardId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await Axios.post(
+      `/api/v1/like/${boardId}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response;
   } catch (error) {
     console.log(error.response?.data?.detail || error.message);
@@ -43,10 +50,13 @@ export const AxiosHeartPost = async (boardId) => {
 export const AxiosScrapPost = async (boardId) => {
   try {
     const token = localStorage.getItem("accessToken");
-    alert("작성 되었습니다!");
-    const response = await Axios.post(`/api/v1/scrap/${boardId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await Axios.post(
+      `/api/v1/scrap/${boardId}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response;
   } catch (error) {
     console.log(error.response?.data?.detail || error.message);
