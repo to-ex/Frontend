@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import TodoList from "../components/TodoList";
 import { ReactComponent as Blue } from "../assets/images/BlueCircle.svg";
@@ -9,20 +9,19 @@ import { AxiosCheckListGet } from "../api/AxiosCheckList";
 
 const CheckList = () => {
   const [events, setEvents] = useState([]);
-  const fetchData = async () => {
+
+  const fetchData = useCallback(async () => {
     try {
       const response = await AxiosCheckListGet();
       setEvents(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  const filteredData = events.filter((item) => item.type === "CHECKLIST");
+  }, [fetchData]);
 
   return (
     <Background>
@@ -34,7 +33,7 @@ const CheckList = () => {
         <BlackText>교환학생 준비 A to Z</BlackText>
         <RedText>체크리스트를 사용해 보다 더 편리하게 준비해보세요!</RedText>
       </TextBox>
-      <TodoList data={filteredData} />
+      <TodoList data={events} callback={fetchData} />
     </Background>
   );
 };

@@ -7,16 +7,19 @@ import { ReactComponent as BlueTab } from "../assets/images/BlueTab.svg";
 import { ReactComponent as BlankListIcon } from "../assets/images/BlankListIcon.svg";
 import { AxiosCheckListDone } from "../api/AxiosCheckList";
 import CustomModal from "./CustomModal";
+import AddModal from "./AddModal";
 
-function TodoList({ data }) {
+function TodoList({ data, callback }) {
   const [todos, setTodos] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [updateTodo, setUpdateTodo] = useState({});
-  const [newTodo, setNewTodo] = useState({});
+  const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+  const [updateTodo, setUpdateTodo] = useState(null);
 
   useEffect(() => {
     setTodos(data);
-  }, [data]);
+    callback(data);
+  }, [data, callback]);
+
   const handleToggle = async (id) => {
     const updatedTodos = todos.map((todo) => {
       if (todo.scheduleId === id) {
@@ -40,6 +43,10 @@ function TodoList({ data }) {
     setUpdateTodo(null);
   };
 
+  const closeAddModal = () => {
+    setAddModalIsOpen(false);
+  };
+
   const handleDelete = (deletedEventId) => {
     setTodos(todos.filter((event) => event.scheduleId !== deletedEventId));
   };
@@ -51,27 +58,10 @@ function TodoList({ data }) {
       )
     );
   };
-  // const handleAddClick = () => {
-  //   setModalIsOpen(true);
-  //   setUpdateTodo({
-  //     content: "",
-  //     startDate: "",
-  //     endDate: "",
-  //     scheduleCategory: "",
-  //     isDone: false,
-  //   });
-  //   setTodos([...todos, newTodo]);
-  // };
-  // // const handleAddTodo = () => {
-  // //   const newTodo = {
-  // //     scheduleId: Date.now(),
-  // //     content,
-  // //     isDone: false,
-  // //     type: "CHECKLIST",
-  // //   };
 
-  // //   setTodos([...todos, newTodo]);
-  // // };
+  const onPost = (newTodo) => {
+    setTodos([...todos, newTodo]);
+  };
 
   return (
     <>
@@ -85,9 +75,9 @@ function TodoList({ data }) {
             <ItemBox>
               {todos
                 .filter((todo) => !todo.isDone)
-                .map((todo) => (
+                .map((todo, index) => (
                   <TodoItem
-                    key={todo.scheduleId}
+                    key={index}
                     todo={todo}
                     onToggle={handleToggle}
                     onDelete={handleDelete}
@@ -95,7 +85,9 @@ function TodoList({ data }) {
                   />
                 ))}
             </ItemBox>
-            <AddButton>To Do 추가하기 +</AddButton>
+            <AddButton onClick={() => setAddModalIsOpen(true)}>
+              To Do 추가하기 +
+            </AddButton>
           </ListBox>
         </ListContainer>
         <BigStepLine />
@@ -118,11 +110,13 @@ function TodoList({ data }) {
               <ItemBox>
                 {todos
                   .filter((todo) => todo.isDone)
-                  .map((todo) => (
+                  .map((todo, index) => (
                     <TodoItem
-                      key={todo.scheduleId}
+                      key={index}
                       todo={todo}
                       onToggle={handleToggle}
+                      onDelete={handleDelete}
+                      onUpdate={handleUpdate}
                     />
                   ))}
               </ItemBox>
@@ -136,12 +130,11 @@ function TodoList({ data }) {
         selectedEvent={updateTodo}
         setSelectedEvent={setUpdateTodo}
       />
-      {/* <AddModal
-        $modalIsOpen={modalIsOpen}
-        closeModal={closeModal}
-        selectedEvent={newEvent}
-        setSelectedEvent={setNewEvent}
-      /> */}
+      <AddModal
+        $modalIsOpen={addModalIsOpen}
+        closeModal={closeAddModal}
+        onPost={onPost}
+      />
     </>
   );
 }
@@ -208,7 +201,7 @@ const AddButton = styled.button`
   font-size: 20px;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.RED01};
+    background-color: ${({ theme }) => theme.colors.RED04};
     color: ${({ theme }) => theme.colors.WHITE};
   }
 `;
