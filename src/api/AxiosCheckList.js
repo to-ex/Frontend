@@ -30,3 +30,20 @@ export const AxiosCheckListDone = async (scheduleId) => {
     throw error;
   }
 };
+
+export const AxiosCheckListPost = async (data) => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    const response = await Axios.patch(
+      `/api/v1/schedule`, // URL 수정
+      data,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error.response?.data?.detail || error.message);
+    throw error;
+  }
+};

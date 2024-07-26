@@ -6,9 +6,13 @@ import { ReactComponent as YellowTab } from "../assets/images/YellowTab.svg";
 import { ReactComponent as BlueTab } from "../assets/images/BlueTab.svg";
 import { ReactComponent as BlankListIcon } from "../assets/images/BlankListIcon.svg";
 import { AxiosCheckListDone } from "../api/AxiosCheckList";
+import CustomModal from "./CustomModal";
 
 function TodoList({ data }) {
   const [todos, setTodos] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [updateTodo, setUpdateTodo] = useState({});
+  const [newTodo, setNewTodo] = useState({});
 
   useEffect(() => {
     setTodos(data);
@@ -31,72 +35,114 @@ function TodoList({ data }) {
     setTodos(updatedTodos);
   };
 
-  const handleAddTodo = (content) => {
-    const newTodo = {
-      scheduleId: Date.now(),
-      content,
-      isDone: false,
-      type: "CHECKLIST",
-    };
-    setTodos([...todos, newTodo]);
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setUpdateTodo(null);
   };
 
+  const handleDelete = (deletedEventId) => {
+    setTodos(todos.filter((event) => event.scheduleId !== deletedEventId));
+  };
+
+  const handleUpdate = (updatedEvent) => {
+    setTodos(
+      todos.map((event) =>
+        event.scheduleId === updatedEvent.scheduleId ? updatedEvent : event
+      )
+    );
+  };
+  // const handleAddClick = () => {
+  //   setModalIsOpen(true);
+  //   setUpdateTodo({
+  //     content: "",
+  //     startDate: "",
+  //     endDate: "",
+  //     scheduleCategory: "",
+  //     isDone: false,
+  //   });
+  //   setTodos([...todos, newTodo]);
+  // };
+  // // const handleAddTodo = () => {
+  // //   const newTodo = {
+  // //     scheduleId: Date.now(),
+  // //     content,
+  // //     isDone: false,
+  // //     type: "CHECKLIST",
+  // //   };
+
+  // //   setTodos([...todos, newTodo]);
+  // // };
+
   return (
-    <TodoContainer>
-      <ListContainer>
-        <Tab color="#fffbdd">
-          <YellowTab />
-          To Do
-        </Tab>
-        <ListBox>
-          <ItemBox>
-            {todos
-              .filter((todo) => !todo.isDone)
-              .map((todo) => (
-                <TodoItem
-                  key={todo.scheduleId}
-                  todo={todo}
-                  onToggle={handleToggle}
-                />
-              ))}
-          </ItemBox>
-          <AddButton onClick={() => handleAddTodo(prompt("Enter new todo:"))}>
-            To Do 추가하기 +
-          </AddButton>
-        </ListBox>
-      </ListContainer>
-      <BigStepLine />
-      <ListContainer>
-        <Tab color="#E6F5FF">
-          <BlueTab />
-          Done
-        </Tab>
-        <ListBox>
-          {todos.filter((todo) => todo.isDone).length === 0 ? (
-            <BlankListContainer>
-              <BlankListIcon />
-              <BlankText>
-                아직 완료된 일정이 없어요💧
-                <br />
-                To Do 일정을 추가해보세요!
-              </BlankText>
-            </BlankListContainer>
-          ) : (
+    <>
+      <TodoContainer>
+        <ListContainer>
+          <Tab color="#fffbdd">
+            <YellowTab />
+            To Do
+          </Tab>
+          <ListBox>
             <ItemBox>
               {todos
-                .filter((todo) => todo.isDone)
+                .filter((todo) => !todo.isDone)
                 .map((todo) => (
                   <TodoItem
                     key={todo.scheduleId}
                     todo={todo}
                     onToggle={handleToggle}
+                    onDelete={handleDelete}
+                    onUpdate={handleUpdate}
                   />
                 ))}
             </ItemBox>
-          )}
-        </ListBox>
-      </ListContainer>
-    </TodoContainer>
+            <AddButton>To Do 추가하기 +</AddButton>
+          </ListBox>
+        </ListContainer>
+        <BigStepLine />
+        <ListContainer>
+          <Tab color="#E6F5FF">
+            <BlueTab />
+            Done
+          </Tab>
+          <ListBox>
+            {todos.filter((todo) => todo.isDone).length === 0 ? (
+              <BlankListContainer>
+                <BlankListIcon />
+                <BlankText>
+                  아직 완료된 일정이 없어요💧
+                  <br />
+                  To Do 일정을 추가해보세요!
+                </BlankText>
+              </BlankListContainer>
+            ) : (
+              <ItemBox>
+                {todos
+                  .filter((todo) => todo.isDone)
+                  .map((todo) => (
+                    <TodoItem
+                      key={todo.scheduleId}
+                      todo={todo}
+                      onToggle={handleToggle}
+                    />
+                  ))}
+              </ItemBox>
+            )}
+          </ListBox>
+        </ListContainer>
+      </TodoContainer>
+      <CustomModal
+        $modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        selectedEvent={updateTodo}
+        setSelectedEvent={setUpdateTodo}
+      />
+      {/* <AddModal
+        $modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        selectedEvent={newEvent}
+        setSelectedEvent={setNewEvent}
+      /> */}
+    </>
   );
 }
 

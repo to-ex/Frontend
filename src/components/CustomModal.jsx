@@ -13,11 +13,42 @@ const CustomModal = ({
   $modalIsOpen,
   closeModal,
   selectedEvent,
-  CategoryTypes,
+
   onDelete,
-  onUpdate, // Add this prop
+  onUpdate,
   setSelectedEvent,
 }) => {
+  const CategoryTypes = [
+    {
+      index: 0,
+      name: "전체",
+      scheduleCategory: "ALL",
+      oncolor: "#FFAEBD",
+      offcolor: "rgba(255, 174, 189, 0.7)",
+    },
+    {
+      index: 1,
+      name: "비자",
+      scheduleCategory: "VISA",
+      oncolor: "#D2AEFF",
+      offcolor: "rgba(210, 174, 255, 0.3)",
+    },
+    {
+      index: 2,
+      name: "어학",
+      scheduleCategory: "TEST",
+      oncolor: "#FFCA63",
+      offcolor: "rgba(255, 202, 99, 0.3)",
+    },
+    {
+      index: 3,
+      name: "기타",
+      scheduleCategory: "ETC",
+      oncolor: "#63E3FF",
+      offcolor: "rgba(99, 227, 255, 0.3)",
+    },
+  ];
+
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const [calendarIsOpen, setCalendarIsOpen] = useState(false);
   const [category, setCategory] = useState(

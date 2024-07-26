@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { ReactComponent as BlankBoxIcon } from "../assets/images/BlankBox.svg";
 import { ReactComponent as CheckBoxIcon } from "../assets/images/CheckBox.svg";
 import CustomModal from "./CustomModal";
+import AddModal from "./AddModal";
 
-function TodoItem({ todo, onToggle }) {
+function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
   const Tabs = [
     {
       index: 0,
@@ -38,6 +39,7 @@ function TodoItem({ todo, onToggle }) {
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+
   const handleItemClick = () => {
     setModalIsOpen(true);
     setSelectedEvent(todo);
@@ -47,6 +49,14 @@ function TodoItem({ todo, onToggle }) {
     setModalIsOpen(false);
     setSelectedEvent(null);
   };
+
+  // const handleDeleteEvent = (deletedEventId) => {
+  //   setSelectedEvent(deletedEventId);
+  // };
+
+  // const handleUpdateEvent = (updatedEvent) => {
+  //   setSelectedEvent(updatedEvent);
+  // };
 
   return (
     <ItemContainer>
@@ -63,8 +73,8 @@ function TodoItem({ todo, onToggle }) {
         selectedEvent={selectedEvent}
         setSelectedEvent={setSelectedEvent}
         CategoryTypes={Tabs}
-        // onDelete={handleDeleteEvent}
-        // onUpdate={handleUpdateEvent} // Pass this prop to handle updates
+        onDelete={onDelete}
+        onUpdate={onUpdate}
       />
     </ItemContainer>
   );
