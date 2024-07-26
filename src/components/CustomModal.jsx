@@ -161,7 +161,9 @@ const CustomModal = ({
             <ModalBottomBtn onClick={handleSelectCalendar}>
               <CalendarIcon />
               <ModalText>
-                {formatStartDate !== formatEndDate
+                {formatStartDate === "Invalid date"
+                  ? "날짜를 설정하지 않았어요!"
+                  : formatStartDate !== formatEndDate
                   ? `${formatStartDate} - ${formatEndDate}`
                   : formatStartDate}
               </ModalText>
@@ -241,5 +243,5 @@ const ModalBottomBtn = styled.button`
 const ModalText = styled.p`
   font-size: 20px;
   font-weight: 500;
-  margin: 2px 0 0 13px;
+  margin: 5px 0 0 13px;
 `;
