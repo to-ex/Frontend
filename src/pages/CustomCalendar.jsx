@@ -196,6 +196,7 @@ const TabBar = styled.div`
   display: flex;
   gap: 23px;
   justify-content: center;
+  margin-top: 130px;
 `;
 
 const Tab = styled.button`
@@ -214,7 +215,7 @@ const Container = styled.div`
   height: 1230px;
   background-color: transparent;
   border-radius: 60px 60px 0 0;
-  margin-top: 270px;
+  margin-top: 380px;
   position: absolute;
   top: 10px;
   box-shadow: 0 -4px 10px 0 rgba(00, 00, 00, 0.1);
