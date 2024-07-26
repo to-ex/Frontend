@@ -185,6 +185,7 @@ const ItemBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 30px;
+  overflow: auto;
 `;
 
 const AddButton = styled.button`
