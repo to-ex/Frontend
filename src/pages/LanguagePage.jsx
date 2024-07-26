@@ -10,6 +10,7 @@ import { ReactComponent as WarningIcon } from '../assets/images/Warning.svg';
 import { ReactComponent as IeltsText } from '../assets/images/IeltsText.svg';
 import { ReactComponent as ToeflText } from '../assets/images/ToeflText.svg';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Bg1IconWrap = styled.div`
   position: absolute;
@@ -332,6 +333,25 @@ const ArrowButton = styled.a`
   }
 `;
 
+const ArrowButton1 = styled(Link)`
+  color: ${({ theme }) => theme.colors.RED04};
+  background-color: ${({ theme }) => theme.colors.WHITE};
+  border: 1px solid ${({ theme }) => theme.colors.RED04};
+  text-decoration: none;
+  border-radius: 50px;
+  width: 280.83px;
+  height: 58px;
+  font-size: 20px;
+  text-align: center;
+  line-height: 55px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.RED04};
+    color: ${({ theme }) => theme.colors.WHITE};
+    border: 1px solid ${({ theme }) => theme.colors.RED04};
+  }
+`;
+
 const PagingWrapper = styled.div`
   margin-top: 50px; 
   margin-bottom: 90px; 
@@ -461,20 +481,6 @@ function LanguagePage() {
     }
   };
 
-  // const addExamToCalendar = async (userId, testId) => {
-  //   try {
-  //     const response = await axios.post(`http://43.200.144.133:8080/api/v1/schedule/engTest/${testId}`, {
-  //       userId: userId,
-  //       testId: testId
-  //     });
-  //     console.log(response.data);
-  //     alert('캘린더에 일정이 추가되었습니다.');
-  //   } catch (error) {
-  //     console.error(error);
-  //     alert('일정을 추가하는 중 오류가 발생했습니다.');
-  //   }
-  // };
-
   return (
     <ThemeProvider theme={Theme}>
       <Header />
@@ -577,7 +583,7 @@ function LanguagePage() {
           </DropdownContainer>
           <ArrowButtonContainer>
           <ArrowButton href={getExamLink()}>시험 신청 바로가기 ↗</ArrowButton>
-            <ArrowButton href="https://ieltskorea.org/korea/test-dates">캘린더에 추가하기 ↗</ArrowButton>
+            <ArrowButton1 to="/calender">캘린더에 기록하기 ↗</ArrowButton1>
           </ArrowButtonContainer>
         </DropdownWrapper>
         {filteredExamData.length === 0 ? (
