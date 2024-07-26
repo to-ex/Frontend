@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { Theme } from "./styles/Theme";
+import PostWrite from './pages/PostWrite';
 import LanguagePage from './pages/LanguagePage';
 import Login from "./pages/Login";
 import Redirection from "./pages/Redirection";
@@ -17,7 +18,6 @@ import ScrollToTop from "./components/ScrollToTop";
 import CheckList from "./pages/CheckList";
 import Community from './pages/Community';
 import WriteClick from './pages/WriteClick';
-
 
 function App() {
   const [isLogin, setIsLogin] = useState(!!localStorage.getItem("accessToken"));
@@ -58,6 +58,7 @@ function App() {
           <Route path="/community" element={<Community />} />
           <Route path="/WriteClick/:boardId" element={<WriteClick />} />
           <Route path="/Language" element={<LanguagePage />} />
+          <Route path="/PostWrite" element={<PostWrite />} />
         </Routes>
       </Router>
     </ThemeProvider>
