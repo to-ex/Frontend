@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactComponent as TrashIcon } from "../assets/images/Trash.svg";
+import { ReactComponent as TrashIcon } from "../assets/images/BigTrash.svg";
 import { ReactComponent as EmptyHeart } from "../assets/images/EmptyHeart.svg";
 import { ReactComponent as FullHeart } from "../assets/images/FullHeart.svg";
 import { ReactComponent as Comment } from "../assets/images/ChatCircle.svg";
