@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Theme } from "../styles/Theme";
-import { ReactComponent as Trashimg } from "../assets/images/Trash.svg";
 import { ReactComponent as EmptyHeart } from "../assets/images/EmptyHeart.svg";
 import { ReactComponent as FullHeart } from "../assets/images/FullHeart.svg";
 import { ReactComponent as Comment } from "../assets/images/ChatCircle.svg";
-import { ReactComponent as Write } from "../assets/images/Write.svg";
 import { ReactComponent as SendIcon } from "../assets/images/Send.svg";
-import Modal from "../components/Modal";
+import { ReactComponent as ProfileIcon } from "../assets/images/Profile.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 import Header from "../components/Header";
@@ -152,24 +150,6 @@ const CountryTag = styled.div`
   font-weight: 600;
 `;
 
-const TopIconBtnBox = styled.div`
-  width: 103px;
-  display: flex;
-  gap: 16px;
-`;
-
-const DeleteBtn = styled.button`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-`;
-
-const WriteBtn = styled.button`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-`;
-
 const Text = styled.p`
   width: 999px;
   height: 157px;
@@ -182,7 +162,7 @@ const Text = styled.p`
   box-sizing: border-box;
   padding: 25px 20px;
   margin-top: 30px;
-  `;
+`;
   
 const ImgBox = styled.div`
   text-align: right;
@@ -324,13 +304,12 @@ const SendIconWrap = styled.div`
   cursor: pointer;
 `;
 
-const WriteMe = () => {
+const WriteClick = () => {
   const navigate = useNavigate();
   const { boardId } = useParams(); 
   const [post, setPost] = useState(null);
   const [heart, setHeart] = useState(false);
   const [heartCount, setHeartCount] = useState(0);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState([]);
   const [commentCount, setCommentCount] = useState(0);
@@ -379,8 +358,8 @@ const WriteMe = () => {
 
   useEffect(() => {
     fetchPost();
-  }, [boardId, mapDataToKorean, comments]);  // comments 상태를 의존성 배열에 추가....
-  
+  }, [boardId, mapDataToKorean, comments]);
+
   const submitComment = async (commentContent) => {
     try {
       const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjAyNDU4M30.e1GOXBjaQG6jwK665B-7nXZrd58-mphYGDucMFhbDXLoXzM1Jwp6Ya51XKvhgUXea-G7M23gj_rfVx_Fv5ZM5A';
@@ -396,8 +375,11 @@ const WriteMe = () => {
       if (response.status === 201) {
         console.log('Comment submitted successfully:', response.data);
         const newCommentData = response.data.data;
+  
+        // 새로운 댓글 데이터를 현재 댓글 리스트에 추가하여 상태 업데이트
         setComments((prevComments) => [...prevComments, newCommentData]);
         setCommentCount((prevCount) => prevCount + 1);
+        fetchPost();
       } else {
         console.error('Failed to submit comment:', response.status);
       }
@@ -406,20 +388,28 @@ const WriteMe = () => {
     }
   };
   
-  const toggleHeart = () => {
-    setHeart((prevHeart) => !prevHeart);
-    setHeartCount((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
+  const toggleHeart = async () => {
+    try {
+      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjAyNDU4M30.e1GOXBjaQG6jwK665B-7nXZrd58-mphYGDucMFhbDXLoXzM1Jwp6Ya51XKvhgUXea-G7M23gj_rfVx_Fv5ZM5A';
+   const url = `http://43.200.144.133:8080/api/v1/like/${boardId}`;
+        
+      const response = await axios.post(url, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (response.status === 200) {
+        setHeart((prevHeart) => !prevHeart);
+        setHeartCount((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
+      } else {
+        console.error('Failed to toggle heart:', response.status);
+      }
+    } catch (error) {
+      console.error('Error toggling heart:', error);
+    }
   };
-
-  const toggleModal = () => {
-    setIsModalVisible((prevVisible) => !prevVisible);
-  };
-
-  const handleDelete = () => {
-    toggleModal();
-    // 여기서 삭제 로직 추가
-  };
-
+   
   const handleCommentChange = (event) => {
     setNewComment(event.target.value);
   };
@@ -445,12 +435,9 @@ const WriteMe = () => {
         <MainTitle>{post.boardCategory}</MainTitle>
         <ContentBox
           post={post}
-          onDelete={handleDelete}
           toggleHeart={toggleHeart}
           heart={heart}
           heartCount={heartCount}
-          isModalVisible={isModalVisible}
-          toggleModal={toggleModal}
           newComment={newComment}
           handleCommentChange={handleCommentChange}
           handleCommentSubmit={handleCommentSubmit}
@@ -464,12 +451,9 @@ const WriteMe = () => {
 
 const ContentBox = ({
   post,
-  onDelete,
   toggleHeart,
   heart,
   heartCount,
-  isModalVisible,
-  toggleModal,
   newComment,
   handleCommentChange,
   handleCommentSubmit,
@@ -496,12 +480,12 @@ const ContentBox = ({
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${year}.${month}.${day} ${hours}:${minutes}`;
   };
-
+  
   return (
     <ContentBoxWrapper>
       <Top>
         <UserInfo>
-          <Avatar src={authorProfileImgUrl} alt="User Avatar" />
+          <Avatar src={authorProfileImgUrl || ProfileIcon} alt="User Avatar" />
           <PostUserInfo>
             <PostUserName>{author}</PostUserName>
             <PostDate>{formatDateTime(post.createdDt)}</PostDate>
@@ -511,17 +495,7 @@ const ContentBox = ({
       <Middle>
         <Content>
           <PostHeader>
-          <PostTitle onClick={() => navigate(post.isMine ? `/WriteMe/${post.boardId}` : `/WriteOthers/${post.boardId}`)}> 
-              {title}
-            </PostTitle>
-            <TopIconBtnBox>
-              <WriteBtn>
-                <Write />
-              </WriteBtn>
-              <DeleteBtn onClick={toggleModal}>
-                <Trashimg />
-              </DeleteBtn>
-            </TopIconBtnBox>
+          <PostTitle>{title}</PostTitle>
           </PostHeader>
           <TagBox>
             <TypeTag># {boardCategory}</TypeTag>
@@ -551,7 +525,7 @@ const ContentBox = ({
         {comments.map(comment => (
           <CommentBox key={comment.commentId}>
             <CommentUserInfo>
-              <Avatar2 src={comment.profileImgUrl} alt="User Avatar" />
+              <Avatar2 src={comment.profileImgUrl || ProfileIcon} alt="User Avatar" />
               <CommentInfo>
                 <CommentDetails>
                   <CommentUserName>{comment.commenterName}</CommentUserName>
@@ -564,8 +538,8 @@ const ContentBox = ({
         ))}
       </Comments>
       <CommentInput>
-        <Avatar3 src={post.authorProfileImgUrl} alt="User Avatar" />
-        <Input 
+        <Avatar3 src={post.authorProfileImgUrl || ProfileIcon} alt="User Avatar" />
+        <Input
           placeholder="댓글을 입력해주세요!" 
           value={newComment}
           onChange={handleCommentChange}
@@ -574,17 +548,8 @@ const ContentBox = ({
           <SendIcon />
         </SendIconWrap>
       </CommentInput>
-      {isModalVisible && (
-        <Modal
-          onConfirm={onDelete}
-          onCancel={toggleModal}
-          msg="삭제하시겠습니까?"
-          text1="아니요"
-          text2="네"
-        />
-      )}
     </ContentBoxWrapper>
   );
 };
 
-export default WriteMe;
+export default WriteClick;

@@ -17,7 +17,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from "../components/Header";
 
-
 const AppWrapper = styled.div`
   width: 1920px;
   height: 980px;
@@ -446,7 +445,7 @@ const fetchPosts = async (searchTerm, boardCategory, countryTag, page, size) => 
         boardCategory: boardCategory,
         countryTag: countryTag,
         page: 0,
-        size: 20,
+        size: 10,
       },
     });
     if (response.status === 200) {
@@ -487,6 +486,7 @@ const Community = () => {
   const [selectedHashtags, setSelectedHashtags] = useState([]);
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate(); 
+  const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjAyNDU4M30.e1GOXBjaQG6jwK665B-7nXZrd58-mphYGDucMFhbDXLoXzM1Jwp6Ya51XKvhgUXea-G7M23gj_rfVx_Fv5ZM5A';
   const [hashtags, setHashtags] = useState([
     { tag: '🇪🇸 스페인', count: 0 },
     { tag: '🇩🇪 독일', count: 0 },
@@ -729,7 +729,7 @@ const Community = () => {
                 <PostHeader>
                   <PostAvatar style={{backgroundImage: `url(${post.authorProfileImgUrl || 'https://via.placeholder.com/50'})`}} />
                   <PostInfo>
-                    <PostTitle onClick={() => navigate(post.isMine === 'Y' ? `/WriteMe/${post.boardId}` : `/WriteOthers/${post.boardId}`)}> 
+                  <PostTitle onClick={() => navigate(`/WriteClick/${post.boardId}`)}> 
                       {post.title} <AuthorSpan>| {post.author}</AuthorSpan>
                     </PostTitle>
                     <PostActions>
