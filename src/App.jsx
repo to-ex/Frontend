@@ -11,7 +11,9 @@ import VisaGuide from "./pages/VisaGuide";
 import MainPage from "./pages/MainPage";
 import MyPage from "./pages/MyPage";
 import Header from "./components/Header";
+import CustomCalendar from "./pages/CustomCalendar";
 import ScrollToTop from "./components/ScrollToTop";
+
 
 function App() {
   const [isLogin, setIsLogin] = useState(!!localStorage.getItem("accessToken"));
@@ -47,6 +49,7 @@ function App() {
           <Route path="/visa" element={<VisaGuide />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/myinfo" element={<MyInfo />} />
+          <Route path="/calendar" element={<CustomCalendar />} />
         </Routes>
       </Router>
     </ThemeProvider>
