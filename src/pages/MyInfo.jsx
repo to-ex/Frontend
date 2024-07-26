@@ -47,14 +47,6 @@ const AvatarContainer = styled.div`
   cursor: pointer;
 `;
 
-// const AvatarIcon = styled(PersonCamIcon)`
-//   position: absolute;
-//   bottom: 0;
-//   cursor: pointer;
-//   width: 218px;
-//   height: 215px;
-// `;
-
 const Input = styled.input`
   width: 355px;
   height: 25px;
@@ -173,11 +165,11 @@ function MyInfo() {
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(null); 
   const [userInfo, setUserInfo] = useState({ userId: '', name: '', email: '', userImage: '' });
 
-  const accessToken = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg';
-  const refreshToken = 'eyJ0eXBlIjoiUmVmcmVzaCIsImFsZyI6IkhTNTEyIn0.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IlJlZnJlc2giLCJzdWIiOiJ3amRnbWxkdXMyOEBuYXZlci5jb20iLCJleHAiOjE3MjU1OTg2NDF9.xJK7K1U3xKAuwvj-_8B6tT2HIfJiXkuUU0yn9g8BxGyQL243R9iOWHrhr0YSMd_mR7kpCZJWDu_WWiyaauLSvw';
-
   useEffect(() => {
     const fetchUserInfo = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+
       try {
         const response = await axios.get('http://43.200.144.133:8080/api/v1/user/mypage', {
           headers: {
@@ -195,6 +187,7 @@ function MyInfo() {
               }
             });
             const newAccessToken = refreshResponse.data.data.accessToken;
+            localStorage.setItem('accessToken', newAccessToken);
             const retryResponse = await axios.get('http://43.200.144.133:8080/api/v1/user/mypage', {
               headers: {
                 Authorization: `Bearer ${newAccessToken}`,
@@ -213,7 +206,7 @@ function MyInfo() {
       }
     };
     fetchUserInfo();
-  }, [accessToken, refreshToken]);
+  }, []);
 
   const handleNicknameChange = (event) => {
     const newNickname = event.target.value;
@@ -225,6 +218,8 @@ function MyInfo() {
   };
   
   const handleCheckNickname = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+
     try {
       const response = await axios.get('http://43.200.144.133:8080/api/v1/user/mypage/check-nickname', {
         headers: {
@@ -263,6 +258,7 @@ function MyInfo() {
   };
 
   const handleSave = async () => {
+    const accessToken = localStorage.getItem('accessToken');
     const formData = new FormData();
     if (fileInputRef.current.files[0]) {
       formData.append('image', fileInputRef.current.files[0]);
@@ -290,25 +286,25 @@ function MyInfo() {
       <PageWrapper>
         <HeaderWrapper>
           <Header />
-        </HeaderWrapper>
+          </HeaderWrapper>
         <Container>
-        <AvatarContainer onClick={handleAvatarClick}>
-        {avatar ? (
-          <>
-            <AvatarImage src={avatar} alt="Avatar" />
-            <Overlay>
-              <CamIcon />
-            </Overlay>
-          </>
-        ) : (
-          <>
-            <AvatarImage src={userInfo.userImage} alt="Avatar" />
-            <Overlay>
-              <CamIcon />
-            </Overlay>
-          </>
-        )}
-      </AvatarContainer>
+          <AvatarContainer onClick={handleAvatarClick}>
+            {avatar ? (
+              <>
+                <AvatarImage src={avatar} alt="Avatar" />
+                <Overlay>
+                  <CamIcon />
+                </Overlay>
+              </>
+            ) : (
+              <>
+                <AvatarImage src={userInfo.userImage} alt="Avatar" />
+                <Overlay>
+                  <CamIcon />
+                </Overlay>
+              </>
+            )}
+          </AvatarContainer>
           <input
             type="file"
             ref={fileInputRef}
@@ -343,3 +339,4 @@ function MyInfo() {
 }
 
 export default MyInfo;
+

@@ -339,8 +339,7 @@ const WriteClick = () => {
 
   const fetchPost = async () => {
     try {
-      const token =
-        "eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg";
+      const token = localStorage.getItem('accessToken'); // 토큰 가져오기
       const response = await axios.get(
         `http://43.200.144.133:8080/api/v1/board/${boardId}`,
         {
@@ -359,17 +358,18 @@ const WriteClick = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         try {
+          const refreshToken = localStorage.getItem('refreshToken'); // Refresh Token 가져오기
           const refreshResponse = await axios.patch(
             "http://43.200.144.133:8080/api/v1/auth/user/refresh",
             null,
             {
               headers: {
-                RefreshToken:
-                  "eyJ0eXBlIjoiUmVmcmVzaCIsImFsZyI6IkhTNTEyIn0.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IlJlZnJlc2giLCJzdWIiOiJ3amRnbWxkdXMyOEBuYXZlci5jb20iLCJleHAiOjE3MjU1OTg2NDF9.xJK7K1U3xKAuwvj-_8B6tT2HIfJiXkuUU0yn9g8BxGyQL243R9iOWHrhr0YSMd_mR7kpCZJWDu_WWiyaauLSvw",
+                RefreshToken: refreshToken,
               },
             }
           );
           const newAccessToken = refreshResponse.data.data.accessToken;
+          localStorage.setItem('accessToken', newAccessToken); // 새로운 Access Token 저장
           const retryResponse = await axios.get(
             `http://43.200.144.133:8080/api/v1/board/${boardId}`,
             {
@@ -389,7 +389,7 @@ const WriteClick = () => {
           console.error("Failed to refresh token or fetch post:", refreshError);
           alert(
             refreshError.response?.data?.message ||
-              "Failed to refresh token or fetch post"
+            "Failed to refresh token or fetch post"
           );
         }
       } else {
@@ -404,8 +404,7 @@ const WriteClick = () => {
 
   const submitComment = async (commentContent) => {
     try {
-      const token =
-        "eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg";
+      const token = localStorage.getItem('accessToken'); // 토큰 가져오기
       const response = await axios.post(
         `http://43.200.144.133:8080/api/v1/comment/${boardId}`,
         { content: commentContent },
@@ -426,17 +425,18 @@ const WriteClick = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         try {
+          const refreshToken = localStorage.getItem('refreshToken'); // Refresh Token 가져오기
           const refreshResponse = await axios.patch(
             "http://43.200.144.133:8080/api/v1/auth/user/refresh",
             null,
             {
               headers: {
-                RefreshToken:
-                  "eyJ0eXBlIjoiUmVmcmVzaCIsImFsZyI6IkhTNTEyIn0.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IlJlZnJlc2giLCJzdWIiOiJ3amRnbWxkdXMyOEBuYXZlci5jb20iLCJleHAiOjE3MjU1OTg2NDF9.xJK7K1U3xKAuwvj-_8B6tT2HIfJiXkuUU0yn9g8BxGyQL243R9iOWHrhr0YSMd_mR7kpCZJWDu_WWiyaauLSvw",
+                RefreshToken: refreshToken,
               },
             }
           );
           const newAccessToken = refreshResponse.data.data.accessToken;
+          localStorage.setItem('accessToken', newAccessToken); // 새로운 Access Token 저장
           const retryResponse = await axios.post(
             `http://43.200.144.133:8080/api/v1/comment/${boardId}`,
             { content: commentContent },
@@ -461,7 +461,7 @@ const WriteClick = () => {
           );
           alert(
             refreshError.response?.data?.message ||
-              "Failed to refresh token or submit comment"
+            "Failed to refresh token or submit comment"
           );
         }
       } else {
@@ -469,12 +469,12 @@ const WriteClick = () => {
       }
     }
   };
+  
 
   const toggleHeart = async () => {
+    const url = `http://43.200.144.133:8080/api/v1/like/${boardId}`; // 여기에 url을 정의합니다.
     try {
-      const token =
-        "eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg";
-      const url = `http://43.200.144.133:8080/api/v1/like/${boardId}`;
+      const token = localStorage.getItem('accessToken'); // 토큰 가져오기
       const response = await axios.post(
         url,
         {},
@@ -493,18 +493,18 @@ const WriteClick = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         try {
+          const refreshToken = localStorage.getItem('refreshToken'); // Refresh Token 가져오기
           const refreshResponse = await axios.patch(
             "http://43.200.144.133:8080/api/v1/auth/user/refresh",
             null,
             {
               headers: {
-                RefreshToken:
-                  "eyJ0eXBlIjoiUmVmcmVzaCIsImFsZyI6IkhTNTEyIn0.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IlJlZnJlc2giLCJzdWIiOiJ3amRnbWxkdXMyOEBuYXZlci5jb20iLCJleHAiOjE3MjU1OTg2NDF9.xJK7K1U3xKAuwvj-_8B6tT2HIfJiXkuUU0yn9g8BxGyQL243R9iOWHrhr0YSMd_mR7kpCZJWDu_WWiyaauLSvw",
+                RefreshToken: refreshToken,
               },
             }
           );
           const newAccessToken = refreshResponse.data.data.accessToken;
-          const url = `http://43.200.144.133:8080/api/v1/like/${boardId}`;
+          localStorage.setItem('accessToken', newAccessToken); // 새로운 Access Token 저장
           const retryResponse = await axios.post(
             url,
             {},
@@ -516,9 +516,7 @@ const WriteClick = () => {
           );
           if (retryResponse.status === 200) {
             setHeart((prevHeart) => !prevHeart);
-            setHeartCount((prevCount) =>
-              heart ? prevCount - 1 : prevCount + 1
-            );
+            setHeartCount((prevCount) => (heart ? prevCount - 1 : prevCount + 1));
           } else {
             console.error("Failed to toggle heart:", retryResponse.status);
           }
@@ -529,7 +527,7 @@ const WriteClick = () => {
           );
           alert(
             refreshError.response?.data?.message ||
-              "Failed to refresh token or toggle heart"
+            "Failed to refresh token or toggle heart"
           );
         }
       } else {
@@ -537,6 +535,8 @@ const WriteClick = () => {
       }
     }
   };
+  
+  
 
   const handleCommentChange = (event) => {
     setNewComment(event.target.value);

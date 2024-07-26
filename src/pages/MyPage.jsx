@@ -13,7 +13,6 @@ import { ReactComponent as Checklist } from '../assets/images/checklist.svg';
 import { ReactComponent as Calendar } from '../assets/images/calendar2.svg';
 import ScrollToTop from '../components/ScrollToTop';
 
-
 const Contain = styled.div`
   box-sizing: border-box;
   padding: 0;
@@ -172,36 +171,34 @@ function MyPage() {
     { id: 5, title: '캘린더', icon: 'calendar', path: '/calendar' } 
   ]);
 
-  useEffect(() => {  //회원 정보 조회 api 연동
+  useEffect(() => {  
     const fetchUserInfo = async () => {
       try {
-        let token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg';
-        
-        // Fetch user info
+        const token = localStorage.getItem('accessToken');
         const response = await axios.get('http://43.200.144.133:8080/api/v1/user/mypage', {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Cache-Control': 'no-cache' // 캐시 비활성화 헤더 추가
+            'Cache-Control': 'no-cache'
           }
         });
 
         setUserInfo(response.data.data);
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          // 액세스 토큰이 만료된 경우, 리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급받음
           try {
+            const refreshToken = localStorage.getItem('refreshToken');
             const refreshTokenResponse = await axios.patch('http://43.200.144.133:8080/api/v1/auth/user/refresh', null, {
               headers: {
-                RefreshToken: 'eyJ0eXBlIjoiUmVmcmVzaCIsImFsZyI6IkhTNTEyIn0.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IlJlZnJlc2giLCJzdWIiOiJ3amRnbWxkdXMyOEBuYXZlci5jb20iLCJleHAiOjE3MjU1OTg2NDF9.xJK7K1U3xKAuwvj-_8B6tT2HIfJiXkuUU0yn9g8BxGyQL243R9iOWHrhr0YSMd_mR7kpCZJWDu_WWiyaauLSvw' 
+                RefreshToken: refreshToken
               }
             });
             const { accessToken } = refreshTokenResponse.data.data;
+            localStorage.setItem('accessToken', accessToken);
 
-            // 새로운 액세스 토큰으로 다시 사용자 정보 조회 요청
             const retryResponse = await axios.get('http://43.200.144.133:8080/api/v1/user/mypage', {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
-                'Cache-Control': 'no-cache' // 캐시 비활성화 헤더 추가
+                'Cache-Control': 'no-cache'
               }
             });
 
@@ -231,9 +228,9 @@ function MyPage() {
     setModalVisible(true);
   };
 
- const confirmLogout = async () => { //로그아웃 api 연동
+  const confirmLogout = async () => {
     try {
-      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg';
+      const token = localStorage.getItem('accessToken');
       await axios.post('http://43.200.144.133:8080/api/v1/auth/logout', null, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -242,6 +239,8 @@ function MyPage() {
           id: userInfo.userId
         }
       });
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       setModalVisible(false);
       setConfirmModalMessage('로그아웃 되었어요');
       setConfirmModalVisible(true);
@@ -251,7 +250,7 @@ function MyPage() {
     }
   };
 
-const handleDeleteClick = () => {
+  const handleDeleteClick = () => {
     setModalContent('더 이상 to.x 사용을 원하지 않으신가요?');
     setModalActions({
       text1: '더 써볼래요',
@@ -262,14 +261,16 @@ const handleDeleteClick = () => {
     setModalVisible(true);
   };
 
- const confirmDeletion = async () => { //회원 탈퇴 api 연동
+  const confirmDeletion = async () => {
     try {
-      const token = 'eyJ0eXBlIjoiQWNjZXNzIiwiYWxnIjoiSFM1MTIifQ.eyJ1c2VySWQiOjMsImVtYWlsIjoid2pkZ21sZHVzMjhAbmF2ZXIuY29tIiwidHlwZSI6IkFjY2VzcyIsInN1YiI6IndqZGdtbGR1czI4QG5hdmVyLmNvbSIsImV4cCI6MTcyMjA1ODY0MX0.5ZTt-_B0_fdLTiecZh-m86chmqXpI99Q9DqxF_XVCksXAgWijuT75U2CgUc5d23G2RjICLK-5U2XoCgAHNZNFg';
+      const token = localStorage.getItem('accessToken');
       await axios.delete('http://43.200.144.133:8080/api/v1/auth/withdraw', {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       setModalVisible(false);
       setConfirmModalMessage('회원탈퇴 처리가 완료되었어요');
       setConfirmModalVisible(true);
@@ -279,65 +280,65 @@ const handleDeleteClick = () => {
     }
   };
 
- const handleCloseConfirmModal = () => {
+  const handleCloseConfirmModal = () => {
     setConfirmModalVisible(false);
-};
+  };
 
-return (
-<ThemeProvider theme={Theme}>
-    <Contain>
-    <PageWrapper>
-        <PageHeader>마이페이지</PageHeader>
-        <MyPageContainer>
-        <UserGreeting>
-            <StyledPerson1 style={{ width: '165.64px', height: '163.17px' }}>{userInfo.userImage}</StyledPerson1>
-            <GreetingContainer>
-            <UserName>{userInfo.name}</UserName>
-            <NameSuffix>님, 안녕하세요!</NameSuffix>
-            </GreetingContainer>
-        </UserGreeting>
-        <IconGrid>
-            {items.map(item => (
-            <Card key={item.id}>
-                {item.path ? (
-                <Link to={item.path}>
-                    {React.createElement(iconMapping[item.icon], { className: 'icon' })}
-                    <ItemTitle>{item.title}</ItemTitle>
-                </Link>
-                ) : (
-                <div>
-                    {React.createElement(iconMapping[item.icon], { className: 'icon' })}
-                    <ItemTitle>{item.title}</ItemTitle>
-                </div>
-                )}
-            </Card>
-            ))}
-        </IconGrid>
-        <AccountActions>
-            <ActionButton onClick={handleLogoutClick}>로그아웃</ActionButton>
-            <ActionButton onClick={handleDeleteClick}>회원탈퇴</ActionButton>
-        </AccountActions>
-        {modalVisible && (
-            <Modal
-            msg={modalContent}
-            text1={modalActions.text1}
-            text2={modalActions.text2}
-            onCancel={modalActions.onCancel}
-            onConfirm={modalActions.onConfirm}
-            />
-        )}
-        {confirmModalVisible && (
-            <ConfirmModal
-            msg={confirmModalMessage}
-            onConfirm={handleCloseConfirmModal}
-            />
-        )}
-        </MyPageContainer>
-    </PageWrapper>
-    <ScrollToTop />
-    </Contain>
-</ThemeProvider>
-);
+  return (
+    <ThemeProvider theme={Theme}>
+      <Contain>
+        <PageWrapper>
+          <PageHeader>마이페이지</PageHeader>
+          <MyPageContainer>
+            <UserGreeting>
+              <StyledPerson1 style={{ width: '165.64px', height: '163.17px' }}>{userInfo.userImage}</StyledPerson1>
+              <GreetingContainer>
+                <UserName>{userInfo.name}</UserName>
+                <NameSuffix>님, 안녕하세요!</NameSuffix>
+              </GreetingContainer>
+            </UserGreeting>
+            <IconGrid>
+              {items.map(item => (
+                <Card key={item.id}>
+                  {item.path ? (
+                    <Link to={item.path}>
+                      {React.createElement(iconMapping[item.icon], { className: 'icon' })}
+                      <ItemTitle>{item.title}</ItemTitle>
+                    </Link>
+                  ) : (
+                    <div>
+                      {React.createElement(iconMapping[item.icon], { className: 'icon' })}
+                      <ItemTitle>{item.title}</ItemTitle>
+                    </div>
+                  )}
+                </Card>
+              ))}
+            </IconGrid>
+            <AccountActions>
+              <ActionButton onClick={handleLogoutClick}>로그아웃</ActionButton>
+              <ActionButton onClick={handleDeleteClick}>회원탈퇴</ActionButton>
+            </AccountActions>
+            {modalVisible && (
+              <Modal
+                msg={modalContent}
+                text1={modalActions.text1}
+                text2={modalActions.text2}
+                onCancel={modalActions.onCancel}
+                onConfirm={modalActions.onConfirm}
+              />
+            )}
+            {confirmModalVisible && (
+              <ConfirmModal
+                msg={confirmModalMessage}
+                onConfirm={handleCloseConfirmModal}
+              />
+            )}
+          </MyPageContainer>
+        </PageWrapper>
+        <ScrollToTop />
+      </Contain>
+    </ThemeProvider>
+  );
 }
 
 export default MyPage;
