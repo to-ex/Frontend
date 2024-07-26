@@ -13,6 +13,7 @@ import MyPage from "./pages/MyPage";
 import Header from "./components/Header";
 import CustomCalendar from "./pages/CustomCalendar";
 import ScrollToTop from "./components/ScrollToTop";
+import CheckList from "./pages/CheckList";
 import Community from './pages/Community';
 import WriteClick from './pages/WriteClick';
 
@@ -49,6 +50,7 @@ function App() {
             element={<Redirection />}
           />
           <Route path="/visa" element={<VisaGuide />} />
+          <Route path="/checklist" element={<CheckList />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/myinfo" element={<MyInfo />} />
           <Route path="/calendar" element={<CustomCalendar />} />

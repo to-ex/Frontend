@@ -2,89 +2,38 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "react-modal";
 import { ReactComponent as CalendarIcon } from "../assets/images/CalendarIcon.svg";
-import { ReactComponent as Trash } from "../assets/images/Trash.svg";
 import { ReactComponent as Send } from "../assets/images/Send.svg";
 import ScheduleCategoryDropDown from "./ScheduleCategoryDropDown";
-import { AxiosCalendarDelete, AxiosCalendarUpdate } from "../api/AxiosCalendar";
+import { AxiosCheckListPost } from "../api/AxiosCheckList";
 import SelectCalendar from "./SelectCalendar";
 import moment from "moment";
 import "moment/locale/ko";
-const CustomModal = ({
-  $modalIsOpen,
-  closeModal,
-  selectedEvent,
 
-  onDelete,
-  onUpdate,
-  setSelectedEvent,
-}) => {
-  const CategoryTypes = [
-    {
-      index: 0,
-      name: "전체",
-      scheduleCategory: "ALL",
-      oncolor: "#FFAEBD",
-      offcolor: "rgba(255, 174, 189, 0.7)",
-    },
-    {
-      index: 1,
-      name: "비자",
-      scheduleCategory: "VISA",
-      oncolor: "#D2AEFF",
-      offcolor: "rgba(210, 174, 255, 0.3)",
-    },
-    {
-      index: 2,
-      name: "어학",
-      scheduleCategory: "TEST",
-      oncolor: "#FFCA63",
-      offcolor: "rgba(255, 202, 99, 0.3)",
-    },
-    {
-      index: 3,
-      name: "기타",
-      scheduleCategory: "ETC",
-      oncolor: "#63E3FF",
-      offcolor: "rgba(99, 227, 255, 0.3)",
-    },
-  ];
-
+const AddModal = ({ $modalIsOpen, closeModal, CategoryTypes, onPost }) => {
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const [calendarIsOpen, setCalendarIsOpen] = useState(false);
-  const [category, setCategory] = useState(
-    selectedEvent ? selectedEvent.scheduleCategory : ""
-  );
-  const [startDate, setStartDate] = useState(
-    selectedEvent ? selectedEvent.startDate : ""
-  );
-  const [endDate, setEndDate] = useState(
-    selectedEvent ? selectedEvent.endDate : ""
-  );
-  const [title, setTitle] = useState(
-    selectedEvent ? selectedEvent.content : ""
-  );
-  const [isDone, setIsDone] = useState(
-    selectedEvent ? selectedEvent.isDone : false
-  );
+  const [category, setCategory] = useState("ETC");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [title, setTitle] = useState("");
+  const [isDone, setIsDone] = useState(false);
 
   const formatStartDate =
-    selectedEvent && moment(startDate).locale("ko").format("M월 D일 (ddd)");
+    startDate && moment(startDate).locale("ko").format("M월 D일 (ddd)");
   const formatEndDate =
-    selectedEvent && moment(endDate).locale("ko").format("M월 D일 (ddd)");
+    endDate && moment(endDate).locale("ko").format("M월 D일 (ddd)");
 
   useEffect(() => {
-    if ($modalIsOpen && selectedEvent) {
+    if ($modalIsOpen) {
       setDropdownIsOpen(false);
       setCalendarIsOpen(false);
-      setTitle(selectedEvent.content || "");
-      setStartDate(selectedEvent.startDate || "");
-      setEndDate(selectedEvent.endDate || "");
-      setCategory(selectedEvent.scheduleCategory || "");
-      setIsDone(selectedEvent.isDone || false);
     } else {
-      setSelectedEvent(null);
+      setCategory("ETC");
+      setStartDate("");
+      setEndDate("");
+      setTitle("");
     }
-  }, [$modalIsOpen, selectedEvent, setSelectedEvent]);
+  }, [$modalIsOpen]);
 
   const handleSelectCalendar = () => {
     setCalendarIsOpen(!calendarIsOpen);
@@ -106,48 +55,22 @@ const CustomModal = ({
     setCategory(selectedCategory);
   };
 
-  const handleDeleteSchedule = async () => {
-    if (!selectedEvent) {
-      console.error("No selected event to delete");
-      return;
-    }
-
+  const handlePostCheckItem = async () => {
     try {
-      await AxiosCalendarDelete(selectedEvent.scheduleId);
-      onDelete(selectedEvent.scheduleId);
-      closeModal();
-      alert("삭제 되었습니다!");
-    } catch (error) {
-      console.error("Error deleting data:", error);
-    }
-  };
-
-  const handleUpdateSchedule = async () => {
-    if (!selectedEvent) {
-      console.error("No selected event to update");
-      return;
-    }
-
-    try {
-      const updatedEvent = {
-        ...selectedEvent,
+      const newEvent = {
         content: title,
         scheduleCategory: category,
         startDate: startDate,
         endDate: endDate,
         isDone: isDone,
       };
-
-      await AxiosCalendarUpdate(selectedEvent.scheduleId, updatedEvent);
-      onUpdate(updatedEvent);
+      onPost(newEvent);
+      await AxiosCheckListPost(newEvent);
       closeModal();
-      alert("수정 되었습니다!");
     } catch (error) {
       console.error("Error updating data:", error);
     }
   };
-
-  if (!selectedEvent) return null;
 
   return (
     <>
@@ -176,14 +99,11 @@ const CustomModal = ({
         <ModalLeftBox>
           <ModalTopBox>
             <ModalTitle
-              value={title}
+              placeholder="일정을 입력해주세요!"
               onChange={(e) => setTitle(e.target.value)}
             />
             <ModalTopBtnBox>
-              <ModalTopBtn onClick={handleDeleteSchedule}>
-                <Trash />
-              </ModalTopBtn>
-              <ModalTopBtn onClick={handleUpdateSchedule}>
+              <ModalTopBtn onClick={handlePostCheckItem}>
                 <Send />
               </ModalTopBtn>
             </ModalTopBtnBox>
@@ -192,8 +112,8 @@ const CustomModal = ({
             <ModalBottomBtn onClick={handleSelectCalendar}>
               <CalendarIcon />
               <ModalText>
-                {formatStartDate === "Invalid date"
-                  ? "날짜를 설정하지 않았어요!"
+                {formatStartDate === ""
+                  ? "날짜 설정하기 👀"
                   : formatStartDate !== formatEndDate
                   ? `${formatStartDate} - ${formatEndDate}`
                   : formatStartDate}
@@ -208,11 +128,7 @@ const CustomModal = ({
           onCategoryChange={handleCategoryChange}
           list={CategoryTypes}
           selected={
-            selectedEvent.scheduleCategory === "VISA"
-              ? "비자"
-              : selectedEvent.scheduleCategory === "TEST"
-              ? "어학"
-              : "기타"
+            category === "VISA" ? "비자" : category === "TEST" ? "어학" : "기타"
           }
         />
       )}
@@ -226,7 +142,7 @@ const CustomModal = ({
   );
 };
 
-export default CustomModal;
+export default AddModal;
 
 const ModalLeftBox = styled.div`
   width: 100%;

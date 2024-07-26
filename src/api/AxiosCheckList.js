@@ -1,6 +1,6 @@
 import Axios from "./Axios";
 
-export const AxiosCalendarGet = async () => {
+export const AxiosCheckListGet = async () => {
   try {
     const id = localStorage.getItem("id");
     const token = localStorage.getItem("accessToken");
@@ -14,28 +14,33 @@ export const AxiosCalendarGet = async () => {
   }
 };
 
-export const AxiosCalendarDelete = async (scheduleId) => {
+export const AxiosCheckListDone = async (scheduleId) => {
   try {
     const token = localStorage.getItem("accessToken");
-    const response = await Axios.delete(`/api/v1/schedule/${scheduleId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await Axios.patch(
+      `/api/v1/schedule/done/${scheduleId}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response;
   } catch (error) {
-    console.log(error.response.data.detail);
+    console.log(error.response?.data?.detail || error.message);
     throw error;
   }
 };
 
-export const AxiosCalendarUpdate = async (scheduleId, data) => {
+export const AxiosCheckListPost = async (data) => {
   try {
     const token = localStorage.getItem("accessToken");
-    const response = await Axios.patch(`/api/v1/schedule/${scheduleId}`, data, {
+    alert("작성 되었습니다!");
+    const response = await Axios.post(`/api/v1/schedule`, data, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response;
   } catch (error) {
-    console.log(error.response.data.detail);
+    console.log(error.response?.data?.detail || error.message);
     throw error;
   }
 };
