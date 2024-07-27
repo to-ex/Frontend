@@ -49,14 +49,6 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
     setSelectedEvent(null);
   };
 
-  // const handleDeleteEvent = (deletedEventId) => {
-  //   setSelectedEvent(deletedEventId);
-  // };
-
-  // const handleUpdateEvent = (updatedEvent) => {
-  //   setSelectedEvent(updatedEvent);
-  // };
-
   return (
     <ItemContainer>
       <CustomCheckbox
@@ -87,6 +79,8 @@ const ItemContainer = styled.div`
 `;
 
 const TodoText = styled.span`
+  min-width: 40px;
+  min-height: 23px;
   font-size: 20px;
   font-weight: 500;
   margin-left: 10px;
