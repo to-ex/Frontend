@@ -162,6 +162,8 @@ const Text = styled.p`
   box-sizing: border-box;
   padding: 25px 20px;
   margin-top: 30px;
+  max-height: 200px; /* 최대 높이 설정 */
+  overflow-y: auto; /* 수직 스크롤바 추가 */
 `;
 
 const ImgBox = styled.div`
@@ -261,6 +263,8 @@ const CommentDate = styled.div`
 const CommentText = styled.p`
   margin: 8px 0 0 0;
   font-size: 20px;
+  max-height: 100px; /* 최대 높이 설정 */
+  overflow-y: auto; /* 수직 스크롤바 추가 */
 `;
 
 const CommentInput = styled.div`
