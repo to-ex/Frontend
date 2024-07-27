@@ -445,7 +445,7 @@ const fetchPosts = async (searchTerm, boardCategory, countryTag, page, size) => 
         boardCategory: boardCategory,
         countryTag: countryTag,
         page: 0,
-        size: 10,
+        size: 150,
       },
     });
     if (response.status === 200) {
