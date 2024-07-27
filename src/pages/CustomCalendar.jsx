@@ -147,10 +147,15 @@ const CustomCalendar = () => {
           let html = [];
           const dayEvents = getEventsForDate(date);
           dayEvents.forEach((event, index) => {
-            let momentDate = moment(date).format("YYYY-MM-DD");
+            const momentDate = moment(
+              date,
+              "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (한국 표준시)"
+            ).format("YYYY-MM-DD");
+
             const isStartDate = event.startDate === momentDate;
             const isEndDate = event.endDate === momentDate;
             const isEqualDate = event.endDate === event.startDate;
+
             html.push(
               <StyledScheduleLine
                 key={event.scheduleId}
