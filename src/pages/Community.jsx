@@ -306,11 +306,16 @@ const PostBox = styled.div`
   box-sizing: border-box;
   padding: 10px 20px;
   margin-right: 45px;
+  overflow: hidden;
 `;
 
 const PostText = styled.p`
   font-size: 20px;
   color: ${({ theme }) => theme.colors.BLACK};
+  max-height: 145px; 
+  overflow-y: auto; 
+  margin: 0;
+  padding-right: 10px; 
 `;
 
 const PostImage = styled.img`
