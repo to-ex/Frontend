@@ -209,7 +209,7 @@ function MyPage() {
           }
         } else {
           console.error('Failed to fetch user info:', error);
-          alert(error.response?.data?.message || 'Failed to fetch user info');
+          alert(error.response?.data?.message || '로그인 후 사용해 주세요!');
         }
       }
     };
